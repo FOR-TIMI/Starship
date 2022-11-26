@@ -21,7 +21,8 @@ const postSchema = new Schema({
   },
 
   createdAt: {
-    type: Date.now,
+    type: Date,
+    default: Date.now,
     get: timeStamp => dateFormat(timeStamp)
   },
 

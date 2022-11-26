@@ -1,6 +1,6 @@
 const faker = require('faker')
 const db = require('../config/connection');
-const { User } = require('../model');
+const { User,Post } = require('../model');
 
 db.once('open', async () => {
   
