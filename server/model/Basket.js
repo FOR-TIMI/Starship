@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 const userSchema = require("./User");
 
 const tickerSchema = require("./Ticker");
@@ -12,4 +12,6 @@ const basketSchema = new mongoose.Schema({
   tickers: [tickerSchema],
 });
 
-module.exports = basketSchema;
+const Basket = model('Basket', basketSchema);
+
+module.exports = Basket;
