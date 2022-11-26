@@ -22,7 +22,7 @@ const userSchema = new Schema(
       required: true,
       minlength: 8
     },
-    Basket: [
+    basket: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Basket'
