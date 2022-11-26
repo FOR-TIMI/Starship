@@ -15,7 +15,7 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  playground: true,
+  playground:true,
 
   context: (req) => {
     const auth = authMiddleware(req);
