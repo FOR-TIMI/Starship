@@ -1,6 +1,6 @@
 const faker = require('faker')
 const db = require('../config/connection');
-const { User } = require('../model');
+const { User,Post } = require('../model');
 
 db.once('open', async () => {
   
@@ -99,7 +99,7 @@ db.once('open', async () => {
      * get a random post from the createdPost array
      */
     const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
-    const { _id : postId } = createdPosts(randomPostIndex);
+    const { _id : postId } = createdPosts[randomPostIndex];
   
     /**
      * add comments to a Post
@@ -127,7 +127,7 @@ console.log('\n ----- Added Comments ----- \n');
      * get a random post from the createdPost array
     */
     const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
-    const { _id : postId } = createdPosts(randomPostIndex);
+    const { _id : postId } = createdPosts[randomPostIndex];
     
     /**
      * Add like to a post
