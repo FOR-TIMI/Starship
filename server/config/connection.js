@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/starship_db', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/starship', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
