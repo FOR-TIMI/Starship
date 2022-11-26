@@ -22,6 +22,12 @@ const userSchema = new Schema(
       required: true,
       minlength: 8
     },
+    Basket: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Basket'
+      }
+    ],
     friends: [
       {
         type: Schema.Types.ObjectId,
