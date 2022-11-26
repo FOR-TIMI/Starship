@@ -18,7 +18,6 @@ const postSchema = new Schema({
   },
   basketId: {
     type: String,
-    required: true,
   },
 
   createdAt: {
