@@ -13,6 +13,12 @@ db.once('open', async () => {
   await Post.deleteMany({});
 
   console.log('\n ----- Deleted all current Posts ----- \n ');
+  
+  //Delete all current posts
+  await Basket.deleteMany({});
+
+  console.log('\n ----- Deleted all current Baskets ----- \n ');
+
 
   // create user data
   const userData = [];
@@ -52,7 +58,7 @@ db.once('open', async () => {
 
   let createdPosts = [];
 
-  for(let i=0; i < 10; i++){
+  for(let i=0; i < 20; i++){
 
     /**
      * Make random 10 character titles for posts
@@ -119,11 +125,17 @@ db.once('open', async () => {
     )
   }
 
+ 
+
 console.log('\n ----- Added Comments ----- \n');
 
-// add Likes
 
-  for(let i=0; i < createdUsers.ops.length; i++){
+
+/**
+ *  Add Likes
+ * */ 
+
+  for(let i=0; i < 10; i++){
 
     /**
      * get a user from the createdUser array
@@ -152,39 +164,36 @@ console.log('\n ----- Added Comments ----- \n');
  
  //Create baskets
 
- for(let i=0; i <10; i++){
-  /**
-   * Make random baskets
-   */  
+let createdBaskets = [];
+
+   for(let i=0; i < 10; i++){
+
+     /**
+      * get a random user from the createdUser array
+      */
+     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
+     const { username, _id: userId} = createdUsers.ops[randomUserIndex];
+   
+ 
+    /**
+     * create one basket
+    */
+     const createdBasket = await Basket.create({ username });
     
-  /**
-   * get a random user from the createdUser array
-   */
-  const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-  const { username } = createdUsers.ops[randomUserIndex];
-
-    
-  /**
-   * get a random post from the createdPost array
-   */
-  const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
-  const { _id : postId } = createdPosts[randomPostIndex];
-
-  /**
-   * add comments to a Post
-   */
-  await Post.updateOne(
-    { _id: postId },
-    { $push: { comments: { commentText,username }}},
-    { runValidators: true }
-  )
-}
-
-console.log('\n ----- Added Comments ----- \n');
-
-
-
-
+     /**
+      * Add post id to the posts field in the user's data
+      */
+     await User.updateOne(
+        {_id: userId},
+        {$push: { baskets: createdBasket._id}}
+     )
+     /**
+      * Add to the list of created baskets
+      */
+     createdBaskets.push(createdBasket);
+   }
+ 
+ console.log('\n ----- Added Baskets ----- \n');
 
 
 

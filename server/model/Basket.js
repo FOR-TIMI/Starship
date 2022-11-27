@@ -11,6 +11,10 @@ const basketSchema = new Schema({
     default: Date.now,
     get: currentTimestamp => dateFormat(currentTimestamp)
   },
+  username: {
+    type : String,
+    required: true
+  },
   tickers: [tickerSchema],
 });
 
