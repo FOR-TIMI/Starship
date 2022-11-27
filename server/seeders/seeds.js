@@ -1,6 +1,6 @@
 const faker = require('faker')
 const db = require('../config/connection');
-const { User,Post } = require('../model');
+const { User,Post, Basket } = require('../model');
 
 db.once('open', async () => {
   
@@ -148,6 +148,42 @@ console.log('\n ----- Added Comments ----- \n');
   }
 
  console.log('\n ----- Added likes ----- \n');
+
+ 
+ //Create baskets
+
+ for(let i=0; i <10; i++){
+  /**
+   * Make random baskets
+   */  
+    
+  /**
+   * get a random user from the createdUser array
+   */
+  const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
+  const { username } = createdUsers.ops[randomUserIndex];
+
+    
+  /**
+   * get a random post from the createdPost array
+   */
+  const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
+  const { _id : postId } = createdPosts[randomPostIndex];
+
+  /**
+   * add comments to a Post
+   */
+  await Post.updateOne(
+    { _id: postId },
+    { $push: { comments: { commentText,username }}},
+    { runValidators: true }
+  )
+}
+
+console.log('\n ----- Added Comments ----- \n');
+
+
+
 
 
 
