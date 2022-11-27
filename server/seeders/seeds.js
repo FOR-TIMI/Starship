@@ -3,6 +3,7 @@ const db = require('../config/connection');
 const { User,Post, Basket } = require('../model');
 
 db.once('open', async () => {
+
   
   // Delete all current users
   await User.deleteMany({});
@@ -194,6 +195,63 @@ let createdBaskets = [];
    }
  
  console.log('\n ----- Added Baskets ----- \n');
+
+   /**
+    * Add Tickers to baskets
+    */
+  const tickerData = [
+      {
+      symbol: "NKN-USDT",
+      market: "crypto",
+      API: "kucoin"
+
+      },
+      {
+      symbol: "LOOM-BTC",
+      market: "crypto",
+      API: "kucoin"
+      },
+      {
+      symbol: "JUP-ETH",
+      market: "crypto",
+      API: "kucoin"
+  
+      },
+      {
+      symbol: "GEM-USDT",
+      market: "crypto",
+      API: "kucoin"
+      },
+
+]
+
+for(let i=0; i <10; i++){
+  /**
+   * Make random tickers from ticker data array
+   */
+  const randomTickerIndex = Math.floor(Math.random() * tickerData.length);
+  const { symbol, market, API } = tickerData[randomTickerIndex] 
+  
+    
+  /**
+   * get a random Basket from the createdBasket array
+   */
+  const randomBasketIndex = Math.floor(Math.random() * createdBaskets.length);
+  const { _id : basketId } = createdBaskets[randomBasketIndex];
+
+
+  /**
+   * add ticker to a Basket
+   */
+  await Basket.updateOne(
+    { _id: basketId },
+    { $push: { tickers : { symbol, market, API }}},
+    { runValidators: true }
+  )
+}
+
+console.log(`-----Added ticker data ----`)
+
 
 
 

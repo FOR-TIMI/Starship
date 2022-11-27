@@ -5,7 +5,7 @@ const tickerSchema = new Schema(
     // "symbol": "MHC-BTC"
     // "symbol": "LOKI-BTC"
     {
-      ticker: {
+      symbol: {
         type: String,
         required: true,
       },
