@@ -19,7 +19,6 @@ const postSchema = new Schema({
   basketId: {
     type: String,
   },
-
   createdAt: {
     type: Date,
     default: Date.now,

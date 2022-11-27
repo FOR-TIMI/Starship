@@ -7,11 +7,18 @@ db.once('open', async () => {
   // Delete all current users
   await User.deleteMany({});
 
+  console.log('\n ----- Deleted all current Users ----- \n ');
+  
+  //Delete all current posts
+  await Post.deleteMany({});
+
+  console.log('\n ----- Deleted all current Posts ----- \n ');
+
   // create user data
   const userData = [];
  
   // add 50 random users to userData array
-  for (let i = 0; i < 50; i += 1) {
+  for (let i = 0; i < 10; i += 1) {
     const username = faker.internet.userName();
     const email = faker.internet.email(username);
     const password = faker.internet.password();
@@ -25,7 +32,7 @@ db.once('open', async () => {
   console.log('\n ----- Added Users ----- \n ');
 
   // create friends
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; i < 20; i += 1) {
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
     const { _id: userId } = createdUsers.ops[randomUserIndex];
 
@@ -45,7 +52,7 @@ db.once('open', async () => {
 
   let createdPosts = [];
 
-  for(let i=0; i < 50; i++){
+  for(let i=0; i < 10; i++){
 
     /**
      * Make random 10 character titles for posts
@@ -57,6 +64,7 @@ db.once('open', async () => {
      */
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
     const { username, _id: userId} = createdUsers.ops[randomUserIndex];
+  
 
     /**
      * create a post
@@ -115,13 +123,13 @@ console.log('\n ----- Added Comments ----- \n');
 
 // add Likes
 
-  for(let i=0; i < 10; i++){
+  for(let i=0; i < createdUsers.ops.length; i++){
 
     /**
-     * get a random user from the createdUser array
+     * get a user from the createdUser array
      */
-    const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-    const { username } = createdUsers.ops[randomUserIndex];
+    const { username } = createdUsers.ops[i];
+   
 
     /**
      * get a random post from the createdPost array
