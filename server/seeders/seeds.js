@@ -1,17 +1,31 @@
 const faker = require('faker')
 const db = require('../config/connection');
-const { User,Post } = require('../model');
+const { User,Post, Basket } = require('../model');
 
 db.once('open', async () => {
+
   
   // Delete all current users
   await User.deleteMany({});
+
+  console.log('\n ----- Deleted all current Users ----- \n ');
+  
+  //Delete all current posts
+  await Post.deleteMany({});
+
+  console.log('\n ----- Deleted all current Posts ----- \n ');
+  
+  //Delete all current posts
+  await Basket.deleteMany({});
+
+  console.log('\n ----- Deleted all current Baskets ----- \n ');
+
 
   // create user data
   const userData = [];
  
   // add 50 random users to userData array
-  for (let i = 0; i < 50; i += 1) {
+  for (let i = 0; i < 10; i += 1) {
     const username = faker.internet.userName();
     const email = faker.internet.email(username);
     const password = faker.internet.password();
@@ -25,7 +39,7 @@ db.once('open', async () => {
   console.log('\n ----- Added Users ----- \n ');
 
   // create friends
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; i < 20; i += 1) {
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
     const { _id: userId } = createdUsers.ops[randomUserIndex];
 
@@ -45,7 +59,7 @@ db.once('open', async () => {
 
   let createdPosts = [];
 
-  for(let i=0; i < 50; i++){
+  for(let i=0; i < 20; i++){
 
     /**
      * Make random 10 character titles for posts
@@ -57,6 +71,7 @@ db.once('open', async () => {
      */
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
     const { username, _id: userId} = createdUsers.ops[randomUserIndex];
+  
 
     /**
      * create a post
@@ -111,17 +126,23 @@ db.once('open', async () => {
     )
   }
 
+ 
+
 console.log('\n ----- Added Comments ----- \n');
 
-// add Likes
+
+
+/**
+ *  Add Likes
+ * */ 
 
   for(let i=0; i < 10; i++){
 
     /**
-     * get a random user from the createdUser array
+     * get a user from the createdUser array
      */
-    const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-    const { username } = createdUsers.ops[randomUserIndex];
+    const { username } = createdUsers.ops[i];
+   
 
     /**
      * get a random post from the createdPost array
@@ -140,6 +161,96 @@ console.log('\n ----- Added Comments ----- \n');
   }
 
  console.log('\n ----- Added likes ----- \n');
+
+ 
+ //Create baskets
+
+let createdBaskets = [];
+
+   for(let i=0; i < 10; i++){
+
+     /**
+      * get a random user from the createdUser array
+      */
+     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
+     const { username, _id: userId} = createdUsers.ops[randomUserIndex];
+   
+ 
+    /**
+     * create one basket
+    */
+     const createdBasket = await Basket.create({ username });
+    
+     /**
+      * Add post id to the posts field in the user's data
+      */
+     await User.updateOne(
+        {_id: userId},
+        {$push: { baskets: createdBasket._id}}
+     )
+     /**
+      * Add to the list of created baskets
+      */
+     createdBaskets.push(createdBasket);
+   }
+ 
+ console.log('\n ----- Added Baskets ----- \n');
+
+   /**
+    * Add Tickers to baskets
+    */
+  const tickerData = [
+      {
+      symbol: "NKN-USDT",
+      market: "crypto",
+      API: "kucoin"
+
+      },
+      {
+      symbol: "LOOM-BTC",
+      market: "crypto",
+      API: "kucoin"
+      },
+      {
+      symbol: "JUP-ETH",
+      market: "crypto",
+      API: "kucoin"
+  
+      },
+      {
+      symbol: "GEM-USDT",
+      market: "crypto",
+      API: "kucoin"
+      },
+
+]
+
+for(let i=0; i <10; i++){
+  /**
+   * Make random tickers from ticker data array
+   */
+  const randomTickerIndex = Math.floor(Math.random() * tickerData.length);
+  const { symbol, market, API } = tickerData[randomTickerIndex] 
+  
+    
+  /**
+   * get a random Basket from the createdBasket array
+   */
+  const randomBasketIndex = Math.floor(Math.random() * createdBaskets.length);
+  const { _id : basketId } = createdBaskets[randomBasketIndex];
+
+
+  /**
+   * add ticker to a Basket
+   */
+  await Basket.updateOne(
+    { _id: basketId },
+    { $push: { tickers : { symbol, market, API }}},
+    { runValidators: true }
+  )
+}
+
+console.log(`-----Added ticker data ----`)
 
 
 

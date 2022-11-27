@@ -16,7 +16,7 @@ const commentSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (timeStamp) => dateFormat(timeStamp),
+      get: timeStamp => dateFormat(timeStamp),
     },
   },
   {

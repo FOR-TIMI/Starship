@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const dateFormat = require('../utils/dateFormat')
 
 
 const tickerSchema = require("./Ticker");
@@ -8,6 +9,11 @@ const basketSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+    get: currentTimestamp => dateFormat(currentTimestamp)
+  },
+  username: {
+    type : String,
+    required: true
   },
   tickers: [tickerSchema],
 });

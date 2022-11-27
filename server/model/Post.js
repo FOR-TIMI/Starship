@@ -19,15 +19,14 @@ const postSchema = new Schema({
   basketId: {
     type: String,
   },
-
   createdAt: {
     type: Date,
     default: Date.now,
     get: timeStamp => dateFormat(timeStamp)
   },
 
-  likes: [likeSchema],
-  comments: [commentSchema]
+  comments: [commentSchema],
+  likes: [likeSchema]
 },
 {
     toJSON: {
