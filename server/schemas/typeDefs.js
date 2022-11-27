@@ -57,8 +57,8 @@ const typeDefs = gql`
 
     type Query {
         posts: [Post]
-        friendsPosts(_id: ID!): [Post]
         post(_id: ID!): Post
+        friendsPosts(_id: ID!): [Post]
         user(username: String!): User
         basket(_id: ID!): Basket
     }
@@ -67,12 +67,13 @@ const typeDefs = gql`
         login(email: String!, password: String!): Auth
         addUser(username: String!, email: String!, password: String!): Auth
         addTicker(basketId: ID!, ticker: String!): Basket
-        addBasket(tickers: [Ticker]):Basket
+        addBasket(tickerId: ID!):Basket
         addPost(title: String): Post
         addComment(postId: ID!, comment: String!): Post 
         addFriend(friendId: ID!): User
     }
 `;
+
 
 //addBasket(basket:[Basket] ): Basket
 //exporting the typeDefs
