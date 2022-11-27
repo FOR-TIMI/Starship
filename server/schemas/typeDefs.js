@@ -67,12 +67,13 @@ const typeDefs = gql`
         login(email: String!, password: String!): Auth
         addUser(username: String!, email: String!, password: String!): Auth
         addTicker(basketId: ID!, ticker: String!): Basket
-        addBasket(basketId: ID!): Basket
-        addPost(username: String!, title: String): Post
+        addBasket(tickers: [Ticker]):Basket
+        addPost(title: String): Post
         addComment(postId: ID!, comment: String!): Post 
         addFriend(friendId: ID!): User
     }
 `;
 
+//addBasket(basket:[Basket] ): Basket
 //exporting the typeDefs
 module.exports = typeDefs;
