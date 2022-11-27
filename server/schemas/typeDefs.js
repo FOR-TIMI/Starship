@@ -22,7 +22,8 @@ const typeDefs = gql`
         basketId: String
         likes: [Like]
         comments: [Comment]
-        
+        commentCount: Int
+        likeCount: Int
     }
 
     type Comment{
@@ -35,6 +36,7 @@ const typeDefs = gql`
     type Like{
         _id: ID
         username: String
+        likeCount: Int
     }
     
     type Basket{
