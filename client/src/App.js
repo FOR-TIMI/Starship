@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import Signup from "./pages/Signup.js"
 import Login from "./pages/Login.js"
+import Signup2 from "./pages/Signup2.js"
 import React, { useEffect } from "react"
 
 
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/signup" element={<Signup />} />
+          <Route exact path="/signup2" element={<Signup2 />} />
         </Routes >
       </BrowserRouter>
     </ApolloProvider>
