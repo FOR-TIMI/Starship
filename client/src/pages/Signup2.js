@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useMutation } from '@apollo/client';
 
-import { LOGIN } from "../utils/mutations"
+import { ADD_USER } from "../utils/mutations"
 
 function Copyright(props) {
   return (
@@ -31,10 +31,10 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function Signup() {
 
 
-    const [login, { data, loading, error }] = useMutation(LOGIN)
+    const [addUser, { data, loading, error }] = useMutation(ADD_USER)
 
 
   const handleSubmit = async (event) => {
@@ -42,18 +42,18 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
 
     const vars = {
+        username: data.get('username'),
         email: data.get('email'),
         password: data.get('password'),
     }
-    console.log(vars)
 
-    let response = login({
+    let response = addUser({
         variables: vars
     })
 
     let res = await response
 
-    localStorage.setItem("jwt", res.data.login.token)
+    localStorage.setItem("jwt", res.data.addUser.token)
 
   };
 
@@ -73,9 +73,18 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign up
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="username"
+              label="Username"
+              id="username"
+              autoComplete="username"
+            />
             <TextField
               margin="normal"
               required
