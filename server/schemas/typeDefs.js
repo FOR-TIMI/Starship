@@ -6,7 +6,7 @@ const typeDefs = gql`
     
     
     type Query {
-        posts: [Post]
+        posts(username: String): [Post]
         post(_id: ID!): Post
         friendsPosts(_id: ID!): [Post]
         user(username: String!): User
@@ -21,7 +21,10 @@ const typeDefs = gql`
         email: String
         friendCount: Int
         baskets: [Basket]
-        friends: [User]
+        followers: [User]
+        followerCount: Int
+        followings: [User]
+        followingCount: Int
         posts: [Post]
     }
 

@@ -11,7 +11,7 @@ const resolvers = {
      return User.find()
                 .select('-__v -password')
                 .populate('followers')
-                .populate('following')
+                .populate('followings')
                 .populate('posts')
                 .populate('baskets')
    },
@@ -21,20 +21,45 @@ const resolvers = {
      return User.findOne({ username })
                .select('-__v -password')
                .populate('followers')
-               .populate('following')
+               .populate({ 
+                path: 'followings',
+                populate: {
+                  path: 'posts',
+                } 
+              })
                .populate('posts')
                .populate('baskets')
    },
 
     //Get all posts
-    posts: async(parent, { username }) => {
+    posts: async(parent, { username , userId}) => {
 
       /**
        * used to search for all posts related to a user or all posts
        */
       const params = username ? { username }: {};
+      
+      let currentUser = params.username
 
-      return Post.find(params).sort({createdAt: -1});
+       if(currentUser){
+          const userData = await User.find(params)
+          return  Post.aggregate([
+            {
+                $lookup:
+                {
+                    from: "users",
+                    localField: "userId",
+                    foreignField: "followings",
+                    as: "relationship"
+                }
+            },
+            { "$match": { "relationship.0.userId": userId } }
+        ]);
+          return Post.find({ userId: { $in: userData.followings } });
+       }
+
+       return Post.find(params).sort({createdAt: -1});
+      
     },
  
     //To get One post
@@ -55,14 +80,16 @@ const resolvers = {
         return Basket.findOne({_id})
     },
 
+  
+
 
    //Get friends posts
-   friendPosts: async(parent, { username }) => {
-      return User.findOne({ username })
-  ``  
+  //  friendPosts: async(parent, { username }) => {
+  //     return User.findOne({ username })
+  // ``  
       
 
-   }
+  //  }
     
 
 
