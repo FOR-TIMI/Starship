@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import Signup from "./pages/Signup.js"
 import Login from "./pages/Login.js"
+import React from "react"
 
 
 const client = new ApolloClient({
@@ -12,9 +13,11 @@ const client = new ApolloClient({
 
 
 function App() {
+
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>
+
         <Routes>
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/signup" element={<Signup />} />
