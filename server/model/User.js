@@ -26,7 +26,13 @@ const userSchema = new Schema(
         ref: "Basket",
       },
     ],
-    friends: [
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      }
+    ],
+    followings: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -68,11 +74,18 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-//current friend count
+//Number of followers the user has
 userSchema
-  .virtual('friendCount')
+  .virtual('followerCount')
   .get( function() {
-  return this.friends.length;
+  return this.followers.length;
+  });
+
+// Number of people the user id currently following
+userSchema
+  .virtual('followingCount')
+  .get( function() {
+  return this.followings.length;
   });
 
 const User = model("User", userSchema);

@@ -5,7 +5,28 @@ const { AuthenticationError } = require('apollo-server-express');
 
 const resolvers = {
   Query: {
-    
+
+   //Get all users => friends,posts, baskets
+   users: async() => {
+     return User.find()
+                .select('-__v -password')
+                .populate('followers')
+                .populate('following')
+                .populate('posts')
+                .populate('baskets')
+   },
+
+   //Get a user by username
+   user: async(parent, { username }) => {
+     return User.findOne({ username })
+               .select('-__v -password')
+               .populate('followers')
+               .populate('following')
+               .populate('posts')
+               .populate('baskets')
+   },
+
+    //Get all posts
     posts: async(parent, { username }) => {
 
       /**
@@ -14,7 +35,36 @@ const resolvers = {
       const params = username ? { username }: {};
 
       return Post.find(params).sort({createdAt: -1});
-    }
+    },
+ 
+    //To get One post
+    post: async(parent, {_id}) => {
+       return Post.findOne({_id})
+    },
+
+    //Get all Baskets
+    baskets: async(parent, { username }) => {
+
+      const params = username ? { username } : {};
+
+      return Basket.find(params).sort({createdAt: -1});
+    },
+
+    //Get one Basket
+    basket: async(parent, {_id}) => {
+        return Basket.findOne({_id})
+    },
+
+
+   //Get friends posts
+   friendPosts: async(parent, { username }) => {
+      return User.findOne({ username })
+  ``  
+      
+
+   }
+    
+
 
     // posts: async () => {
     //   return await Post.find();
