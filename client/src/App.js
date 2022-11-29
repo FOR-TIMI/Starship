@@ -1,10 +1,13 @@
-import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import Signup from "./pages/Signup.js"
-import Login from "./pages/Login.js"
-import Dashboard from "./pages/Dashboard.js"
-import React, { useEffect } from "react"
+// routes
+import Router from './routes';
+// theme
+import ThemeProvider from './theme';
+// components
+import ScrollToTop from './components/scroll-to-top';
+import { StyledChart } from './components/chart';
+
+
 
 
 const client = new ApolloClient({
@@ -13,22 +16,14 @@ const client = new ApolloClient({
 });
 
 
-function App() {
-
-
+export default function App() {
   return (
     <ApolloProvider client={client}>
-      <BrowserRouter>
-
-
-        <Routes>
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/signup" element={<Signup />} />
-          <Route exact path="/dashboard" element={<Dashboard />} />
-        </Routes >
-      </BrowserRouter>
+      <ThemeProvider>
+        <ScrollToTop />
+        <StyledChart />
+        <Router />
+      </ThemeProvider>
     </ApolloProvider>
   );
 }
-
-export default App;
