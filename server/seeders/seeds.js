@@ -87,7 +87,7 @@ db.once('open', async () => {
     /**
      * create a post
      */
-    const createdPost = await Post.create({ title, username });
+    const createdPost = await Post.create({ title, username, userId });
    
     /**
      * Add post id to the posts field in the user's data

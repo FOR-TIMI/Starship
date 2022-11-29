@@ -21,44 +21,29 @@ const resolvers = {
      return User.findOne({ username })
                .select('-__v -password')
                .populate('followers')
-               .populate({ 
-                path: 'followings',
-                populate: {
-                  path: 'posts',
-                } 
-              })
+               .populate('followings')
                .populate('posts')
                .populate('baskets')
    },
 
     //Get all posts
-    posts: async(parent, { username , userId}) => {
+    posts: async(parent, { followings }) => {
 
       /**
        * used to search for all posts related to a user or all posts
        */
-      const params = username ? { username }: {};
+      const params = followings ? { followings }: {};
       
-      let currentUser = params.username
+      if(followings){
+        try{
+          return Post.find( { userId : { $in : followings } })
+                     .sort({ createdAt: -1})
+        } catch{
+           return Post.find(params).sort({createdAt: -1});
+        }
+      }
 
-       if(currentUser){
-          const userData = await User.find(params)
-          return  Post.aggregate([
-            {
-                $lookup:
-                {
-                    from: "users",
-                    localField: "userId",
-                    foreignField: "followings",
-                    as: "relationship"
-                }
-            },
-            { "$match": { "relationship.0.userId": userId } }
-        ]);
-          return Post.find({ userId: { $in: userData.followings } });
-       }
-
-       return Post.find(params).sort({createdAt: -1});
+      return  Post.find(params).sort({createdAt: -1});
       
     },
  
