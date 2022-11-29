@@ -42,7 +42,7 @@ const resolvers = {
    },
 
     //Get all posts
-    posts: async(parent, { username }, { user }) => {
+    posts: async(parent, { username }, context) => {
 
       /**
        * used to search for all posts related to a user or all posts
@@ -53,12 +53,23 @@ const resolvers = {
       /**
        * If a user is signed in, it gets the following id and trys to find all the posts
        */
-      
-      if (user) {
-          try{
-            return Post.find( { userId : { $in : user.followings } })
-                      .sort({ createdAt: -1})
 
+      
+      if (context.user) {
+          try{
+            const [{followings}] = await User.find({username: context.user.username});
+
+            if(followings.length){
+
+                const friendsPosts = await Post.find( { userId : { $in : followings } })
+                .sort({ createdAt: -1})
+               
+                const allPosts = await Post.find(params) .sort({ createdAt: -1})
+
+                return [...friendsPosts,...allPosts]
+            }
+
+            return Post.find(params).sort({createdAt: -1});
           } catch{
             return Post.find(params).sort({createdAt: -1}); // if user does not have any friends
         }
@@ -165,6 +176,7 @@ const resolvers = {
           await User.findOneAndUpdate(
             {_id : followingId},
             {$addToSet: { followers: context.user._id } },
+            { new: true }
           )
 
           //update my following list and userImFollowing's follower list
@@ -187,21 +199,21 @@ const resolvers = {
       if (context.user) {
         const post = await Post.create({ ...args, username: context.user.username, userId: context.user._id })
 
-        const updatedUser = await User.findOneAndUpdate(
+        await User.findOneAndUpdate(
           { _id: context.user._id },
           { $push: { posts: post._id } },
           { new: true }
         )
-        return updatedUser;
+        return post;
       }
       throw new AuthenticationError("You need to be logged in!")
     },
 
-    addComment: async (parent, { postId, comment }, context) => {
+    addComment: async (parent, { postId, commentText }, context) => {
       if (context.user) {
         const updatedPost = await Post.findOneAndUpdate(
           { _id: postId },
-          { $push: { comments: { comment, username: context.user.username } } }
+          { $push: { comments: { commentText, username: context.user.username } } }
         )
         return updatedPost;
       }

@@ -77,7 +77,7 @@ const typeDefs = gql`
         addTicker(basketId: ID!, ticker: String!): Basket
         addBasket(tickerId: ID!):Basket
         addPost(title: String!): Post
-        addComment(postId: ID!, comment: String!): Post 
+        addComment(postId: ID!, commentText: String!): Post 
         addFollowing(followingId: ID!): User
     }
 `;
