@@ -10,6 +10,7 @@ const typeDefs = gql`
         users: [User]
         basket(_id: ID!): Basket
         baskets: [Basket]
+        signedInUser: User
     }
 
     type User{
@@ -75,7 +76,7 @@ const typeDefs = gql`
         addUser(username: String!, email: String!, password: String!): Auth
         addTicker(basketId: ID!, ticker: String!): Basket
         addBasket(tickerId: ID!):Basket
-        addPost(title: String): Post
+        addPost(title: String!): Post
         addComment(postId: ID!, comment: String!): Post 
         addFollowing(followingId: ID!): User
     }

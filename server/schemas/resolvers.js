@@ -6,6 +6,21 @@ const { AuthenticationError } = require('apollo-server-express');
 const resolvers = {
   Query: {
 
+    //Get signedIn User
+  signedInUser: async(parent, args,context) => {
+    if(context.user){
+      const userData = await User.findOne({_id: context.user._id})
+      .select('-__v -password')
+      .populate('followers')
+      .populate('followings')
+      .populate('posts')
+      .populate('baskets')
+
+        return userData
+    }
+    throw new AuthenticationError("You're currently not signed in")
+  },
+
    //Get all users => friends,posts, baskets
    users: async() => {
      return User.find()
@@ -27,13 +42,13 @@ const resolvers = {
    },
 
     //Get all posts
-    posts: async(parent, args, { user }) => {
+    posts: async(parent, { username }, { user }) => {
 
       /**
        * used to search for all posts related to a user or all posts
        * if the user has followers, it should return all the posts of the followers from the most recent post
        */
-      const params = followings ? { followings }: {};
+      const params = username ? { username }: {};
 
       /**
        * If a user is signed in, it gets the following id and trys to find all the posts
@@ -170,7 +185,7 @@ const resolvers = {
     addPost: async (parent, args, context) => {
 
       if (context.user) {
-        const post = await Post.create({ ...args, username: context.user.username, userId: context.user.userId })
+        const post = await Post.create({ ...args, username: context.user.username, userId: context.user._id })
 
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
@@ -181,7 +196,7 @@ const resolvers = {
       }
       throw new AuthenticationError("You need to be logged in!")
     },
-    
+
     addComment: async (parent, { postId, comment }, context) => {
       if (context.user) {
         const updatedPost = await Post.findOneAndUpdate(
