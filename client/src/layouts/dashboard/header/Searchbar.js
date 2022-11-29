@@ -1,11 +1,13 @@
 import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
+import { Input,Autocomplete,TextField,Popper, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
+import qqqsymbols from '../../../utils/Data/symbolsList';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // component
 import Iconify from '../../../components/iconify';
+
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +31,12 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 5),
   },
 }));
+const StyledPopper = styled((props) => <Popper placement="bottom-start" {...props} />)({
+  width: ' max-content !important',
+  margin: '0 0 0 30px !important'
+});
+
+
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +62,34 @@ export default function Searchbar() {
 
         <Slide direction="down" in={open} mountOnEnter unmountOnExit>
           <StyledSearchbar>
-            <Input
+          <Autocomplete
+          sx={{ mr: 2, fontWeight: 'fontWeightBold' }}
+          fullWidth
+          autoFocus
+          disableUnderline
+      autoHighlight
+      popupIcon={null}
+      PopperComponent={StyledPopper}
+      getOptionLabel={(post) => post}
+      options={qqqsymbols}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          
+          placeholder="Search post..."
+          InputProps={{
+            ...params.InputProps,
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon={'eva:search-fill'} sx={{ ml: 5, width: 20, height: 20, color: 'text.disabled' }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+      )}
+    />
+            {/* <Input
               autoFocus
               fullWidth
               disableUnderline
@@ -65,7 +100,7 @@ export default function Searchbar() {
                 </InputAdornment>
               }
               sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
-            />
+            /> */}
             <Button variant="contained" onClick={handleClose}>
               Search
             </Button>
