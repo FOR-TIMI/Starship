@@ -2,13 +2,10 @@
 const { gql } = require("apollo-server-express");
 
 //creating typeDefs
-const typeDefs = gql`
-    
-    
+const typeDefs = gql`  
     type Query {
-        posts(followings:[ID]): [Post]
+        posts: [Post]
         post(_id: ID!): Post
-        friendsPosts(_id: ID!): [Post]
         user(username: String!): User
         users: [User]
         basket(_id: ID!): Basket
@@ -80,7 +77,7 @@ const typeDefs = gql`
         addBasket(tickerId: ID!):Basket
         addPost(title: String): Post
         addComment(postId: ID!, comment: String!): Post 
-        addFriend(friendId: ID!): User
+        addFollowing(followingId: ID!): User
     }
 `;
 
