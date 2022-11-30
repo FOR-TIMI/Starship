@@ -53,6 +53,34 @@ const typeDefs = gql`
     user: User
   }
 
+  type Bardata {
+    Timestamp: String
+    OpenPrice: Float
+    HighPrice: Float
+    LowPrice: Float
+    ClosePrice: Float
+    Volume: Float
+    TradeCount: Float
+    VWAP: Float
+  }
+
+  type Bardata2 {
+    Timestamp: String
+    OpenPrice: String
+    HighPrice: String
+    LowPrice: String
+    ClosePrice: String
+    Volume: String
+    TradeCount: String
+    VWAP: String
+    Symbol: String
+  }
+
+  type Barsdata {
+    Name: String
+    Barsdata: [Bardata2]
+  }
+
   type Query {
     users: [User]
     baskets: [Basket]
@@ -61,6 +89,18 @@ const typeDefs = gql`
     friendsPosts(_id: ID!): [Post]
     user(username: String!): User
     basket(_id: ID!): Basket
+    barDataQuery(
+      symbol: String!
+      timeframe: String!
+      limit: Int!
+      days: Int!
+    ): [Bardata]
+    barsDataQuery(
+      symbols: [String]!
+      timeframe: String!
+      limit: Int!
+      days: Int!
+    ): [Barsdata]
   }
 
   type Mutation {

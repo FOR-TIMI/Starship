@@ -1,3 +1,4 @@
+const {getBarData, getBarsData} = require("../utils/API_calls/queries");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken, authMiddleware } = require("../utils/auth");
 const { User, Basket, Like, Post, Ticker, Comment } = require("../model");
@@ -5,8 +6,35 @@ const { User, Basket, Like, Post, Ticker, Comment } = require("../model");
 const resolvers = {
   Query: {
     posts: async () => {
+      let data = await Post.find().populate("comments").populate("likes");
       return await Post.find().populate("comments").populate("likes");
     },
+
+    barDataQuery: async (parent, { symbol, timeframe, limit, days }) => {
+      
+      
+      let data = await getBarData(symbol, timeframe, limit, days);
+      // console.log(data);
+      return data;
+    },
+
+    barsDataQuery:async (parent, { symbols, timeframe, limit, days }) => {
+      let data = await getBarsData(symbols, timeframe, limit, days);
+      console.log(data);
+      return data;
+    },
+
+    // dataQuery: async () => {
+    //     let test = {name:"appl"};
+    //     // let data = await getBarData("AAPL", "1Min", 100, 2);
+    //     console.log(data);
+    //     return test;
+    //   },
+
+
+
+    
+
 
     // We are putting this issue on hold due to the complexity of this function.
     // friendsPosts: async (parent, { _id }) => {
