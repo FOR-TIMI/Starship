@@ -2,34 +2,32 @@
 const { gql } = require("apollo-server-express");
 
 //creating typeDefs
-const typeDefs = gql`  
-   
+const typeDefs = gql`
+  type User {
+    _id: ID
+    username: String
+    email: String
+    friendCount: Int
+    baskets: [Basket]
+    followers: [User]
+    followerCount: Int
+    followings: [User]
+    followingCount: Int
+    posts: [Post]
+  }
 
-    type User{
-        _id: ID
-        username: String
-        email: String
-        friendCount: Int
-        baskets: [Basket]
-        followers: [User]
-        followerCount: Int
-        followings: [User]
-        followingCount: Int
-        posts: [Post]
-    }
-
-    type Post{
-        _id: ID
-        userId: ID
-        title: String
-        createdAt: String
-        username: String
-        basketId: String
-        likes: [Like]
-        comments: [Comment]
-        commentCount: Int
-        likeCount: Int
-    }
+  type Post {
+    _id: ID
+    userId: ID
+    title: String
+    createdAt: String
+    username: String
+    basketId: String
+    likes: [Like]
+    comments: [Comment]
+    commentCount: Int
+    likeCount: Int
+  }
 
   type Comment {
     _id: ID
@@ -38,30 +36,29 @@ const typeDefs = gql`
     createdAt: String
   }
 
-    type Like{
-        _id: ID
-        username: String
-        likeCount: Int
-    }
-    
-    type Basket{
-        _id: ID
-        createdAt: String
-        tickers: [Ticker]
-    }
+  type Like {
+    _id: ID
+    username: String
+    likeCount: Int
+  }
 
-    type Ticker{
-        _id: ID
-        symbol: String
-        market: String
-        API: String
-    }
+  type Basket {
+    _id: ID
+    createdAt: String
+    tickers: [Ticker]
+  }
+
+  type Ticker {
+    _id: ID
+    symbol: String
+    market: String
+    API: String
+  }
 
   type Auth {
     token: ID!
     user: User
   }
-
 
   type Bardata {
     Timestamp: String
@@ -76,13 +73,13 @@ const typeDefs = gql`
 
   type Bardata2 {
     Timestamp: String
-    OpenPrice: String
-    HighPrice: String
-    LowPrice: String
-    ClosePrice: String
-    Volume: String
-    TradeCount: String
-    VWAP: String
+    OpenPrice: Float
+    HighPrice: Float
+    LowPrice: Float
+    ClosePrice: Float
+    Volume: Int
+    TradeCount: Int
+    VWAP: Float
     Symbol: String
   }
 
@@ -114,21 +111,16 @@ const typeDefs = gql`
     ): [Barsdata]
   }
 
-
-
-
-
-
-    type Mutation {
-        login(email: String!, password: String!): Auth
-        addUser(username: String!, email: String!, password: String!): Auth
-        addTicker(basketId: ID!, ticker: String!): Basket
-        addBasket(tickerId: ID!):Basket
-        addPost(title: String!): Post
-        addComment(postId: ID!, commentText: String!): Post 
-        addFollowing(followingId: ID!): User
-        addLike(postId: ID!): Like
-    }
+  type Mutation {
+    login(email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
+    addTicker(basketId: ID!, ticker: String!): Basket
+    addBasket(tickerId: ID!): Basket
+    addPost(title: String!): Post
+    addComment(postId: ID!, commentText: String!): Post
+    addFollowing(followingId: ID!): User
+    addLike(postId: ID!): Like
+  }
 `;
 
 //addBasket(basket:[Basket] ): Basket
