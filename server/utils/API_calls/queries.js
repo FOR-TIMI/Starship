@@ -35,14 +35,11 @@ async function getBarData(symbol, timeframe, limit, days) {
       }
       barsData.push(barsDataParsed);
     }
-   console.table(barsData);
-
+    console.table(barsData);
 
     resolve(barsData);
   });
 }
-
-
 
 async function getBarsData(symbol, timeframe, limit, days) {
   return new Promise(async (resolve) => {
@@ -55,16 +52,32 @@ async function getBarsData(symbol, timeframe, limit, days) {
       timeframe: timeframe, // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
       limit: limit, // I have tested this upto 100000
     });
-    let barsData = {};
-    console.log("Bars data coming: ", bars);
+
+    const allBars = [];
     for (const b of bars) {
+      let barsData = {};
       barsData["Name"] = b[0];
-      barsData["Barsdata"] = b[1];
+      barsData["Barsdata"] = [];
+
+      let barsDataParsed = {};
+      console.log(b[1], "this b1");
+      for (const i of b[1]) {
+        for (let key in i) {
+          if (key == "Symbol" || key == "Timestamp") {
+            barsDataParsed[key] = i[key];
+          } else if (key == "TradeCount" || key == "Volume") {
+            barsDataParsed[key] = parseInt(i[key]);
+          } else {
+            barsDataParsed[key] = parseFloat(i[key]);
+          }
+        }
+        barsData["Barsdata"].push(barsDataParsed);
+      }
+
+      allBars.push(barsData);
     }
 
-    console.log("sending to front end", barsData);
-
-    resolve(barsData);
+    resolve(allBars);
   });
 }
 module.exports = { getBarData, getBarsData };
