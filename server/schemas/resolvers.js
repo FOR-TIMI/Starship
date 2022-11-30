@@ -9,10 +9,7 @@ const resolvers = {
   Query: {
 
 
-posts: async () => {
-      let data = await Post.find().populate("comments").populate("likes");
-      return await Post.find().populate("comments").populate("likes");
-    },
+
 
     barDataQuery: async (parent, { symbol, timeframe, limit, days }) => {
       
@@ -51,14 +48,8 @@ posts: async () => {
     //   return posts;
     // },
     
-    post: async (parent, { _id }) => {
-      return await Post.findById(_id).populate("comments").populate("likes");
-    },
-    user: async (parent, { username }) => {
-      return await User.findOne({ username })
-        .populate("basket")
-        .populate("friends")
-        .populate("posts");
+    
+   
 
     //Get signedIn User
   signedInUser: async(parent, args,context) => {
@@ -94,6 +85,9 @@ posts: async () => {
                .populate('posts')
                .populate('baskets')
    },
+
+  
+ 
 
     //Get all posts
     posts: async(parent, { username }, context) => {
@@ -133,11 +127,12 @@ posts: async () => {
       
 
     },
- 
-    //To get One post
-    post: async(parent, {_id}) => {
-       return Post.findOne({_id})
+
+    post: async (parent, { _id }) => {
+      return await Post.findById(_id).populate("comments").populate("likes");
     },
+ 
+ 
 
     //Get all Baskets
     baskets: async(parent, { username }) => {
