@@ -32,31 +32,42 @@ db.once('open', async () => {
 
     userData.push({ username, email, password });
   }
-
+ 
+  // FOllowers are people following me. When they follow me, i add their user id into my follower array
+  // Following are people i follow.
   
   const createdUsers = await User.collection.insertMany(userData);
   
   console.log('\n ----- Added Users ----- \n ');
 
-  // create friends
-  for (let i = 0; i < 20; i += 1) {
+  // create followers and following
+  for(let i=0; i < 30; i++){
+
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-    const { _id: userId } = createdUsers.ops[randomUserIndex];
+    const {  _id: userId  } = createdUsers.ops[randomUserIndex];
+ 
+    //Get random people to follow
+    const randomFollowingIndex = Math.floor(Math.random() * createdUsers.ops.length);
+    
+    
+    let followingId = createdUsers.ops[randomFollowingIndex]
+    let followerId = userId
+ 
 
-    let friendId = userId;
-
-    while (friendId === userId) {
-      const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-      friendId = createdUsers.ops[randomUserIndex];
+    while(followerId === userId){
+      const randomFollowerIndex = Math.floor(Math.random() * createdUsers.ops.length);
+      followerId = createdUsers.ops[randomFollowerIndex]
     }
 
-    await User.updateOne({ _id: userId }, { $addToSet: { friends: friendId } });
+    await User.updateOne({ _id: userId }, { $addToSet: { followers: followerId, followings : followingId  } });
   }
   
-  console.log('\n ----- Added Friends ----- \n');
+  console.log('\n ----- Added Followers and following ----- \n');
+
+
+  
 
   // create Posts
-
   let createdPosts = [];
 
   for(let i=0; i < 20; i++){
@@ -76,7 +87,7 @@ db.once('open', async () => {
     /**
      * create a post
      */
-    const createdPost = await Post.create({ title, username });
+    const createdPost = await Post.create({ title, username, userId });
    
     /**
      * Add post id to the posts field in the user's data
@@ -151,11 +162,11 @@ console.log('\n ----- Added Comments ----- \n');
     const { _id : postId } = createdPosts[randomPostIndex];
     
     /**
-     * Add like to a post
+     * Add unique like to a post
      */
     await Post.updateOne(
       { _id: postId },
-      { $push: { likes : { username }}},
+      { $addToSet : { likes : { username }}},
       { runValidators: true }
     )
   }
@@ -250,7 +261,7 @@ for(let i=0; i <10; i++){
   )
 }
 
-console.log(`-----Added ticker data ----`)
+ console.log(`-----Added ticker data ----`)
 
 
 
