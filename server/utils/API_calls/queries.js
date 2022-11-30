@@ -5,8 +5,8 @@ require("dotenv").config();
 const moment = require("moment");
 
 const alpaca = new Alpaca({
-  keyId: "PKRXN1LVUW50X67PGV34",
-  secretKey: "Iy2ZEcBvsXH03LxQfdMezTfJY10B8ye3lQeeJzag",
+  keyId: process.env.KEYID,
+  secretKey: process.env.SECRET_KEY,
 });
 
 async function getBarData(symbol, timeframe, limit, days) {
