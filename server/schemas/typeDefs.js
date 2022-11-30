@@ -3,15 +3,7 @@ const { gql } = require("apollo-server-express");
 
 //creating typeDefs
 const typeDefs = gql`  
-    type Query {
-        posts: [Post]
-        post(_id: ID!): Post
-        user(username: String!): User
-        users: [User]
-        basket(_id: ID!): Basket
-        baskets: [Basket]
-        signedInUser: User
-    }
+   
 
     type User{
         _id: ID
@@ -69,6 +61,62 @@ const typeDefs = gql`
     token: ID!
     user: User
   }
+
+
+  type Bardata {
+    Timestamp: String
+    OpenPrice: Float
+    HighPrice: Float
+    LowPrice: Float
+    ClosePrice: Float
+    Volume: Float
+    TradeCount: Float
+    VWAP: Float
+  }
+
+  type Bardata2 {
+    Timestamp: String
+    OpenPrice: String
+    HighPrice: String
+    LowPrice: String
+    ClosePrice: String
+    Volume: String
+    TradeCount: String
+    VWAP: String
+    Symbol: String
+  }
+
+  type Barsdata {
+    Name: String
+    Barsdata: [Bardata2]
+  }
+
+  type Query {
+    users: [User]
+    baskets: [Basket]
+    posts: [Post]
+    signedInUser: User
+    post(_id: ID!): Post
+    friendsPosts(_id: ID!): [Post]
+    user(username: String!): User
+    basket(_id: ID!): Basket
+    barDataQuery(
+      symbol: String!
+      timeframe: String!
+      limit: Int!
+      days: Int!
+    ): [Bardata]
+    barsDataQuery(
+      symbols: [String]!
+      timeframe: String!
+      limit: Int!
+      days: Int!
+    ): [Barsdata]
+  }
+
+
+
+
 
 
     type Mutation {

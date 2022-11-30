@@ -24,12 +24,15 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
+        { path: 'analysis', element: <BlogPage /> },
+
       ],
     },
     {
       path: 'login',
       element: <LoginPage />,
     },
+    
     {
       path: 'register',
       element: <RegisterPage />,
