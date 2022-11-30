@@ -1,7 +1,17 @@
 import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
+import {
+  Autocomplete,
+  TextField,
+  Popper,
+  Slide,
+  Button,
+  IconButton,
+  InputAdornment,
+  ClickAwayListener,
+} from '@mui/material';
+import qqqsymbols from '../../../utils/Data/symbolsList';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // component
@@ -29,18 +39,31 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 5),
   },
 }));
+const StyledPopper = styled((props) => <Popper placement="bottom-start" {...props} />)({
+  width: ' inherit !important',
+
+});
 
 // ----------------------------------------------------------------------
 
 export default function Searchbar() {
   const [open, setOpen] = useState(false);
-
+  const [value, setValue] = useState(null);
+  
   const handleOpen = () => {
+    setValue(null);
     setOpen(!open);
   };
 
   const handleClose = () => {
     setOpen(false);
+    
+  };
+  const handleSearch = () => {
+    console.log(value);
+    setOpen(false);
+
+    
   };
 
   return (
@@ -54,19 +77,39 @@ export default function Searchbar() {
 
         <Slide direction="down" in={open} mountOnEnter unmountOnExit>
           <StyledSearchbar>
-            <Input
-              autoFocus
+            <Autocomplete
+              sx={{ mr: 2, fontWeight: 'fontWeightBold' }}
               fullWidth
+              autoFocus
               disableUnderline
-              placeholder="Search…"
-              startAdornment={
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-                </InputAdornment>
-              }
-              sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
+              autoHighlight
+              popupIcon={null}
+              PopperComponent={StyledPopper}
+              getOptionLabel={(post) => post}
+              options={qqqsymbols}
+              value={value}
+              onChange={(event,newValue)=> setValue(newValue)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Search post..."
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify
+                          icon={'eva:search-fill'}
+                          sx={{ ml: 5, width: 20, height: 20, color: 'text.disabled' }}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
             />
-            <Button variant="contained" onClick={handleClose}>
+
+            <Button variant="contained" onClick={handleSearch}>
               Search
             </Button>
           </StyledSearchbar>
