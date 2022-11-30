@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
@@ -21,24 +22,39 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  ToggleButton,
+  ToggleButtonGroup
 } from '@mui/material';
 // components
+import { useQuery } from '@apollo/client';
+import { useParams, Link } from 'react-router-dom';
 import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
+// mock--currently being fed into the list function filteredUsers
 import USERLIST from '../_mock/user';
+import { QUERY_SOCIAL } from '../utils/queries';
+// query user to get [followings]
+// then list usernames based on the ids within [followings]
 
+// pseudo code:
+// add toggle between Followers/Following
+// based on the toggle populate list with userIds(pull associated usernames and baskets) from 
+// from following list; option to unfollow (pull user id from following array)
+// from followers list; cannot delete follower (dont normally delete followers anyway) FUTURE DIRECTIONS? maybe block? and then run a "validator" to check if the id exists in [blocked]
+// in the following/follower list there will be a link to a basketpage. Should be similar to Basket page of the context.user but for the follower or following.
+// in follower/following page, add follow button. once clicked set to unfollow button
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'followingBasket', label: 'See how they\'re baskets are doing.', alignRight: false },
+  // { id: 'company', label: 'Company', alignRight: false },
+  // { id: 'role', label: 'Role', alignRight: false },
+  // { id: 'isVerified', label: 'Verified', alignRight: false },
+  // { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
 ];
 
@@ -88,6 +104,34 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  // for toggling following/follower list:
+  const [social, setSocial] = useState('following')
+  
+  // querying and unpacking data from user query [following] or [follower]:
+  
+    const { id: userId } = useParams();
+    
+    const { loading, data } = useQuery(QUERY_SOCIAL, {
+      variables: { username: 'Johann_Rutherford'}
+    })
+
+    const userSocial = data
+    const userFollowers = userSocial.user.followers
+    const userFollowings = userSocial.user.followings
+    // const userFollowings = userSocial.user.followings
+    console.log(userSocial)
+    console.log(userFollowers[0].username)
+    
+  
+
+  // -----------------for toggle button-----------------------//
+
+  const [alignment, setAlignment] = React.useState('web');
+
+  const handleChange = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
+  // ---------------------------- //
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -143,26 +187,55 @@ export default function UserPage() {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  // const filteredUsers = applySortFilter(userSocial, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
+
+  let userList
+  if (social === 'following') {
+    // const userlist = userSocial.followings
+    console.log(userFollowings)
+    userList = userFollowings
+  } else {
+    // const userlist = userSocial.followers
+    console.log(userFollowers)
+    userList = userFollowers
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Following | StarShip </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            User
-          </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button>
+          <ToggleButtonGroup
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+            aria-label="Platform"
+          >
+            <ToggleButton value="web" onClick={()=>{setSocial('following')}}  >Following</ToggleButton>
+            <ToggleButton value="android" onClick={()=>{setSocial('follower')}}  >Follower</ToggleButton>
+          </ToggleButtonGroup>
+          {/* <Typography variant="h4" gutterBottom>
+            Following
+          </Typography> */}
+          {/* <Button variant="contained" */}
+          {/* feature not required, this page is for friends of user already */}
+          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            Add Friend
+          </Button> */}
         </Stack>
 
         <Card>
+          {/* Filter friends list by name; match the name */}
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
@@ -178,9 +251,18 @@ export default function UserPage() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                  {/* filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id, name, status, company, avatarUrl, isVerified } = row;
+                    const selectedUser = selected.indexOf(name) !== -1; */
+
+                    userList.map( ( user, index) => {
+                      
+                      const id = user._id
+                      const name = user.username
+                      const selectedUser = selected.indexOf(name) !== -1
+                      const avatarUrl = 'avatar'
+                      
+                    
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
@@ -188,6 +270,9 @@ export default function UserPage() {
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
                         </TableCell>
 
+                        {/* Where name is being fed into
+                          TODO: feed usernames from [friends] of context.user
+                        */}
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Avatar alt={name} src={avatarUrl} />
@@ -197,15 +282,21 @@ export default function UserPage() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{company}</TableCell>
+                        <TableCell align="left">
+                          <Link to="/">
+                            Click to view {name}'s basket
+                          </Link>
+                        </TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                        {/* <TableCell align="left">{company}</TableCell> */}
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                        {/* <TableCell align="left">{role}</TableCell> */}
+
+                        {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
 
                         <TableCell align="left">
                           <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                        </TableCell>
+                        </TableCell> */}
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
@@ -279,14 +370,18 @@ export default function UserPage() {
           },
         }}
       >
-        <MenuItem>
+        
+        {/* <MenuItem>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
-        </MenuItem>
+        </MenuItem> */}
 
+        {/* vertical ellipses with popover for deleting from list 
+            TODO: add functionality to 'Remove Friend'
+        */}
         <MenuItem sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
+          Unfollow
         </MenuItem>
       </Popover>
     </>
