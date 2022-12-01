@@ -79,23 +79,76 @@ const resolvers = {
           if (followings.length) {
             const friendsPosts = await Post.find({
               userId: { $in: followings },
-            }).sort({ createdAt: -1 });
+            }).populate("author")
+            .populate("likes")
+            .populate({ 
+              path: "comments",
+              populate: {
+                path: 'author',
+                model: 'User'
+              } 
+           }).sort({ createdAt: -1 }); 
 
-            const allPosts = await Post.find(params).sort({ createdAt: -1 });
+            const allPosts = await Post.find(params)
+                                        .populate("author")
+                                        .populate("likes")
+                                        .populate({ 
+                                          path: "comments",
+                                          populate: {
+                                            path: 'author',
+                                            model: 'User'
+                                          } 
+                                      }).sort({ createdAt: -1 }); 
 
             return [...friendsPosts, ...allPosts];
           }
 
-          return Post.find(params).sort({ createdAt: -1 });
+          return Post.find(params)
+          .populate("author")
+          .populate("likes")
+          .populate({ 
+            path: "comments",
+            populate: {
+              path: 'author',
+              model: 'User'
+            } 
+         }).sort({ createdAt: -1 }); 
         } catch {
-          return Post.find(params).sort({ createdAt: -1 }); // if user does not have any friends
-        }
+          return Post.find(params)
+          .populate("author")
+          .populate("likes")
+          .populate({ 
+            path: "comments",
+            populate: {
+              path: 'author',
+              model: 'User'
+            } 
+         }).sort({ createdAt: -1 });  // if the user doesn't have friends
       }
-      return Post.find(params).sort({ createdAt: -1 }); // when a user is not signed in
+    }
+      return Post.find(params)
+      .populate("author")
+      .populate("likes")
+      .populate({ 
+        path: "comments",
+        populate: {
+          path: 'author',
+          model: 'User'
+        } 
+     }).sort({ createdAt: -1 }); // when a user is not signed in
     },
 
     post: async (parent, { _id }) => {
-      return await Post.findById(_id).populate("comments").populate("likes");
+      return Post.findById(_id)
+      .populate("author")
+      .populate("likes")
+      .populate({ 
+        path: "comments",
+        populate: {
+          path: 'author',
+          model: 'User'
+        } 
+     })
     },
 
     getDataFromBasket: async (parent, { id }, context) => {
@@ -266,7 +319,7 @@ const resolvers = {
       if (context.user) {
         const updatedPost = await Post.findOneAndUpdate(
           { _id: postId },
-          { $addToSet: { likes: { username: context.user.username } } },
+          { $addToSet: { likes: { _id : context.user._id } } },
           { new: true }
         );
         return updatedPost;

@@ -44,6 +44,10 @@ const userSchema = new Schema(
         ref: "Post",
       },
     ],
+    avatar:{
+      type: String,
+      default:"avatar_default.jpg"
+    }
   },
   {
     toJSON: {

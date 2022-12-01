@@ -14,6 +14,7 @@ const typeDefs = gql`
     followings: [User]
     followingCount: Int
     posts: [Post]
+    avatar: String
   }
 
   type Post {
@@ -21,26 +22,22 @@ const typeDefs = gql`
     userId: ID
     title: String
     createdAt: String
-    username: String
+    author: User
     basketId: String
-    likes: [Like]
+    likes: [User]
     comments: [Comment]
     commentCount: Int
     likeCount: Int
+    coverPhoto: String
   }
 
   type Comment {
     _id: ID
-    username: String
+    author: User
     commentText: String
     createdAt: String
   }
 
-  type Like {
-    _id: ID
-    username: String
-    likeCount: Int
-  }
 
   type Basket {
     _id: ID
@@ -120,7 +117,7 @@ const typeDefs = gql`
     addPost(title: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
-    addLike(postId: ID!): Like
+    addLike(postId: ID!): Post
   }
 `;
 
