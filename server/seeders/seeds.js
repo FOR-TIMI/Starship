@@ -19,18 +19,34 @@ db.once('open', async () => {
   await Basket.deleteMany({});
 
   console.log('\n ----- Deleted all current Baskets ----- \n ');
+  
 
+  //all avatars
+  const avatars = []
+  //all  post covers
+  const covers = []
+ 
+  // to add covers and avatars
+  for(let i =1; i <= 24; i++){
+    avatars.push(`avatar_${i}.jpg`)
+    covers.push(`cover_${i}.jpg`)
+  }
 
   // create user data
   const userData = [];
  
-  // add 50 random users to userData array
+  // add 10 random users to userData array
   for (let i = 0; i < 10; i += 1) {
     const username = faker.internet.userName();
     const email = faker.internet.email(username);
     const password = faker.internet.password();
 
-    userData.push({ username, email, password });
+    //to get a random avatar index
+    const randomAvatarIndex = Math.floor(Math.random() * avatars.length);
+    //to get random avatar from the avatars array
+    const avatar = avatars[randomAvatarIndex]
+
+    userData.push({ username, email, password, avatar });
   }
  
   // FOllowers are people following me. When they follow me, i add their user id into my follower array
@@ -70,7 +86,7 @@ db.once('open', async () => {
   // create Posts
   let createdPosts = [];
 
-  for(let i=0; i < 20; i++){
+  for(let i=0; i < 30; i++){
 
     /**
      * Make random 10 character titles for posts
@@ -81,13 +97,19 @@ db.once('open', async () => {
      * get a random user from the createdUser array
      */
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-    const { username, _id: userId} = createdUsers.ops[randomUserIndex];
-  
+    const {_id: userId} = createdUsers.ops[randomUserIndex];
+
+    //set author to the users Id
+    const author = userId
+    
+    //get random cover photo
+    const randomCoverIndex = Math.floor(Math.random() * covers.length);
+    const coverPhoto = covers[randomCoverIndex]
 
     /**
      * create a post
      */
-    const createdPost = await Post.create({ title, username, userId });
+    const createdPost = await Post.create({ title, author, coverPhoto});
    
     /**
      * Add post id to the posts field in the user's data

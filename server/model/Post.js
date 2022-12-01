@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const reactionSchema = require('./Reaction');
 const dateFormat = require('../utils/dateFormat');
 
 const postSchema = new Schema(
@@ -15,11 +14,10 @@ const postSchema = new Schema(
       default: Date.now,
       get: timestamp => dateFormat(timestamp)
     },
-    cover: {
+    coverPhoto: {
       type: String,
       required: 'You must select a cover for your post',
     },
-    reactions: [reactionSchema],
     author:{
       type: Schema.Types.ObjectId, 
       ref: 'User'
