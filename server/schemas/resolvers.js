@@ -1,100 +1,147 @@
 const { User, Basket, Like, Post, Ticker, Comment } = require("../model");
-
-const { signToken } =require('../utils/auth');
-const { AuthenticationError } = require('apollo-server-express');
+const {
+  getBarData,
+  getBarsData,
+  addBasketHelper,
+  dataToBasket,
+} = require("../utils/API_calls/queries");
+const { signToken } = require("../utils/auth");
+const { AuthenticationError } = require("apollo-server-express");
 
 const resolvers = {
   Query: {
+    barDataQuery: async (parent, { symbol, timeframe, limit, days }) => {
+      let data = await getBarData(symbol, timeframe, limit, days);
+      // console.log(data);
+      return data;
+    },
+
+    barsDataQuery: async (parent, { symbols, timeframe, limit, days }) => {
+      let data = await getBarsData(symbols, timeframe, limit, days);
+      console.log(data);
+      return data;
+    },
+
+    // dataQuery: async () => {
+    //     let test = {name:"appl"};
+    //     // let data = await getBarData("AAPL", "1Min", 100, 2);
+    //     console.log(data);
+    //     return test;
+    //   },
+
+    // We are putting this issue on hold due to the complexity of this function.
+    // friendsPosts: async (parent, { _id }) => {
+    //   let friends = await User.findById(_id).select( "friends" );
+    //   let friendsarr = friends.friends;
+    //   let arr = [];
+    //   let posts = await Post.find().select("_id");
+    //   console.log(posts);
+    //   console.log(friendsarr);
+    //   return posts;
+    // },
 
     //Get signedIn User
-  signedInUser: async(parent, args,context) => {
-    if(context.user){
-      const userData = await User.findOne({_id: context.user._id})
-      .select('-__v -password')
-      .populate('followers')
-      .populate('followings')
-      .populate('posts')
-      .populate('baskets')
+    signedInUser: async (parent, args, context) => {
+      if (context.user) {
+        const userData = await User.findOne({ _id: context.user._id })
+          .select("-__v -password")
+          .populate("followers")
+          .populate("followings")
+          .populate("posts")
+          .populate("baskets");
 
-        return userData
-    }
-    throw new AuthenticationError("You're currently not signed in")
-  },
+        return userData;
+      }
+      throw new AuthenticationError("You're currently not signed in");
+    },
 
-   //Get all users => friends,posts, baskets
-   users: async() => {
-     return User.find()
-                .select('-__v -password')
-                .populate('followers')
-                .populate('followings')
-                .populate('posts')
-                .populate('baskets')
-   },
+    //Get all users => friends,posts, baskets
+    users: async () => {
+      return User.find()
+        .select("-__v -password")
+        .populate("followers")
+        .populate("followings")
+        .populate("posts")
+        .populate("baskets");
+    },
 
-   //Get a user by username
-   user: async(parent, { username }) => {
-     return User.findOne({ username })
-               .select('-__v -password')
-               .populate('followers')
-               .populate('followings')
-               .populate('posts')
-               .populate('baskets')
-   },
+    //Get a user by username
+    user: async (parent, { username }) => {
+      return User.findOne({ username })
+        .select("-__v -password")
+        .populate("followers")
+        .populate("followings")
+        .populate("posts")
+        .populate("baskets");
+    },
 
     //Get all posts
-    posts: async(parent, { username }, context) => {
-
+    posts: async (parent, { username }, context) => {
       /**
        * used to search for all posts related to a user or all posts
        * if the user has followers, it should return all the posts of the followers from the most recent post
        */
-      const params = username ? { username }: {};
+      const params = username ? { username } : {};
 
       /**
        * If a user is signed in, it gets the following id and trys to find all the posts
        */
 
-      
       if (context.user) {
-          try{
-            const [{followings}] = await User.find({username: context.user.username});
+        try {
+          const [{ followings }] = await User.find({
+            username: context.user.username,
+          });
 
-            if(followings.length){
+          if (followings.length) {
+            const friendsPosts = await Post.find({
+              userId: { $in: followings },
+            }).sort({ createdAt: -1 });
 
-                const friendsPosts = await Post.find( { userId : { $in : followings } })
-                .sort({ createdAt: -1})
-               
-                const allPosts = await Post.find(params) .sort({ createdAt: -1})
+            const allPosts = await Post.find(params).sort({ createdAt: -1 });
 
-                return [...friendsPosts,...allPosts]
-            }
+            return [...friendsPosts, ...allPosts];
+          }
 
-            return Post.find(params).sort({createdAt: -1});
-          } catch{
-            return Post.find(params).sort({createdAt: -1}); // if user does not have any friends
+          return Post.find(params).sort({ createdAt: -1 });
+        } catch {
+          return Post.find(params).sort({ createdAt: -1 }); // if user does not have any friends
         }
-      
-      } 
-      return  Post.find(params).sort({createdAt: -1}); // when a user is not signed in
-      
+      }
+      return Post.find(params).sort({ createdAt: -1 }); // when a user is not signed in
     },
- 
-    //To get One post
-    post: async(parent, {_id}) => {
-       return Post.findOne({_id})
+
+    post: async (parent, { _id }) => {
+      return await Post.findById(_id).populate("comments").populate("likes");
+    },
+
+    getDataFromBasket: async (parent, { id }, context) => {
+      const basket = await Basket.find({ _id: id }).populate("ticker");
+      const symbols = [];
+      console.log(basket[0].tickers);
+      basket[0].tickers.map((each) => {
+        symbols.push(each.symbol);
+      });
+      const barsData = await getBarsData(symbols, "1D", 100, 10);
+      // console.log(barsData);
+      const endData = await dataToBasket(barsData);
+      // console.log(endData, "end data");
+      return endData;
     },
 
     //Get all Baskets
-    baskets: async(parent, { username }) => {
-
-      const params = username ? { username } : {};
-
-      return Basket.find(params).sort({createdAt: -1});
+    baskets: async (parent, context) => {
+      if (context.user) {
+        const params = context.user.username;
+        return Basket.find({ username: params }).sort({ createdAt: -1 });
+      } else {
+        throw new AuthenticationError("You need to be logged in!");
+      }
     },
 
     //Get one Basket
-    basket: async(parent, {_id}) => {
-        return Basket.findOne({_id})
+    basket: async (parent, { _id }) => {
+      return Basket.findOne({ _id });
     },
   },
 
@@ -137,11 +184,12 @@ const resolvers = {
     // IM NOT TOO SURE IF I AM PASSING IN THE RIGHT ARGS do we need {basketId} instead? , line 52
     addBasket: async (parent, args, context) => {
       if (context.user) {
+        let tickers = await addBasketHelper(args);
         const basket = await Basket.create({
-          ...args,
+          tickers: tickers,
           username: context.user.username,
-        }); //need pass in user creds via args so that the basket can be associated to the user (?)
-        //NOT TOO SURE THIS WILL WORK WILL NEED TO DISCUSS
+        });
+
         await User.findByIdAndUpdate(
           { _id: context.user._id }, // get the user Id to access basket:[Basket]
           { $push: { basket: basket._id } }, // push only to the basket component of the User TypeDef, by basketId
@@ -174,40 +222,43 @@ const resolvers = {
 
     // userId will be my userId and the followId would be the userId of the person i'm following
     addFollowing: async (parent, { followingId }, context) => {
-         
       if (context.user && followingId) {
-        try{
+        try {
           //To update the person i'm following's follower list
           await User.findOneAndUpdate(
-            {_id : followingId},
-            {$addToSet: { followers: context.user._id } },
+            { _id: followingId },
+            { $addToSet: { followers: context.user._id } },
             { new: true }
-          )
+          );
 
           //update my following list and userImFollowing's follower list
           //To update my following list
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $addToSet: { followings: followingId } },
-          { new: true }
-        )
-        return updatedUser
-       } catch{
-          throw new AuthenticationError("Something went wrong")
-       }
+          const updatedUser = await User.findOneAndUpdate(
+            { _id: context.user._id },
+            { $addToSet: { followings: followingId } },
+            { new: true }
+          );
+          return updatedUser;
+        } catch {
+          throw new AuthenticationError("Something went wrong");
+        }
       }
       throw new AuthenticationError("You need to be logged in!");
     },
-    
+
     addPost: async (parent, args, context) => {
       if (context.user) {
-        const post = await Post.create({ ...args, username: context.user.username, userId: context.user._id })
+        const post = await Post.create({
+          ...args,
+          username: context.user.username,
+          userId: context.user._id,
+        });
 
         await User.findOneAndUpdate(
           { _id: context.user._id },
           { $push: { posts: post._id } },
           { new: true }
-        )
+        );
         return updatedUser;
       }
       throw new AuthenticationError("You need to be logged in!");
@@ -217,27 +268,29 @@ const resolvers = {
       if (context.user) {
         const updatedPost = await Post.findOneAndUpdate(
           { _id: postId },
-          { $push: { comments: { commentText, username: context.user.username } } }
-        )
+          {
+            $push: {
+              comments: { commentText, username: context.user.username },
+            },
+          }
+        );
         return updatedPost;
       }
       throw new AuthenticationError("You need to be logged in!");
     },
 
-    addLike: async(parent, {postId }, context) => {
-      if(context.user){
+    addLike: async (parent, { postId }, context) => {
+      if (context.user) {
         const updatedPost = await Post.findOneAndUpdate(
-          {_id: postId},
-          {$addToSet: { likes: {username:context.user.username}}},
+          { _id: postId },
+          { $addToSet: { likes: { username: context.user.username } } },
           { new: true }
-        )
-        return updatedPost
+        );
+        return updatedPost;
       }
-      throw new AuthenticationError("You need to be logged In!")
-    }
-  }
-
-}
-
+      throw new AuthenticationError("You need to be logged In!");
+    },
+  },
+};
 
 module.exports = resolvers;

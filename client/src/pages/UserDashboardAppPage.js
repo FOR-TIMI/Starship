@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
+import { useQuery } from '@apollo/client';
+import { BARS_DATA_QUERY } from '../utils/queries';
 import Iconify from '../components/iconify';
 // sections
 import {
@@ -18,10 +21,32 @@ import {
   AppConversionRates,
 } from '../sections/@dashboard/app';
 
+// import { dataToBasket } from '../utils/dataToBasket';
+
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
+  const [parsedData, setParsedData] = useState();
+
   const theme = useTheme();
+  const vars = {
+    symbols: ['MSFT', 'TSLA'],
+    timeframe: '1D',
+    limit: 15,
+    days: 15,
+  };
+  const { loading, error, data } = useQuery(BARS_DATA_QUERY, {
+    variables: vars,
+  });
+
+  if (loading) {
+    return <div>Loading</div>;
+  }
+  if (data) {
+    console.log(data);
+    // const newData = dataToBasket(data.barsDataQuery);
+    // setParsedData(newData);
+  }
 
   return (
     <>
@@ -36,7 +61,7 @@ export default function DashboardAppPage() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary title="Weekly Change" total={714000} icon={'ant-design:android-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
