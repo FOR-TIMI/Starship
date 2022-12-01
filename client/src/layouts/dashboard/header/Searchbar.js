@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 // @mui
 import { styled } from '@mui/material/styles';
 import {
@@ -41,7 +42,6 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
 }));
 const StyledPopper = styled((props) => <Popper placement="bottom-start" {...props} />)({
   width: ' inherit !important',
-
 });
 
 // ----------------------------------------------------------------------
@@ -60,10 +60,10 @@ export default function Searchbar() {
     
   };
   const handleSearch = () => {
-    console.log(value);
+    const navigate = useNavigate();
     setOpen(false);
-
-    
+   
+    console.log(value);
   };
 
   return (
