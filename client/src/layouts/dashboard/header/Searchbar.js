@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import {
@@ -49,6 +49,7 @@ const StyledPopper = styled((props) => <Popper placement="bottom-start" {...prop
 export default function Searchbar() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const navigate = useNavigate();
   
   const handleOpen = () => {
     setValue(null);
@@ -60,10 +61,12 @@ export default function Searchbar() {
     
   };
   const handleSearch = () => {
-    const navigate = useNavigate();
+    
     setOpen(false);
-   
-    console.log(value);
+  //  console.log(value);
+
+  // navigate link to single ticker analysis page
+    navigate(`/dashboard/analysis/${value}`);
   };
 
   return (
@@ -81,7 +84,6 @@ export default function Searchbar() {
               sx={{ mr: 2, fontWeight: 'fontWeightBold' }}
               fullWidth
               autoFocus
-              disableUnderline
               autoHighlight
               popupIcon={null}
               PopperComponent={StyledPopper}
