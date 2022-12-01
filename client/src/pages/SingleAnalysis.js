@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
+
 import { faker } from '@faker-js/faker';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 // @mui functions
 import { useTheme } from '@mui/material/styles';
@@ -10,64 +11,71 @@ import { BAR_DATA_QUERY } from '../utils/queries';
 // components
 import Iconify from '../components/iconify';
 import {
-  AppTasks,
   AppNewsUpdate,
-  AppOrderTimeline,
   AppCurrentVisits,
   AppWebsiteVisits,
-  AppTrafficBySite,
   AppWidgetSummary,
   AppCurrentSubject,
-  AppConversionRates,
+  FearGreedSummary,
+  CandleStick,
+  PriceLineChart
 } from '../sections/@dashboard/app';
 
 
-// {  "symbol": "AAPL",
+
+export default function SingleAnalysis() {
+  const theme = useTheme();
+
+  let { symbol } = useParams();
+  symbol = symbol.toUpperCase();
+
+  
+
+  const vars = {
+    symbol: symbol,
+    timeframe: '1Day',
+    limit: 1000,
+    days: 1000,
+  };
+  const { data } = useQuery(BAR_DATA_QUERY, { variables: vars });
+
+  // {  "symbol": "AAPL",
 //   "timeframe": "1Min",  "limit": 50,
 //   "days": 5
 // }
 
-export default function SingleAnalysis() {
-    const theme = useTheme();
-    // let { symbol } = useParams(); 
-    // const [barDataQuery, { data, loading, error }] = useQuery(BAR_DATA_QUERY);
-    // symbol = symbol.toUpperCase();
+  
+  if (data) {
+    var closeP= data.barDataQuery.map((e)=>{
+      return {
+        x: e.Timestamp,
+        y: [e.OpenPrice,e.HighPrice,e.LowPrice,e.ClosePrice]      
+      }
+    });
 
-
-  const vars = {
-    symbol: "AAPL",
-    timeframe: "1Min",
-    limit: 50,
-    days: 5
-}
-// {"data":{"barDataQuery":[{"ClosePrice"
-  const {data} = useQuery(BAR_DATA_QUERY, { variables: vars } );
-if(data){
-  
-  data.barDataQuery.forEach(element => {
-    console.log(element.ClosePrice);
-  });
-  
-}
-  
+      console.log( closeP);
     
-    return (
-      <>
-        <Helmet>
-          <title> Single Analysis | Starship </title>
-        </Helmet>
-  
-        <Container maxWidth="xl">
-          <Typography variant="h4" sx={{ mb: 5 }}>
-            Search for this stock:-  
-          </Typography>
-          <Grid container spacing={3}>
+  }
+
+
+
+  return (
+    <>
+      <Helmet>
+        <title> Single Analysis | Starship </title>
+      </Helmet>
+
+      <Container maxWidth="xl">
+        <Typography variant="h3" sx={{ mb: 5 }}>
+          {symbol} Summary
+        </Typography>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Timestamp" total={714000} icon={'ant-design:android-filled'} />
+            <FearGreedSummary />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Volume" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+            <AppWidgetSummary title="Max Close" total={1352831} color="info" icon={'ant-design:apple-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -79,9 +87,9 @@ if(data){
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits
-              title="Website Visits"
-              subheader="(+43%) than last year"
+            <PriceLineChart
+              title={symbol}
+              subheader="Close price"
               chartLabels={[
                 '01/01/2003',
                 '02/01/2003',
@@ -95,26 +103,9 @@ if(data){
                 '10/01/2003',
                 '11/01/2003',
               ]}
-              chartData={[
-                {
-                  name: 'Team A',
-                  type: 'column',
-                  fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                },
-                {
-                  name: 'Team B',
-                  type: 'area',
-                  fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                },
-                {
-                  name: 'Team C',
-                  type: 'line',
-                  fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                },
-              ]}
+              chartData={[{
+                data: closeP
+              }]}
             />
           </Grid>
 
@@ -136,7 +127,15 @@ if(data){
             />
           </Grid>
 
-          
+          <Grid item xs={12} md={6} lg={8}>
+            <CandleStick
+              
+              chartData={[{
+                data: closeP
+              }]}
+            />
+          </Grid>
+
           <Grid item xs={12} md={6} lg={8}>
             <AppNewsUpdate
               title="News Update"
@@ -162,17 +161,8 @@ if(data){
               chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
             />
           </Grid>
-
-         
-
-         
-
-          
-
-          
         </Grid>
-        </Container>
-      </>
-    );
-  }
-  
+      </Container>
+    </>
+  );
+}

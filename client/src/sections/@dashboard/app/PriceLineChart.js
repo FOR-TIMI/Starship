@@ -7,14 +7,14 @@ import { useChart } from '../../../components/chart';
 
 // ----------------------------------------------------------------------
 
-AppWebsiteVisits.propTypes = {
+PriceLineChart.propTypes = {
   title: PropTypes.string,
   subheader: PropTypes.string,
   chartData: PropTypes.array.isRequired,
   chartLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default function AppWebsiteVisits({ title, subheader, chartLabels, chartData, ...other }) {
+export default function PriceLineChart({ title, subheader, chartLabels, chartData, ...other }) {
   const chartOptions = useChart({
     
     
@@ -35,8 +35,8 @@ export default function AppWebsiteVisits({ title, subheader, chartLabels, chartD
   });
 
   return (
-    <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
+    <Card >
+      <CardHeader  title={title} subheader={subheader} />
 
       <Box sx={{ p: 3, pb: 1 }} dir="ltr">
         <ReactApexChart type="line" series={chartData}  options={chartOptions} height={364} />
