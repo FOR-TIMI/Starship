@@ -30,7 +30,7 @@ export const QUERY_POST = gql`
       }
   }
 `;
-import { gql } from '@apollo/client';
+
 
 
 export const QUERY_SOCIAL = gql `
