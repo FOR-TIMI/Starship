@@ -112,17 +112,19 @@ const typeDefs = gql`
     getDataFromBasket(id: ID!): [Bardata]
   }
 
-   type Mutation {
-        login(email: String!, password: String!): Auth
-        addUser(username: String!, email: String!, password: String!): Auth
-        addTicker(basketId: ID!, ticker: String!): Basket
-        addBasket(tickerId: ID!):Basket
-        addPost(title: String!): Post
-        addComment(postId: ID!, commentText: String!): Post 
-        addFollowing(followingId: ID!): User
-        removeFollowing(followingId: ID!): User
-        addLike(postId: ID!): Like
-    }
+ type Mutation {
+      login(email: String!, password: String!): Auth
+      addUser(username: String!, email: String!, password: String!): Auth
+      addTicker(basketId: ID!, ticker: String!): Basket
+      addBasket(tickerId: ID!):Basket
+      addPost(title: String!): Post
+      addComment(postId: ID!, commentText: String!): Post 
+      addFollowing(followingId: ID!): User
+      removeFollowing(followingId: ID!): User
+      addLike(postId: ID!): Like
+      deleteBasket(basketId: ID!): Basket
+
+  }
 
 
 //addBasket(basket:[Basket] ): Basket

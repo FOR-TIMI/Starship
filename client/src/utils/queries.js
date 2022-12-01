@@ -92,11 +92,12 @@ export const GET_BASKETS = gql`
   query Query {
     baskets {
       _id
+      createdAt
       tickers {
-        symbol
         market
         _id
         API
+        symbol
       }
     }
   }
