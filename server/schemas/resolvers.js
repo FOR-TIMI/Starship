@@ -22,23 +22,6 @@ const resolvers = {
       return data;
     },
 
-    // dataQuery: async () => {
-    //     let test = {name:"appl"};
-    //     // let data = await getBarData("AAPL", "1Min", 100, 2);
-    //     console.log(data);
-    //     return test;
-    //   },
-
-    // We are putting this issue on hold due to the complexity of this function.
-    // friendsPosts: async (parent, { _id }) => {
-    //   let friends = await User.findById(_id).select( "friends" );
-    //   let friendsarr = friends.friends;
-    //   let arr = [];
-    //   let posts = await Post.find().select("_id");
-    //   console.log(posts);
-    //   console.log(friendsarr);
-    //   return posts;
-    // },
 
     //Get signedIn User
     signedInUser: async (parent, args, context) => {
