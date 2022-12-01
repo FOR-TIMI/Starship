@@ -79,6 +79,7 @@ const typeDefs = gql`
         addPost(title: String!): Post
         addComment(postId: ID!, commentText: String!): Post 
         addFollowing(followingId: ID!): User
+        removeFollowing(followingId: ID!): User
         addLike(postId: ID!): Like
     }
 `;
