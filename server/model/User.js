@@ -46,7 +46,8 @@ const userSchema = new Schema(
     ],
     avatarUrl: {
       type: String,
-      default: 'avatar_default.jpg'
+      default: 'avatar_default.jpg',
+      required: true
     }
   },
   {
