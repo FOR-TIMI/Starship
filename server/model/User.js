@@ -42,8 +42,12 @@ const userSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Post",
-      },
+      }
     ],
+    avatarUrl: {
+      type: String,
+      default: 'avatar_default.jpg'
+    }
   },
   {
     toJSON: {
