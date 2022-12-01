@@ -129,7 +129,7 @@ db.once('open', async () => {
 
 //Create Comments
 
-  for(let i=0; i <10; i++){
+  for(let i=0; i <20; i++){
     /**
      * Make random comment texts
      */
@@ -140,7 +140,7 @@ db.once('open', async () => {
      * get a random user from the createdUser array
      */
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-    const { username } = createdUsers.ops[randomUserIndex];
+    const { _id : author } = createdUsers.ops[randomUserIndex];
 
       
     /**
@@ -154,7 +154,7 @@ db.once('open', async () => {
      */
     await Post.updateOne(
       { _id: postId },
-      { $push: { comments: { commentText,username }}},
+      { $push: { comments: { commentText,author }}},
       { runValidators: true }
     )
   }
@@ -168,30 +168,32 @@ console.log('\n ----- Added Comments ----- \n');
 /**
  *  Add Likes
  * */ 
+for(let post of createdPosts){
+      for(let i=0; i < 10; i++){
+           /**
+           * get a user from the createdUser array
+           */
+          const { _id : userId } = createdUsers.ops[i];
 
-  for(let i=0; i < 10; i++){
+        
 
-    /**
-     * get a user from the createdUser array
-     */
-    const { username } = createdUsers.ops[i];
-   
-
-    /**
-     * get a random post from the createdPost array
-    */
-    const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
-    const { _id : postId } = createdPosts[randomPostIndex];
-    
-    /**
-     * Add unique like to a post
-     */
-    await Post.updateOne(
-      { _id: postId },
-      { $addToSet : { likes : { username }}},
-      { runValidators: true }
-    )
+          /**
+           * get a random post from the createdPost array
+          */
+          const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
+          const { _id : postId } = createdPosts[randomPostIndex];
+          
+          /**
+           * Add unique like to a post
+           */
+          await Post.updateOne(
+            { _id: postId },
+            { $addToSet : { likes : userId}},
+            { runValidators: true }
+          )
+     }
   }
+
 
  console.log('\n ----- Added likes ----- \n');
 

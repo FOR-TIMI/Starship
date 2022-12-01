@@ -1,6 +1,9 @@
 const { Schema, model } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
+// Imported Schemas 
+const commentSchema = require('./Comment')
+
 const postSchema = new Schema(
   {
     title: {
@@ -21,7 +24,15 @@ const postSchema = new Schema(
     author:{
       type: Schema.Types.ObjectId, 
       ref: 'User'
-    }
+    },
+
+    comments: [commentSchema],
+    likes: [ 
+      {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+     },
+    ]
   },
   {
     toJSON: {
@@ -30,10 +41,19 @@ const postSchema = new Schema(
   }
 );
 
-postSchema.virtual('reactionCount').get(function() {
-  return this.reactions.length;
-});
+postSchema
+    .virtual('commentCount')
+    .get(function(){
+        return this.comments.length
+    })
+
+postSchema
+    .virtual('likeCount')
+    .get(function(){
+        return this.likes.length
+    })
 
 const Post = model('Post', postSchema);
+
 
 module.exports = Post;
