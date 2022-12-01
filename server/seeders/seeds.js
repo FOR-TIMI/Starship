@@ -19,7 +19,14 @@ db.once('open', async () => {
   await Basket.deleteMany({});
 
   console.log('\n ----- Deleted all current Baskets ----- \n ');
+  
 
+  //all avatars
+  const avatars = []
+
+  for(let i =1; i <= 24; i++){
+    avatars.push(`avatar_${i}.jpg`)
+  }
 
   // create user data
   const userData = [];
@@ -30,7 +37,12 @@ db.once('open', async () => {
     const email = faker.internet.email(username);
     const password = faker.internet.password();
 
-    userData.push({ username, email, password });
+    //to get a random avatar index
+    const randomAvatarIndex = Math.floor(Math.random() * avatars.length);
+    //to get random avatar from the avatars array
+    const avatar = avatars[randomAvatarIndex]
+
+    userData.push({ username, email, password, avatar });
   }
  
   // FOllowers are people following me. When they follow me, i add their user id into my follower array
