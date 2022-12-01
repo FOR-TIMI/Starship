@@ -30,7 +30,7 @@ export default function ShopProductCard({ product }) {
   return (
     <Card>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        {status && (
+        {/* {status && (
           <Label
             variant="filled"
             color={(status === 'sale' && 'error') || 'info'}
@@ -44,7 +44,7 @@ export default function ShopProductCard({ product }) {
           >
             {status}
           </Label>
-        )}
+        )} */}
         <StyledProductImg alt={name} src={cover} />
       </Box>
 

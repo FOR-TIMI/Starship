@@ -119,6 +119,7 @@ const resolvers = {
 
     //Get all Baskets
     baskets: async (parent, args, context) => {
+      // console.log("hello");
       if (context.user) {
         const params = context.user.username;
         return Basket.find({ username: params }).sort({ createdAt: -1 });
