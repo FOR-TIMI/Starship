@@ -109,7 +109,7 @@ const typeDefs = gql`
       limit: Int!
       days: Int!
     ): [Barsdata]
-    getDataFromBasket(id: ID!): [Barsdata]
+    getDataFromBasket(id: ID!): [Bardata]
   }
 
   type Mutation {

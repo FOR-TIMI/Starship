@@ -118,19 +118,18 @@ const resolvers = {
     getDataFromBasket: async (parent, { id }, context) => {
       const basket = await Basket.find({ _id: id }).populate("ticker");
       const symbols = [];
-      console.log(basket[0].tickers);
+      console.log(basket);
       basket[0].tickers.map((each) => {
         symbols.push(each.symbol);
       });
+
       const barsData = await getBarsData(symbols, "1D", 100, 10);
-      // console.log(barsData);
       const endData = await dataToBasket(barsData);
-      // console.log(endData, "end data");
       return endData;
     },
 
     //Get all Baskets
-    baskets: async (parent, context) => {
+    baskets: async (parent, args, context) => {
       if (context.user) {
         const params = context.user.username;
         return Basket.find({ username: params }).sort({ createdAt: -1 });
