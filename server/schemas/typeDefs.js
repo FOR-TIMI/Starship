@@ -109,13 +109,14 @@ const typeDefs = gql`
       limit: Int!
       days: Int!
     ): [Barsdata]
+    getDataFromBasket(id: ID!): [Barsdata]
   }
 
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
     addTicker(basketId: ID!, ticker: String!): Basket
-    addBasket(tickerId: ID!): Basket
+    addBasket(tickers: [String]!): Basket
     addPost(title: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
