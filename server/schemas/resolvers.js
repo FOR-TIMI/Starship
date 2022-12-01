@@ -1,10 +1,55 @@
-const { User, Basket, Like, Post, Ticker, Comment } = require("../model");
 
+
+const { User, Basket, Like, Post, Ticker, Comment } = require("../model");
+const {getBarData, getBarsData} = require("../utils/API_calls/queries");
 const { signToken } =require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express');
 
 const resolvers = {
   Query: {
+
+
+
+
+    barDataQuery: async (parent, { symbol, timeframe, limit, days }) => {
+      
+      
+      let data = await getBarData(symbol, timeframe, limit, days);
+      // console.log(data);
+      return data;
+    },
+
+    barsDataQuery:async (parent, { symbols, timeframe, limit, days }) => {
+      let data = await getBarsData(symbols, timeframe, limit, days);
+      console.log(data);
+      return data;
+    },
+
+    // dataQuery: async () => {
+    //     let test = {name:"appl"};
+    //     // let data = await getBarData("AAPL", "1Min", 100, 2);
+    //     console.log(data);
+    //     return test;
+    //   },
+
+
+
+    
+
+
+    // We are putting this issue on hold due to the complexity of this function.
+    // friendsPosts: async (parent, { _id }) => {
+    //   let friends = await User.findById(_id).select( "friends" );
+    //   let friendsarr = friends.friends;
+    //   let arr = [];
+    //   let posts = await Post.find().select("_id");
+    //   console.log(posts);
+    //   console.log(friendsarr);
+    //   return posts;
+    // },
+    
+    
+   
 
     //Get signedIn User
   signedInUser: async(parent, args,context) => {
@@ -40,6 +85,9 @@ const resolvers = {
                .populate('posts')
                .populate('baskets')
    },
+
+  
+ 
 
     //Get all posts
     posts: async(parent, { username }, context) => {
@@ -77,12 +125,14 @@ const resolvers = {
       } 
       return  Post.find(params).sort({createdAt: -1}); // when a user is not signed in
       
+
+    },
+
+    post: async (parent, { _id }) => {
+      return await Post.findById(_id).populate("comments").populate("likes");
     },
  
-    //To get One post
-    post: async(parent, {_id}) => {
-       return Post.findOne({_id})
-    },
+ 
 
     //Get all Baskets
     baskets: async(parent, { username }) => {
