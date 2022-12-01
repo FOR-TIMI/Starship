@@ -37,12 +37,12 @@ export default function FearGreedSummary({ color = 'primary', sx, ...other }) {
   const [icon, setIcon] = useState("line-md:loading-alt-loop"); 
 
   // https://production.dataviz.cnn.io/index/fearandgreed/graphdata/2022-12-01
-  let day = moment().format().split('T')[0];
-  fetch(`https://production.dataviz.cnn.io/index/fearandgreed/graphdata/${day}`)
+  // let day = moment().format().split('T')[0];
+  fetch(`https://production.dataviz.cnn.io/index/fearandgreed/current`)
     .then((response) => response.json())
     .then((data) => {
-
-      let{score,rating}= data.fear_and_greed;
+      let{score,rating,previous_close,previous_1_year,previous_1_week
+,previous_1_month}= data;
        score = Math.floor(score);
        rating = rating[0].toUpperCase() + rating.substring(1);
        setFearGreedRating(rating);
