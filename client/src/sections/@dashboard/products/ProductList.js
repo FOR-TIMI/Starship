@@ -11,14 +11,9 @@ ProductList.propTypes = {
   products: PropTypes.array.isRequired,
 };
 
-export default function ProductList({ products, ...other }) {
-  const { loading, error, data } = useQuery(GET_BASKETS, {
-    context: {
-      headers: {
-        Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
-      },
-    },
-  });
+export default function ProductList({ baskets, ...other }) {
+  const { loading, error, data } = useQuery(GET_BASKETS);
+
   if (loading) {
     console.log('loading');
   }
@@ -27,16 +22,17 @@ export default function ProductList({ products, ...other }) {
   }
   if (data) {
     console.log('got data');
-    console.log(data);
+    console.log(data.baskets);
+
+    // console.log(products);
+    return (
+      <Grid container spacing={3} {...other}>
+        {data.baskets.map((basket, key) => (
+          <Grid key={basket.id} item xs={12} sm={6} md={3}>
+            <ShopProductCard basket={basket} basketKey={key + 1} />
+          </Grid>
+        ))}
+      </Grid>
+    );
   }
-  // console.log(products);
-  return (
-    <Grid container spacing={3} {...other}>
-      {products.map((product) => (
-        <Grid key={product.id} item xs={12} sm={6} md={3}>
-          <ShopProductCard product={product} />
-        </Grid>
-      ))}
-    </Grid>
-  );
 }

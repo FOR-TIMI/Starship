@@ -170,7 +170,14 @@ const resolvers = {
     //basket: [Basket]
     //ADD basket to USER
     //use parent?
-    // IM NOT TOO SURE IF I AM PASSING IN THE RIGHT ARGS do we need {basketId} instead? , line 52
+    deleteBasket: async (parent, { basketId }, context) => {
+      if (context.user) {
+        let basket = await Basket.findOneAndRemove({ _id: basketId }).exec();
+        console.log(basket);
+        console.log(basket);
+      }
+    },
+
     addBasket: async (parent, args, context) => {
       if (context.user) {
         let tickers = await addBasketHelper(args);

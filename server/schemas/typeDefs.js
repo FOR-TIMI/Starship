@@ -121,6 +121,7 @@ const typeDefs = gql`
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
     addLike(postId: ID!): Like
+    deleteBasket(basketId: ID!): Basket
   }
 `;
 
