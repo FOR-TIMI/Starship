@@ -55,13 +55,10 @@ async function getBarsData(symbol, timeframe, limit, days) {
       limit: limit, // I have tested this upto 100000
     });
 
-    console.log(bars);
     const allBars = [];
     for (const b of bars) {
       let barsData = {};
       barsData["Name"] = b[0];
-      console.log(b[0], "this b");
-      console.log(b[1], "this b1");
       barsData["Barsdata"] = [];
 
       for (const i of b[1]) {
@@ -87,26 +84,66 @@ async function getBarsData(symbol, timeframe, limit, days) {
 
 function dataToBasket(data) {
   return new Promise((resolve) => {
-    console.log(data, "this data");
+    console.log(data[0]);
     const finalArr = [];
-    data.map((each, key) => {
-      for (let i = 0; i < each.Barsdata.length; i++) {
-        if (finalArr.length == 0) {
-          finalArr.push(each.Barsdata[i]);
+
+    // const allValues = [];
+
+    const uniqueTimeStampSymbolObjects = [];
+
+    const VWAP = [];
+    for (let i = 0; i < data.length; i++) {
+      for (let b = 0; b < data[i].Barsdata.length; b++) {
+        if (b == 0) {
+          VWAP.push(data[i].Barsdata[b]);
         }
-        for (let b = 0; b < finalArr.length; b++) {
-          if (each.Barsdata[i].Timestamp === finalArr[b].Timestamp) {
-            finalArr[b].VWAP += each.Barsdata[i].VWAP;
-            console.log(finalArr[b], each.Barsdata[i]);
-          } else {
-            finalArr.push(each.Barsdata[i]);
+        // else if(data[i].Barsdata[b].Timestamp == data[i].Barsdata[b+1].Timestamp)
+        // {
+        //   VWAP.push(data[i].Barsdata[b])
+        // }
+        let unique = true;
+        for (let x = 0; x < VWAP.length; x++) {
+          if (data[i].Barsdata[b].Timestamp == VWAP[x].Timestamp) {
+            VWAP[x].VWAP += data[i].Barsdata[b].VWAP;
+            unique = false;
+          } else if (x == VWAP.length - 1 && unique == true) {
+            VWAP.push(data[i].Barsdata[b]); //
           }
         }
-        if (key == data.length - 1 && i == each.Barsdata.length - 1) {
-          resolve(finalArr);
+        if (b == data[i].Barsdata.length - 1) {
+          resolve(VWAP);
         }
       }
-    });
+    }
+    //   data.forEach(grabData)
+
+    // function grabData(data)
+    // {
+
+    // }
+    // data.map((each, key) => {
+
+    // for (let i = 0; i < each.Barsdata.length; i++) {
+    //   if (finalArr.length == 0) {
+    //     finalArr.push(each.Barsdata[i]);
+    //   }
+
+    //   // for (let b = 0; b < finalArr.length; b++) {
+    //   // finalArr.map((item) => {
+    //   //   if (each.Barsdata[i].Timestamp === item.Timestamp) {
+    //   //     item.VWAP += each.Barsdata[i].VWAP;
+    //   //     // console.log(finalArr[b], each.Barsdata[i], "BOTH");
+    //   //     console.log("same");
+    //   //   } else {
+    //   //     finalArr.push(each.Barsdata[i]);
+    //   //   }
+    //   // });
+    //   // // }
+    //   if (key == data.length - 1 && i == each.Barsdata.length - 1) {
+    //     resolve(finalArr);
+    //   }
+    // }
+    // });
   });
 }
 
