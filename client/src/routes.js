@@ -11,6 +11,7 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import UserDashboardAppPage from './pages/UserDashboardAppPage';
+import SingleAnalysis from './pages/SingleAnalysis';
 
 // ----------------------------------------------------------------------
 
@@ -22,10 +23,10 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserDashboardAppPage /> },
+        // { path: 'following', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path: 'analysis', element: <BlogPage /> },
+        { path: 'analysis/:symbol', element: <SingleAnalysis /> },
       ],
     },
     {
