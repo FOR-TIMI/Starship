@@ -44,10 +44,9 @@ const userSchema = new Schema(
         ref: "Post",
       }
     ],
-    avatarUrl: {
+    avatar: {
       type: String,
       default: 'avatar_default.jpg',
-      required: true
     }
   },
   {

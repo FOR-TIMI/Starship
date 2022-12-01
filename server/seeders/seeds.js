@@ -25,7 +25,7 @@ db.once('open', async () => {
   const avatars = []
 
   for(let i =1; i <= 24; i++){
-    avatars.push(`avatar_${i}`)
+    avatars.push(`avatar_${i}.jpg`)
   }
 
   // create user data
@@ -40,9 +40,9 @@ db.once('open', async () => {
     //to get a random avatar index
     const randomAvatarIndex = Math.floor(Math.random() * avatars.length);
     //to get random avatar from the avatars array
-    const avatarUrl = avatars[randomAvatarIndex]
+    const avatar = avatars[randomAvatarIndex]
 
-    userData.push({ username, email, password, avatarUrl });
+    userData.push({ username, email, password, avatar });
   }
  
   // FOllowers are people following me. When they follow me, i add their user id into my follower array
