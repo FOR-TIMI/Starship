@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 // @mui functions
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, Button,  } from '@mui/material';
 import { BAR_DATA_QUERY } from '../utils/queries';
+import AddToBasket from 'src/components/add-to-basket';
 // components
 import Iconify from '../components/iconify';
 import {
@@ -21,8 +22,13 @@ import {
   PriceLineChart,
 } from '../sections/@dashboard/app';
 
+
 export default function SingleAnalysis() {
   const theme = useTheme();
+  let [modalOpen, setModalOpen] = useState(false);
+  function handleOpen() {
+    setModalOpen(!modalOpen);
+  };
 
   let { symbol } = useParams();
   symbol = symbol.toUpperCase();
@@ -35,10 +41,8 @@ export default function SingleAnalysis() {
   };
   const { data } = useQuery(BAR_DATA_QUERY, { variables: vars });
 
-  // {  "symbol": "AAPL",
-  //   "timeframe": "1Min",  "limit": 50,
-  //   "days": 5
-  // }
+
+
   // initialising with hard-code data
   let candleData = { x: moment(), y: [0, 0, 0, 0] };
   let closeP= { x: moment(), y: 0 };
@@ -81,8 +85,21 @@ export default function SingleAnalysis() {
       </Helmet>
 
       <Container maxWidth="xl">
-        <Typography variant="h3" sx={{ mb: 5 }}>
+        <Typography variant="h3" sx={{ mb: 5, display: "flex", justifyContent: "space-around" }}>
           {symbol} Summary
+          <Button
+                onClick={() => {
+                  handleOpen();
+                }}
+                sx={{ ml: 1 }}
+                
+                variant="contained"
+                
+              >
+                <Typography variant="title2" sx={{ color: 'white' }}>
+                  Add to Basket
+                </Typography>
+              </Button>
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
@@ -168,6 +185,7 @@ export default function SingleAnalysis() {
             />
           </Grid>
         </Grid>
+        <AddToBasket modalOpen={modalOpen} handleOpen={handleOpen} />
       </Container>
     </>
   );
