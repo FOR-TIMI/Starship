@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useMutation } from '@apollo/client';
+import Auth from '../utils/auth';
 
 import { LOGIN } from "../utils/mutations"
 
@@ -52,8 +53,7 @@ export default function SignIn() {
     })
 
     const res = await response
-
-    localStorage.setItem("jwt", res.data.login.token)
+    Auth.login(res.login.token);
 
   };
 

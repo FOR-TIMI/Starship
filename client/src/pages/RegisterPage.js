@@ -16,6 +16,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useMutation } from '@apollo/client';
 import { validateEmail } from 'src/utils/helpers';
 import { ADD_USER } from '../utils/mutations';
+import Auth from '../utils/auth';
 
 function Copyright(props) {
   return (
@@ -37,7 +38,6 @@ export default function Signup() {
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -57,14 +57,19 @@ export default function Signup() {
       return;
     }
 
-    const response = addUser({
-      variables: vars,
-    });
-
-    const res = await response;
-    localStorage.setItem('jwt', res.data.addUser.token);
-    navigate(`/`);
-    setErrorMessage('');
+    try {
+      const response = addUser({
+        variables: vars,
+      });
+      const res = await response;
+      Auth.login(res.login.token);
+      setErrorMessage('');
+    } catch (e) {
+      if (e.message=="Username/email already exists!"){
+        setErrorMessage('Username/email already exists!');
+      }
+      console.error(e);
+    }
   };
 
   return (
@@ -119,11 +124,11 @@ export default function Signup() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-             {errorMessage && (
-                  <Typography color={"error"}  variant="button">
-                    {errorMessage}
-                  </Typography>
-                )}
+            {errorMessage && (
+              <Typography color={'error'} variant="button">
+                {errorMessage}
+              </Typography>
+            )}
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
             </Button>
@@ -133,9 +138,7 @@ export default function Signup() {
                   Forgot password?
                 </Link> */}
               </Grid>
-              <Grid item>
-               
-              </Grid>
+              <Grid item></Grid>
             </Grid>
           </Box>
         </Box>
