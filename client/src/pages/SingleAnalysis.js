@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 // @mui functions
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, Button } from '@mui/material';
 import { BAR_DATA_QUERY } from '../utils/queries';
 // components
 import Iconify from '../components/iconify';
@@ -81,8 +81,21 @@ export default function SingleAnalysis() {
       </Helmet>
 
       <Container maxWidth="xl">
-        <Typography variant="h3" sx={{ mb: 5 }}>
+        <Typography variant="h3" sx={{ mb: 5, display: "flex", justifyContent: "space-around" }}>
           {symbol} Summary
+          <Button
+                onClick={() => {
+                  window.location.assign('/login');
+                }}
+                sx={{ ml: 1 }}
+                
+                variant="contained"
+                
+              >
+                <Typography variant="title2" sx={{ color: 'white' }}>
+                  Add to Basket
+                </Typography>
+              </Button>
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
