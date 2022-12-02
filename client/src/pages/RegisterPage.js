@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,8 +14,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useMutation } from '@apollo/client';
-
-import { ADD_USER } from "../utils/mutations"
+import { validateEmail } from 'src/utils/helpers';
+import { ADD_USER } from '../utils/mutations';
 
 function Copyright(props) {
   return (
@@ -32,29 +33,38 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Signup() {
+  const [addUser, { data, loading, error }] = useMutation(ADD_USER);
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const navigate = useNavigate();
 
 
-    const [addUser, { data, loading, error }] = useMutation(ADD_USER)
-
-
-    const handleSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     const vars = {
-        username: data.get('username'),
-        email: data.get('email'),
-        password: data.get('password'),
+      username: data.get('username'),
+      email: data.get('email'),
+      password: data.get('password'),
+    };
+
+    if (!validateEmail(vars.email) || !vars.username) {
+      setErrorMessage('Email or username is invalid');
+      return;
+    }
+    if (vars.password.length < 8) {
+      setErrorMessage(`Password should have atleast 8 characters`);
+      return;
     }
 
     const response = addUser({
-        variables: vars
-    })
+      variables: vars,
+    });
 
-    const res = await response
-
-    localStorage.setItem("jwt", res.data.addUser.token)
-
+    const res = await response;
+    localStorage.setItem('jwt', res.data.addUser.token);
+    navigate(`/`);
+    setErrorMessage('');
   };
 
   return (
@@ -76,7 +86,7 @@ export default function Signup() {
             Sign up
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
+            <TextField
               margin="normal"
               required
               fullWidth
@@ -84,6 +94,7 @@ export default function Signup() {
               label="Username"
               id="username"
               autoComplete="username"
+              autoFocus
             />
             <TextField
               margin="normal"
@@ -93,7 +104,6 @@ export default function Signup() {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
             />
             <TextField
               margin="normal"
@@ -105,28 +115,26 @@ export default function Signup() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            /> */}
+             {errorMessage && (
+                  <Typography color={"error"}  variant="button">
+                    {errorMessage}
+                  </Typography>
+                )}
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                {/* <Link href="#" variant="body2">
                   Forgot password?
-                </Link>
+                </Link> */}
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+               
               </Grid>
             </Grid>
           </Box>
