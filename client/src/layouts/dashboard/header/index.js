@@ -76,7 +76,7 @@ export default function Header({ onOpenNav }) {
           }}
         >
            {loggedIn && data ? (<>
-          <NotificationsPopover />
+          {/* <NotificationsPopover /> */}
           <AccountPopover data={data.signedInUser} />
           </>): null}
         </Stack>
