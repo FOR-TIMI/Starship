@@ -7,6 +7,7 @@ query SignedInUser {
     username
     _id
     avatar
+    email
   }
 }
 `;

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useQuery } from '@apollo/client';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
@@ -11,6 +12,10 @@ import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 
 import NotificationsPopover from './NotificationsPopover';
+import { QUERY_ME } from 'src/utils/queries';
+import Auth from '../../../utils/auth';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +48,8 @@ Header.propTypes = {
 };
 
 export default function Header({ onOpenNav }) {
+  const { data } = useQuery(QUERY_ME);
+  const loggedIn = Auth.loggedIn();
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -68,9 +75,10 @@ export default function Header({ onOpenNav }) {
             sm: 1,
           }}
         >
-          
-          <NotificationsPopover />
-          <AccountPopover />
+           {loggedIn && data ? (<>
+          {/* <NotificationsPopover /> */}
+          <AccountPopover data={data.signedInUser} />
+          </>): null}
         </Stack>
       </StyledToolbar>
     </StyledRoot>
