@@ -40,22 +40,54 @@ export default function PriceLineChart({ title, subheader, chartData }) {
 
   return (
     <Card>
-      <Box  sx={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-evenly' }}>
+      <Box sx={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-evenly' }}>
         <CardHeader title={title} subheader={subheader} />
-        <CardActionArea>
-        <InputLabel id="demo-simple-select-label">Limits</InputLabel>
-        <Select  sx={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-evenly', width: '15%' }}
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          //value={age}
-          label="Age"
-          //onChange={handleChange}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
+        
+        <CardActionArea sx={{ display:'flex'}}>
+          <InputLabel sx={{ display: 'inline', justifyContent: 'space-evenly' }} id="demo-simple-select-label">
+            Days
+          </InputLabel>
+          <Select
+            sx={{ backgroundColor: 'white', justifyContent: 'space-evenly', width: '25%' }}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            //value={age}
+            label="Age"
+            //onChange={handleChange}
+          >
+            <MenuItem value={1}>1Day</MenuItem>
+            <MenuItem value={23}>3Days</MenuItem>
+            <MenuItem value={5}>5Days</MenuItem>
+            <MenuItem value={30}>1Month</MenuItem>
+            <MenuItem value={90}>3Month</MenuItem>
+            <MenuItem value={180}>6Month</MenuItem>
+            <MenuItem value={365}>1Year</MenuItem>
+            <MenuItem value={730}>2Year</MenuItem>
+            <MenuItem value={1095}>3Year</MenuItem>
+            <MenuItem value={1460}>4Year</MenuItem>
+            <MenuItem value={1825}>5Year</MenuItem>
+          </Select>
         </CardActionArea>
+        <CardActionArea sx={{ display: 'inline' }}>
+          <InputLabel sx={{ display: 'inline', justifyContent: 'space-evenly' }} id="demo-simple-select-label">
+            Time
+          </InputLabel>
+          <Select
+            sx={{ backgroundColor: 'white', justifyContent: 'space-evenly', width: '25%' }}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            //value={age}
+            label="Age"
+            //onChange={handleChange}
+          >
+            <MenuItem value={'1Min'}>1Min</MenuItem>
+            <MenuItem value={'5Min'}>5Min</MenuItem>
+            <MenuItem value={'15Min'}>15Min</MenuItem>
+            <MenuItem value={'1H'}>1Hour</MenuItem>
+            <MenuItem value={'1D'}>1Day</MenuItem>
+          </Select>
+        </CardActionArea>
+        
       </Box>
 
       <Box sx={{ p: 3, pb: 1 }} dir="ltr">

@@ -42,10 +42,21 @@ export default function SingleAnalysis() {
   // initialising with hard-code data
   let candleData = { x: moment(), y: [0, 0, 0, 0] };
   let closeP= { x: moment(), y: 0 };
-
+  let diff = 0;
+  let currentOpenPrice = 0; 
+  let currentVolume = 0;
   if (data) {
     console.log(data.barDataQuery);
     // function for all 3
+    
+      const finalPrice = data.barDataQuery[data.barDataQuery.length - 1].ClosePrice;
+      const initialPrice = data.barDataQuery[0].ClosePrice;
+      diff = (finalPrice - initialPrice).toFixed(2);
+      
+      currentOpenPrice = data.barDataQuery[data.barDataQuery.length - 1].OpenPrice;
+      currentVolume = data.barDataQuery[data.barDataQuery.length - 1].Volume;
+  
+    // functions end
     closeP = data.barDataQuery.map((e) => {
       return {
         x: e.Timestamp,
@@ -79,15 +90,15 @@ export default function SingleAnalysis() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Max Close" total={1352831} color="info" icon={'cryptocurrency:aave'} />
+            <AppWidgetSummary title="Close Price Difference" total={diff} color="info" icon={'ri:stock-fill'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="High Price" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
+            <AppWidgetSummary title="Current Open Price" total={currentOpenPrice} color="warning" icon={'ic:baseline-open-in-browser'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Low Price" total={234} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary title="Volume" total={currentVolume} color="success" icon={'tabler:brand-cashapp'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
