@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
 
-import { LOGIN } from "../utils/mutations"
+import { LOGIN } from '../utils/mutations';
 
 function Copyright(props) {
   return (
@@ -33,28 +33,33 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-
-
-    const [login, { data, loading, error }] = useMutation(LOGIN)
-
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [login, { data, loading, error }] = useMutation(LOGIN);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     const vars = {
-        email: data.get('email'),
-        password: data.get('password'),
+      email: data.get('email'),
+      password: data.get('password'),
+    };
+    // console.log(vars)
+    try {
+      const response = login({
+        variables: vars,
+      });
+
+      const res = await response;
+      setErrorMessage('');
+      // console.log(res.data.login.token);
+      Auth.login(res.data.login.token);
+    } catch (e) {
+      if (e.message == 'Incorrect credentials') {
+        setErrorMessage('Incorrect Credentials');
+      }
+      console.error(e);
     }
-    console.log(vars)
-
-    const response = login({
-        variables: vars
-    })
-
-    const res = await response
-    Auth.login(res.login.token);
-
   };
 
   return (
@@ -100,18 +105,16 @@ export default function SignIn() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            {errorMessage && (
+              <Typography color={'error'} variant="button">
+                {errorMessage}
+              </Typography>
+            )}
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                
-              </Grid>
+              <Grid item xs></Grid>
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
