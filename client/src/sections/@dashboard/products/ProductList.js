@@ -35,7 +35,7 @@ export default function ProductList({ baskets, ...other }) {
       <Grid container spacing={3} {...other}>
         {data.baskets.map((basket, key) => (
           <Grid key={basket.id} onClick={handleClick} item xs={12} sm={6} md={3}>
-            {clicked ? <Navigate to={'/dashboard/user/' + basket._id} basket={basket} /> : <></>}
+            {clicked ? <Navigate to={'/dashboard/user/' + basket._id} /> : <></>}
             <ShopProductCard basket={basket} basketKey={key + 1} />
           </Grid>
         ))}
