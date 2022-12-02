@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
+import { useParams } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
@@ -29,6 +30,9 @@ export default function DashboardAppPage() {
   const [parsedData, setParsedData] = useState();
   const [chartLabels, setChartLabels] = useState();
   const [timestamps, setTimestamps] = useState();
+
+  let { id } = useParams();
+
   useEffect(() => {
     if (data) {
       console.log(data.barsDataQuery, 'THIS BARS');

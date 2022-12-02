@@ -93,10 +93,7 @@ function dataToBasket(data) {
         if (b == 0) {
           VWAP.push(data[i].Barsdata[b]);
         }
-        // else if(data[i].Barsdata[b].Timestamp == data[i].Barsdata[b+1].Timestamp)
-        // {
-        //   VWAP.push(data[i].Barsdata[b])
-        // }
+
         let unique = true;
         for (let x = 0; x < VWAP.length; x++) {
           if (data[i].Barsdata[b].Timestamp == VWAP[x].Timestamp) {
