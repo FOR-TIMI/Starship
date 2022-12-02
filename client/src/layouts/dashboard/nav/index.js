@@ -73,7 +73,10 @@ export default function Nav({ openNav, onCloseNav }) {
               <Typography variant="h4" sx={{ color: 'text.primary' }}>
               {data.signedInUser.username}
               </Typography>
-            </Box></> ): <Button
+            </Box></> ): <Button 
+            onClick={() => {
+              window.location.assign('/login');
+            }}
               sx={{ py: 1 }}
               fullWidth
               variant="contained"
