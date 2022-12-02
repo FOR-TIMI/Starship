@@ -173,7 +173,7 @@ const resolvers = {
     //use parent?
     deleteBasket: async (parent, { basketId }, context) => {
       if (context.user) {
-        let basket = await Basket.findOneAndRemove({ _id: basketId }).exec();
+        let basket = await Basket.find().remove().exec();
         console.log(basket);
         console.log(basket);
       }
