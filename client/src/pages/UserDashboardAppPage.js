@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
 import { useQuery } from '@apollo/client';
-import { BARS_DATA_QUERY } from '../utils/queries';
+import { BARS_DATA_QUERY, GET_BASKET } from '../utils/queries';
 import Iconify from '../components/iconify';
 // sections
 import {
@@ -30,9 +30,28 @@ export default function DashboardAppPage() {
   const [parsedData, setParsedData] = useState();
   const [chartLabels, setChartLabels] = useState();
   const [timestamps, setTimestamps] = useState();
+  let { basketId } = useParams();
 
-  let { id } = useParams();
+  let vars = {
+    id: basketId,
+  };
 
+  const { loading2, error2, data2 } = useQuery(GET_BASKET, {
+    variables: vars,
+  });
+  if (data2) {
+    console.log(data2, 'DATA 2');
+  }
+
+  const vars2 = {
+    symbols: ['MSFT', 'TSLA'],
+    timeframe: '1D',
+    limit: 15,
+    days: 15,
+  };
+  const { loading, error, data } = useQuery(BARS_DATA_QUERY, {
+    variables: vars2,
+  });
   useEffect(() => {
     if (data) {
       console.log(data.barsDataQuery, 'THIS BARS');
@@ -49,15 +68,6 @@ export default function DashboardAppPage() {
   }, []);
 
   const theme = useTheme();
-  const vars = {
-    symbols: ['MSFT', 'TSLA'],
-    timeframe: '1D',
-    limit: 15,
-    days: 15,
-  };
-  const { loading, error, data } = useQuery(BARS_DATA_QUERY, {
-    variables: vars,
-  });
 
   if (loading) {
     return <div>Loading</div>;

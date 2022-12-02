@@ -102,3 +102,18 @@ export const GET_BASKETS = gql`
     }
   }
 `;
+
+export const GET_BASKET = gql`
+  query Query($id: ID!) {
+    basket(_id: $id) {
+      _id
+      createdAt
+      tickers {
+        API
+        market
+        symbol
+        _id
+      }
+    }
+  }
+`;
