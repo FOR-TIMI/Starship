@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -36,7 +35,7 @@ const theme = createTheme();
 export default function Signup() {
   const [addUser, { data, loading, error }] = useMutation(ADD_USER);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const navigate = useNavigate();
+ 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -62,8 +61,9 @@ export default function Signup() {
         variables: vars,
       });
       const res = await response;
-      Auth.login(res.login.token);
       setErrorMessage('');
+      // console.log(res.data.addUser.token);
+      Auth.login(res.data.addUser.token);
     } catch (e) {
       if (e.message=="Username/email already exists!"){
         setErrorMessage('Username/email already exists!');

@@ -149,8 +149,9 @@ const resolvers = {
     } catch(err){
       if (err.code === 11000){
         throw new AuthenticationError("Username/email already exists!");
-      }
+      }else{
       return err;
+    }
     }
     },
     login: async (parent, { email, password }) => {
@@ -159,7 +160,7 @@ const resolvers = {
 
       // If there is no user with that email address, return an Authentication error stating so
       if (!user) {
-        throw new AuthenticationError("No user found with this email address");
+        throw new AuthenticationError("Incorrect credentials");
       }
 
       // If there is a user found, execute the `isCorrectPassword` instance method and check if the correct password was provided
