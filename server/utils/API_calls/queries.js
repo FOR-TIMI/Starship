@@ -85,31 +85,28 @@ async function getBarsData(symbol, timeframe, limit, days) {
 function dataToBasket(data) {
   return new Promise((resolve) => {
     console.log(data[0]);
-    console.log(data[1]);
     const finalArr = [];
-
-    // const allValues = [];
-
-    const uniqueTimeStampSymbolObjects = [];
 
     const VWAP = [];
     for (let i = 0; i < data.length; i++) {
       for (let b = 0; b < data[i].Barsdata.length; b++) {
-        if (b == 0 && i == 0) {
+        if (b == 0) {
           VWAP.push(data[i].Barsdata[b]);
         }
+        // else if(data[i].Barsdata[b].Timestamp == data[i].Barsdata[b+1].Timestamp)
+        // {
+        //   VWAP.push(data[i].Barsdata[b])
+        // }
         let unique = true;
         for (let x = 0; x < VWAP.length; x++) {
           if (data[i].Barsdata[b].Timestamp == VWAP[x].Timestamp) {
-            if (data[i].Barsdata[b].Symbol != VWAP[x].Symbol) {
-              VWAP[x].VWAP += data[i].Barsdata[b].VWAP;
-            }
+            VWAP[x].VWAP += data[i].Barsdata[b].VWAP;
             unique = false;
           } else if (x == VWAP.length - 1 && unique == true) {
             VWAP.push(data[i].Barsdata[b]); //
           }
         }
-        if (b == data[i].Barsdata.length - 1 && i == 1) {
+        if (b == data[i].Barsdata.length - 1) {
           resolve(VWAP);
         }
       }

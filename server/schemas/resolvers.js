@@ -112,8 +112,9 @@ const resolvers = {
         symbols.push(each.symbol);
       });
 
-      const barsData = await getBarsData(symbols, "1D", 100, 10);
+      const barsData = await getBarsData(symbols, "1D", 2, 2);
       const endData = await dataToBasket(barsData);
+      console.log(barsData, "HELLO");
       return endData;
     },
 
@@ -244,20 +245,20 @@ const resolvers = {
 
     removeFollowing: async (parent, { followingId }, context) => {
       if (context.user && followingId) {
-        try{
+        try {
           await User.findOneAndUpdate(
             { _id: context.user._id },
-            {$pull: { followings: followingId} },
+            { $pull: { followings: followingId } },
             { new: true }
-          )
-          return updatedUser
+          );
+          return updatedUser;
         } catch {
-          throw new AuthenticationError("Something went wrong")
+          throw new AuthenticationError("Something went wrong");
         }
       }
-      throw new AuthenticationError("You need to be logged in!")
+      throw new AuthenticationError("You need to be logged in!");
     },
-    
+
     addPost: async (parent, args, context) => {
       if (context.user) {
         const post = await Post.create({
