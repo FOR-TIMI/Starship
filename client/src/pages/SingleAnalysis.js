@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 // @mui functions
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography, Button } from '@mui/material';
+import { Grid, Container, Typography, Button,  } from '@mui/material';
 import { BAR_DATA_QUERY } from '../utils/queries';
+import AddToBasket from 'src/components/add-to-basket';
 // components
 import Iconify from '../components/iconify';
 import {
@@ -21,8 +22,13 @@ import {
   PriceLineChart,
 } from '../sections/@dashboard/app';
 
+
 export default function SingleAnalysis() {
   const theme = useTheme();
+  let [modalOpen, setModalOpen] = useState(false);
+  function handleOpen() {
+    setModalOpen(!modalOpen);
+  };
 
   let { symbol } = useParams();
   symbol = symbol.toUpperCase();
@@ -35,10 +41,8 @@ export default function SingleAnalysis() {
   };
   const { data } = useQuery(BAR_DATA_QUERY, { variables: vars });
 
-  // {  "symbol": "AAPL",
-  //   "timeframe": "1Min",  "limit": 50,
-  //   "days": 5
-  // }
+
+
   // initialising with hard-code data
   let candleData = { x: moment(), y: [0, 0, 0, 0] };
   let closeP= { x: moment(), y: 0 };
@@ -85,7 +89,7 @@ export default function SingleAnalysis() {
           {symbol} Summary
           <Button
                 onClick={() => {
-                  window.location.assign('/login');
+                  handleOpen();
                 }}
                 sx={{ ml: 1 }}
                 
@@ -181,6 +185,7 @@ export default function SingleAnalysis() {
             />
           </Grid>
         </Grid>
+        <AddToBasket modalOpen={modalOpen} handleOpen={handleOpen} />
       </Container>
     </>
   );
