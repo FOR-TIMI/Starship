@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-
+import moment from 'moment';
 import { faker } from '@faker-js/faker';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -18,10 +18,8 @@ import {
   AppCurrentSubject,
   FearGreedSummary,
   CandleStick,
-  PriceLineChart
+  PriceLineChart,
 } from '../sections/@dashboard/app';
-
-
 
 export default function SingleAnalysis() {
   const theme = useTheme();
@@ -29,35 +27,41 @@ export default function SingleAnalysis() {
   let { symbol } = useParams();
   symbol = symbol.toUpperCase();
 
-  
-
   const vars = {
     symbol: symbol,
     timeframe: '1Day',
     limit: 1000,
-    days: 1000,
+    days: 50,
   };
   const { data } = useQuery(BAR_DATA_QUERY, { variables: vars });
 
   // {  "symbol": "AAPL",
-//   "timeframe": "1Min",  "limit": 50,
-//   "days": 5
-// }
+  //   "timeframe": "1Min",  "limit": 50,
+  //   "days": 5
+  // }
+  // initialising with hard-code data
+  let candleData = { x: moment(), y: [0, 0, 0, 0] };
+  let closeP= { x: moment(), y: 0 };
 
-  
   if (data) {
-    var closeP= data.barDataQuery.map((e)=>{
+    console.log(data.barDataQuery);
+    // function for all 3
+    closeP = data.barDataQuery.map((e) => {
       return {
         x: e.Timestamp,
-        y: [e.OpenPrice,e.HighPrice,e.LowPrice,e.ClosePrice]      
-      }
+        y: e.ClosePrice,
+      };
     });
 
-      console.log( closeP);
-    
+    candleData = data.barDataQuery.map((e) => {
+      return {
+        x: e.Timestamp,
+        y: [e.OpenPrice, e.HighPrice, e.LowPrice, e.ClosePrice],
+      };
+    });
+
+    //console.log( closeP);
   }
-
-
 
   return (
     <>
@@ -75,7 +79,7 @@ export default function SingleAnalysis() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Max Close" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+            <AppWidgetSummary title="Max Close" total={1352831} color="info" icon={'cryptocurrency:aave'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -90,22 +94,12 @@ export default function SingleAnalysis() {
             <PriceLineChart
               title={symbol}
               subheader="Close price"
-              chartLabels={[
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
+              chartData={[
+                {
+                  name: 'Close Price',
+                  data: closeP,
+                },
               ]}
-              chartData={[{
-                data: closeP
-              }]}
             />
           </Grid>
 
@@ -129,10 +123,11 @@ export default function SingleAnalysis() {
 
           <Grid item xs={12} md={6} lg={8}>
             <CandleStick
-              
-              chartData={[{
-                data: closeP
-              }]}
+              chartData={[
+                {
+                  data: candleData,
+                },
+              ]}
             />
           </Grid>
 
