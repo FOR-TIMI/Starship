@@ -48,13 +48,15 @@ function ChildModal() {
   );
 }
 
-export default function SinglePost({open, setOpen}) {
+export default function SinglePost({open, setOpen, post, loading}) {
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
+  const { title, coverPhoto, author, comments, likes } = post
 
   return (
     <div>
@@ -66,9 +68,9 @@ export default function SinglePost({open, setOpen}) {
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: 400 }}>
-          <h2 id="parent-modal-title">Text in a modal</h2>
+          <h2 id="parent-modal-title">{title}</h2>
           <p id="parent-modal-description">
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+ 
           </p>
           <ChildModal />
         </Box>

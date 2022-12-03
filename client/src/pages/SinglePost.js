@@ -21,7 +21,6 @@ function SinglePost({modalOpen, setModalOpen, currentPostId }) {
 
   const POST = data?.post || [];
   
-  console.log(POST)
   return (
     <PostModal
         open={modalOpen}

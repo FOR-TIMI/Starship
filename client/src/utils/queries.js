@@ -37,6 +37,7 @@ query($id: ID!){
       username
     }
     title
+    coverPhoto
     comments {
       commentText
       author {
