@@ -14,6 +14,7 @@ const typeDefs = gql`
     followerCount: Int
     followings: [User]
     followingCount: Int
+    likedPosts: [Post]
     posts: [Post]
   }
 
