@@ -6,7 +6,9 @@ const {
   dataToBasket,
 } = require("../utils/API_calls/queries");
 const { signToken } = require("../utils/auth");
+const mongoose = require('mongoose')
 const { AuthenticationError } = require("apollo-server-express");
+
 
 const resolvers = {
   Query: {
@@ -218,19 +220,19 @@ const resolvers = {
 
     // userId will be my userId and the followId would be the userId of the person i'm following
     addFollowing: async (parent, { followingId }, context) => {
-      if (context.user && followingId) {
+      if ( followingId) {
         try {
           //To update the person i'm following's follower list
           await User.findOneAndUpdate(
-            { _id: followingId },
-            { $addToSet: { followers: context.user._id } },
+            { _id: '63894d0f99c523a160c7ebcd' },
+            { $addToSet: { followers: '63894d0f99c523a160c7ebca'} },
             { new: true }
           );
 
           //update my following list and userImFollowing's follower list
           //To update my following list
           const updatedUser = await User.findOneAndUpdate(
-            { _id: context.user._id },
+            { _id: '63894d0f99c523a160c7ebca' },
             { $addToSet: { followings: followingId } },
             { new: true }
           );
@@ -243,20 +245,19 @@ const resolvers = {
     },
 
     removeFollowing: async (parent, { followingId }, context) => {
-      if (context.user && followingId) {
-        try{
-          await User.findOneAndUpdate(
-            { _id: context.user._id },
-            {$pull: { followings: followingId} },
-            { new: true }
+      if (followingId) {
+          const updatedUser = await User.findOneAndUpdate(
+            { _id: '63894d0f99c523a160c7ebca' },
+            { $pull: { followings: { $in: [followingId] }} },
+            { new: true },
+            function callback (err,data) {
+              console.log(data)
+            }
           )
           return updatedUser
-        } catch {
-          throw new AuthenticationError("Something went wrong")
         }
-      }
-      throw new AuthenticationError("You need to be logged in!")
-    },
+        throw new AuthenticationError("You need to be logged in!")
+        },
     
     addPost: async (parent, args, context) => {
       if (context.user) {
