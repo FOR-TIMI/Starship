@@ -1,1 +1,1 @@
-export { default } from './post-modal';
+export { default } from './PostModal';

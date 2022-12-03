@@ -11,11 +11,10 @@ import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashb
 
 import React, { useState } from 'react';
 
-import  {QUERY_POSTS, QUERY_POST } from '../utils/queries';
+import  {QUERY_POSTS } from '../utils/queries';
 
 //Import post modal
-import SinglePostPage from './singlePostPage';
-
+import SinglePost from './SinglePost';
 
 // ----------------------------------------------------------------------
 
@@ -76,7 +75,7 @@ export default function BlogPage() {
      
           {/* Modal */}
           {modalOpen && (
-             <SinglePostPage
+          <SinglePost
              modalOpen={modalOpen}
              setModalOpen={setModalOpen}
              currentPostId={currentPostId}

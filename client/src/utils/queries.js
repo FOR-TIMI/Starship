@@ -30,23 +30,26 @@ export const QUERY_POSTS = gql`
 `;
 
 export const QUERY_POST = gql`
-  query post($id: ID!) {
-    post(_id: $id) {
-      _id
-      title
-      userId
+query($id: ID!){
+  post(_id: $id) {
+    author {
+      avatar
       username
-      comments {
-        commentText
-        createdAt
-        username
-      }
-      likes {
-        _id
-        username
+    }
+    title
+    comments {
+      commentText
+      author {
+        avatar
       }
     }
+    likes {
+      _id
+      username
+      avatar
+    }
   }
+}
 `;
 
 export const QUERY_SOCIAL = gql`
