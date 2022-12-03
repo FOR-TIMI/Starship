@@ -62,7 +62,7 @@ BlogPostCard.propTypes = {
   index: PropTypes.number,
 };
 
-export default function BlogPostCard({ post, index }) {
+export default function BlogPostCard({ post, index, selected, setSelected }) {
   
   const { coverPhoto, title,createdAt,commentCount,likeCount, author } = post
   
@@ -73,14 +73,27 @@ export default function BlogPostCard({ post, index }) {
   const POST_INFO = [
     { number: commentCount, icon: 'eva:message-circle-fill' },
     { number:likeCount, icon: 'eva:heart-outline' },
-    // { number: share, icon: 'eva:share-fill' },
   ];
+ 
+  if(selected){
+    return ( 
+    <AnimatePresence>
+      {selectedId && (
+        <motion.div layoutId={selectedId}>
+          <motion.h5>{item.subtitle}</motion.h5>
+          <motion.h2>{item.title}</motion.h2>
+          <motion.button onClick={() => setSelectedId(null)} />
+        </motion.div>
+      )}
+    </AnimatePresence>
+    )
+  }
 
 
 
 
   return (
-    <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
+    <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3} onClick={() => set}>
       <Card sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
@@ -167,6 +180,9 @@ export default function BlogPostCard({ post, index }) {
               <Box
                 key={index}
                 sx={{
+                  "&hover":{
+                      color: 'blue.500'
+                  },
                   display: 'flex',
                   alignItems: 'center',
                   ml: index === 0 ? 0 : 1.5,
@@ -179,6 +195,7 @@ export default function BlogPostCard({ post, index }) {
                 <Typography variant="caption">{fShortenNumber(info.number)}</Typography>
               </Box>
             ))}
+
           </StyledInfo>
         </CardContent>
       </Card>

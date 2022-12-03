@@ -15,7 +15,6 @@ const typeDefs = gql`
     followings: [User]
     followingCount: Int
     posts: [Post]
-    avatar: String
   }
 
   type Post {

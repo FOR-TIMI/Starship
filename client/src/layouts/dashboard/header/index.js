@@ -12,7 +12,7 @@ import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 
 import NotificationsPopover from './NotificationsPopover';
-import { QUERY_ME } from 'src/utils/queries';
+import { QUERY_ME } from '../../../utils/queries';
 import Auth from '../../../utils/auth';
 
 
