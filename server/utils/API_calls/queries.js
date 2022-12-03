@@ -140,7 +140,45 @@ function addBasketHelper(args) {
     });
   });
 }
-module.exports = { getBarData, dataToBasket, getBarsData, addBasketHelper };
+
+async function getLargeTrades(ticker) {
+  return new Promise(async (resolve) => {
+    let dateStart = moment().subtract(10, "days").format();
+    let datenow = moment().subtract(16, "minutes").format();
+
+    const trades = await alpaca.getTradesV2(ticker, {
+      start: dateStart,
+      end: datenow, // // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
+      limit: 10000,
+    });
+
+    let done = [];
+
+    for await (const b of trades) {
+      // console.log(b);
+      if (done.length < 5) {
+        done.push(b);
+      } else {
+        for (let i = 0; i < done.length; i++) {
+          let d = done.findIndex((e) => e.ID === b.ID);
+          if (done[i].Size <= b.Size && d == -1) {
+            done.splice(i, 1);
+            done.push(b);
+          }
+        }
+      }
+    }
+    resolve(done);
+  });
+}
+
+module.exports = {
+  getLargeTrades,
+  getBarData,
+  dataToBasket,
+  getBarsData,
+  addBasketHelper,
+};
 
 // (async (symbol)=>{
 

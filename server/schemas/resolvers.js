@@ -4,6 +4,7 @@ const {
   getBarsData,
   addBasketHelper,
   dataToBasket,
+  getLargeTrades,
 } = require("../utils/API_calls/queries");
 const { searchGoogle } = require("../utils/API_calls/gnews");
 const { signToken } = require("../utils/auth");
@@ -25,6 +26,12 @@ const resolvers = {
     getNews: async (parent, { ticker }) => {
       const sg = await searchGoogle(ticker);
       return sg;
+    },
+
+    getLargeTrades: async (parent, { ticker }) => {
+      const trades = await getLargeTrades(ticker);
+      console.log(trades, "LARGE TRADES");
+      return trades;
     },
 
     //Get signedIn User

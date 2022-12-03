@@ -8,16 +8,18 @@ const searchGoogle = async (searchQuery) => {
 
     const page = await browser.newPage();
 
-    await page.goto("https://www.google.com/webhp?tbm=nws");
+    await page.goto(
+      "https://www.google.com/search?q=" + searchQuery + "&tbm=nws"
+    );
 
-    //Finds input element with name attribue 'q' and types searchQuery
-    await page.type('input[name="q"]', searchQuery);
+    // //Finds input element with name attribue 'q' and types searchQuery
+    // await page.type('input[name="q"]', searchQuery);
 
-    //   Finds an input with name 'btnK', after so it executes .click() DOM Method
-    await page.$eval("input[name=btnK]", (button) => button.click());
+    // //   Finds an input with name 'btnK', after so it executes .click() DOM Method
+    // await page.$eval("input[name=btnK]", (button) => button.click());
 
     //Wait for one of the div classes to load
-    await page.waitForSelector(".uhHOwf > img");
+    await page.waitForSelector(".uhHOwf > img", { visible: true });
 
     const results = await page.content();
     const $ = cheerio.load(results);
