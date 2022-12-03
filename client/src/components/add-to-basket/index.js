@@ -24,6 +24,10 @@ function ChildModal() {
     const handleOpen = () => {
       setOpen(!open);
     };
+    function handleSubmit() {
+// query to save basket in backend and show error if error
+     setOpen(!open);
+    }
     
   
     return (
@@ -39,7 +43,9 @@ function ChildModal() {
           <Box sx={{ ...style }}>
             <h2 id="child-modal-title">Give a name to the basket</h2>
             <TextField id="standard-basic" label="Basket Name" variant="standard" /><br></br>
-            <Button sx={{p:2, my:2}} variant="contained" onClick={handleOpen}>Submit</Button>
+            <Button sx={{p:2, my:2}} variant="contained" onClick={handleSubmit}>Submit</Button>
+            <Button sx={{p:2, my:2}} variant="contained" onClick={handleOpen}>Close</Button>
+
           </Box>
         </Modal>
       </>
