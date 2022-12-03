@@ -21,17 +21,15 @@ import {
   AppConversionRates,
 } from '../sections/@dashboard/app';
 
-// import { dataToBasket } from '../utils/dataToBasket';
-
 // ----------------------------------------------------------------------
 
-export default function DashboardAppPage() {
+export default function MainAppPage() {
+  const theme = useTheme();
+
   const [parsedData, setParsedData] = useState();
 
-  const theme = useTheme();
   const vars = {
-    //create function that gets top 5 stocks?
-    symbols: ['AAPL', 'MSFT'],
+    symbols: ['MSFT', 'TSLA', 'AAPL'],
     timeframe: '1D',
     limit: 15,
     days: 15,
@@ -52,20 +50,17 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Starship </title>
+        <title> Welcome to the Starship </title>
       </Helmet>
-
-
-      {/* add component for time series */}
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          Prepare to be amazed! 
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Change" total={714000} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>

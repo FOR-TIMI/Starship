@@ -10,20 +10,35 @@ import RegisterPage from './pages/RegisterPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
+import MainAppPage from './pages/LandingPage';
 import UserDashboardAppPage from './pages/UserDashboardAppPage';
 import SingleAnalysis from './pages/SingleAnalysis';
+// import Auth from '../
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
+
   const routes = useRoutes([
+    {
+      path: '/mainpage',
+      element: <DashboardLayout />,
+      children: [
+        { element: <Navigate to="/mainpage/app"/>, index: true },
+        { path: 'app', element: <DashboardAppPage /> },
+        // { path: 'following', element: <UserPage /> },
+        { path: 'products', element: <ProductsPage /> },
+        { path: 'blog', element: <BlogPage /> },
+        { path: 'analysis/:symbol', element: <SingleAnalysis /> },
+      ],
+    },
     {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
-        // { path: 'following', element: <UserPage /> },
+        //{ path: 'following', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'analysis/:symbol', element: <SingleAnalysis /> },
