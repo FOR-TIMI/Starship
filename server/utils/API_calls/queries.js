@@ -51,7 +51,7 @@ async function getBarsData(symbol, timeframe, limit, days) {
     const bars = await alpaca.getMultiBarsV2(symbol, {
       start: dateStart,
       end: datenow, // it cannot be latest time, we need to keep it 15min behind for free API data.
-      timeframe: alpaca.newTimeframe(30, alpaca.timeframeUnit.MIN), // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
+      timeframe: timeframe, // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
       limit: limit, // I have tested this upto 100000
     });
     for (const b of bars) {
