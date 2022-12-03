@@ -14,7 +14,7 @@ import Iconify from '../components/iconify';
 import {
   AppTasks,
   AppNewsUpdate2,
-  AppOrderTimeline,
+  AppOrderTimeline2,
   AppCurrentVisits2,
   AppWebsiteVisits2,
   AppTrafficBySite,
@@ -58,7 +58,6 @@ export default function DashboardAppPage() {
   const { loading, error, data } = useQuery(GET_DATA_FROM_BASKET, {
     variables: vars,
   });
-
 
   if (data) {
     // daily change
@@ -264,7 +263,7 @@ export default function DashboardAppPage() {
             </Grid>
 
             <Grid item xs={12} md={6} lg={4}>
-              <AppOrderTimeline
+              <AppOrderTimeline2
                 title="Order Timeline"
                 list={[...Array(5)].map((_, index) => ({
                   id: faker.datatype.uuid(),

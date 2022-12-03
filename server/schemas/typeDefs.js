@@ -97,6 +97,16 @@ const typeDefs = gql`
     img: String
   }
 
+  type Trade {
+    Timestamp: String
+    Exchange: String
+    Price: Float
+    Size: Float
+    Conditions: [String]
+    ID: Int
+    Tape: String
+  }
+
   type Query {
     users: [User]
     baskets: [Basket]
@@ -125,6 +135,7 @@ const typeDefs = gql`
       days: Int!
     ): [Bardata!]
     getNews(ticker: String!): [GNews]
+    getLargeTrades(ticker: String!): [Trade]
   }
 
   type Mutation {
