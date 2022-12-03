@@ -23,9 +23,7 @@ const resolvers = {
     },
 
     getNews: async (parent, { ticker }) => {
-      // const basket = await Basket.find({ _id: basketId }).populate("ticker");
       const sg = await searchGoogle(ticker);
-      console.log(sg);
       return sg;
     },
 
@@ -168,21 +166,21 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
       // First we create the user
-      
-      try{
-      const user = await User.create({ username, email, password });
-      
-      // To reduce friction for the user, we immediately sign a JSON Web Token and log the user in after they are created
-      const token = signToken(user);
-      // Return an `Auth` object that consists of the signed token and user's information
-      return { token, user };
-    } catch(err){
-      if (err.code === 11000){
-        throw new AuthenticationError("Username/email already exists!");
-      }else{
-      return err;
-    }
-    }
+
+      try {
+        const user = await User.create({ username, email, password });
+
+        // To reduce friction for the user, we immediately sign a JSON Web Token and log the user in after they are created
+        const token = signToken(user);
+        // Return an `Auth` object that consists of the signed token and user's information
+        return { token, user };
+      } catch (err) {
+        if (err.code === 11000) {
+          throw new AuthenticationError("Username/email already exists!");
+        } else {
+          return err;
+        }
+      }
     },
     login: async (parent, { email, password }) => {
       // Look up the user by the provided email address. Since the `email` field is unique, we know that only one person will exist with that email
