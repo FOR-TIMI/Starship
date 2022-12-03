@@ -1,5 +1,17 @@
 import { gql } from '@apollo/client';
 
+
+export const QUERY_ME = gql`
+query SignedInUser {
+  signedInUser {
+    username
+    _id
+    avatar
+    email
+  }
+}
+`;
+
 export const QUERY_POSTS = gql`
   query posts {
     posts {
@@ -138,3 +150,4 @@ export const NEWS_QUERY = gql`
     }
   }
 `;
+

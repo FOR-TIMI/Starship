@@ -6,6 +6,7 @@ const typeDefs = gql`
   type User {
     _id: ID
     username: String
+    avatar: String
     email: String
     friendCount: Int
     baskets: [Basket]

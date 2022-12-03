@@ -8,6 +8,7 @@ import { Grid, Container, Typography } from '@mui/material';
 // components
 import { useQuery } from '@apollo/client';
 import { BARS_DATA_QUERY, GET_BASKET, GET_DATA_FROM_BASKET } from '../utils/queries';
+
 import Iconify from '../components/iconify';
 // sections
 import {
@@ -57,6 +58,7 @@ export default function DashboardAppPage() {
   const { loading, error, data } = useQuery(GET_DATA_FROM_BASKET, {
     variables: vars,
   });
+
 
   if (data) {
     // daily change
