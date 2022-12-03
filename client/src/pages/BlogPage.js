@@ -14,7 +14,8 @@ import React, { useState } from 'react';
 import  {QUERY_POSTS, QUERY_POST } from '../utils/queries';
 
 //Import post modal
-import SinglePost from '../components/singlePost'
+import SinglePostPage from './singlePostPage';
+
 
 // ----------------------------------------------------------------------
 
@@ -24,20 +25,6 @@ const SORT_OPTIONS = [
   { value: 'oldest', label: 'Oldest' },
 ];
 
-// const posts = [...Array(23)].map((_, index) => ({
-//   id: faker.datatype.uuid(),
-//   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
-//   title: POST_TITLES[index + 1],
-//   createdAt: faker.date.past(),
-//   view: faker.datatype.number(),
-//   comment: faker.datatype.number(),
-//   share: faker.datatype.number(),
-//   favorite: faker.datatype.number(),
-//   author: {
-//     name: faker.name.fullName(),
-//     avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
-//   },
-// }));
 // ----------------------------------------------------------------------
 
 export default function BlogPage() {
@@ -45,8 +32,6 @@ export default function BlogPage() {
   const { loading,data } = useQuery(QUERY_POSTS);
   const POSTS = data?.posts || [];
 
-  //To keep track of the post that was selected
-  const [selectedId, setSelectedId] = useState(null)
   
   //To Keep track of modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -91,11 +76,11 @@ export default function BlogPage() {
      
           {/* Modal */}
           {modalOpen && (
-            <SinglePost
-              open={modalOpen}
-              setOpen={setModalOpen}
-              currentPostId={currentPostId}
-            />
+             <SinglePostPage
+             modalOpen={modalOpen}
+             setModalOpen={setModalOpen}
+             currentPostId={currentPostId}
+           />
           )}
 
           

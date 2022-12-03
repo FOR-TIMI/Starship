@@ -75,19 +75,7 @@ export default function BlogPostCard({ post, index, modalToggle }) {
     { number:likeCount, icon: 'eva:heart-outline', name: "like" },
   ];
  
-  // if(selected){
-  //   return ( 
-  //   <AnimatePresence>
-  //     {selectedId && (
-  //       <motion.div layoutId={selectedId}>
-  //         <motion.h5>{item.subtitle}</motion.h5>
-  //         <motion.h2>{item.title}</motion.h2>
-  //         <motion.button onClick={() => setSelectedId(null)} />
-  //       </motion.div>
-  //     )}
-  //   </AnimatePresence>
-  //   )
-  // }
+ 
 
   const handleClick = (e) => {
      console.log(e.target.dataset)
@@ -177,6 +165,7 @@ export default function BlogPostCard({ post, index, modalToggle }) {
               ...(latestPostLarge && { typography: 'h5', height: 60 }),
               ...((latestPostLarge || latestPost) && {
                 color: 'common.white',
+                cursor: "pointer"
               }),
             }}
           >
@@ -191,7 +180,7 @@ export default function BlogPostCard({ post, index, modalToggle }) {
                 key={index}
                 sx={{
                   "&:hover":{
-                      color: 'lightred'
+                      color: 'red'
                   },
                   cursor: 'pointer',
                   display: 'flex',
