@@ -28,6 +28,7 @@ import {
 // components
 import { useQuery } from '@apollo/client';
 import { useParams, Link } from 'react-router-dom';
+import FollowButton from '../components/toggle-button'
 import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
@@ -90,6 +91,8 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function UserPage() {
+  const [toggleSelected, setToggleSelected] = React.useState(false);
+
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -107,22 +110,20 @@ export default function UserPage() {
   // for toggling following/follower list:
   const [social, setSocial] = useState('following')
   
+  // for toggling follow or unfollow option under Followers page
+  const [follow, setFollow] = useState('')
   // querying and unpacking data from user query [following] or [follower]:
   
-    const { id: userId } = useParams();
+    // const { id: userId } = useParams();
     
-    const { loading, data } = useQuery(QUERY_SOCIAL, {
-      variables: { username: 'Johann_Rutherford'}
-    })
+  const { loading, data } = useQuery(QUERY_SOCIAL, {
+    variables: { username: 'Johann_Rutherford'}
+  })
 
-    const userSocial = data
-    const userFollowers = userSocial.user.followers
-    const userFollowings = userSocial.user.followings
-    // const userFollowings = userSocial.user.followings
-    console.log(userSocial)
-    console.log(userFollowers[0].username)
-    
-  
+  const users = data?.user || {}
+
+  const userFollowers = users.followers
+  const userFollowings = users.followings 
 
   // -----------------for toggle button-----------------------//
 
@@ -132,6 +133,9 @@ export default function UserPage() {
     setAlignment(newAlignment);
   };
   // ---------------------------- //
+  const handleFollowToggle = (event) => {
+    console.log('toggle clicked', event.target.getAttribute('id'))
+  }
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -260,10 +264,8 @@ export default function UserPage() {
                       const id = user._id
                       const name = user.username
                       const selectedUser = selected.indexOf(name) !== -1
-                      const avatarUrl = 'avatar'
-                      
+                      const avatarUrl = 'avatar'                  
                     
-
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
@@ -288,6 +290,7 @@ export default function UserPage() {
                           </Link>
                         </TableCell>
 
+                        <FollowButton user = {user} />
                         {/* <TableCell align="left">{company}</TableCell> */}
 
                         {/* <TableCell align="left">{role}</TableCell> */}
@@ -298,11 +301,11 @@ export default function UserPage() {
                           <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
                         </TableCell> */}
 
-                        <TableCell align="right">
+                        {/* <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     );
                   })}
@@ -343,7 +346,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={social==='following' ? userFollowings.length : userFollowers.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -379,10 +382,21 @@ export default function UserPage() {
         {/* vertical ellipses with popover for deleting from list 
             TODO: add functionality to 'Remove Friend'
         */}
-        <MenuItem sx={{ color: 'error.main' }}>
+        { social === 'following'?
+         <MenuItem sx={{ color: 'error.main' }} onClick={()=> 
+          console.log('unfollow clicked')}
+          >
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Unfollow
-        </MenuItem>
+         </MenuItem> :
+         <MenuItem name={`${follow}`} onClick={(event)=>
+         console.log(event.target.parentElement.parentElement) }
+         >
+          <Iconify/>
+          {follow}
+         </MenuItem>
+        }
+        
       </Popover>
     </>
   );

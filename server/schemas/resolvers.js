@@ -154,19 +154,20 @@ const resolvers = {
     getDataFromBasket: async (parent, { id }, context) => {
       const basket = await Basket.find({ _id: id }).populate("ticker");
       const symbols = [];
-      console.log(basket[0].tickers);
+      console.log(basket);
       basket[0].tickers.map((each) => {
         symbols.push(each.symbol);
       });
-      const barsData = await getBarsData(symbols, "1D", 100, 10);
-      // console.log(barsData);
+
+      const barsData = await getBarsData(symbols, "1D", 2, 2);
       const endData = await dataToBasket(barsData);
-      // console.log(endData, "end data");
+      console.log(barsData, "HELLO");
       return endData;
     },
 
     //Get all Baskets
-    baskets: async (parent, context) => {
+    baskets: async (parent, args, context) => {
+      // console.log("hello");
       if (context.user) {
         const params = context.user.username;
         return Basket.find({ username: params }).sort({ createdAt: -1 });
@@ -184,11 +185,21 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
       // First we create the user
+      
+      try{
       const user = await User.create({ username, email, password });
+      
       // To reduce friction for the user, we immediately sign a JSON Web Token and log the user in after they are created
       const token = signToken(user);
       // Return an `Auth` object that consists of the signed token and user's information
       return { token, user };
+    } catch(err){
+      if (err.code === 11000){
+        throw new AuthenticationError("Username/email already exists!");
+      }else{
+      return err;
+    }
+    }
     },
     login: async (parent, { email, password }) => {
       // Look up the user by the provided email address. Since the `email` field is unique, we know that only one person will exist with that email
@@ -196,7 +207,7 @@ const resolvers = {
 
       // If there is no user with that email address, return an Authentication error stating so
       if (!user) {
-        throw new AuthenticationError("No user found with this email address");
+        throw new AuthenticationError("Incorrect credentials");
       }
 
       // If there is a user found, execute the `isCorrectPassword` instance method and check if the correct password was provided
@@ -217,7 +228,14 @@ const resolvers = {
     //basket: [Basket]
     //ADD basket to USER
     //use parent?
-    // IM NOT TOO SURE IF I AM PASSING IN THE RIGHT ARGS do we need {basketId} instead? , line 52
+    deleteBasket: async (parent, { basketId }, context) => {
+      if (context.user) {
+        let basket = await Basket.find().remove().exec();
+        console.log(basket);
+        console.log(basket);
+      }
+    },
+
     addBasket: async (parent, args, context) => {
       if (context.user) {
         let tickers = await addBasketHelper(args);
@@ -272,6 +290,22 @@ const resolvers = {
           const updatedUser = await User.findOneAndUpdate(
             { _id: context.user._id },
             { $addToSet: { followings: followingId } },
+            { new: true }
+          );
+          return updatedUser;
+        } catch {
+          throw new AuthenticationError("Something went wrong");
+        }
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
+    removeFollowing: async (parent, { followingId }, context) => {
+      if (context.user && followingId) {
+        try {
+          await User.findOneAndUpdate(
+            { _id: context.user._id },
+            { $pull: { followings: followingId } },
             { new: true }
           );
           return updatedUser;

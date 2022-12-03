@@ -6,6 +6,7 @@ const typeDefs = gql`
   type User {
     _id: ID
     username: String
+    avatar: String
     email: String
     friendCount: Int
     baskets: [Basket]
@@ -106,7 +107,7 @@ const typeDefs = gql`
       limit: Int!
       days: Int!
     ): [Barsdata]
-    getDataFromBasket(id: ID!): [Barsdata]
+    getDataFromBasket(id: ID!): [Bardata]
   }
 
   type Mutation {
@@ -117,7 +118,9 @@ const typeDefs = gql`
     addPost(title: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
+    removeFollowing(followingId: ID!): User
     addLike(postId: ID!): Post
+    deleteBasket(basketId: ID!): Basket
   }
 `;
 

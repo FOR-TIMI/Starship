@@ -1,4 +1,16 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
+
+
+export const QUERY_ME = gql`
+query SignedInUser {
+  signedInUser {
+    username
+    _id
+    avatar
+    email
+  }
+}
+`;
 
 export const QUERY_POSTS = gql`
     query{
@@ -15,52 +27,51 @@ export const QUERY_POSTS = gql`
         }
       }
     }
+  }
 `;
 
 export const QUERY_POST = gql`
   query post($id: ID!) {
     post(_id: $id) {
-        _id
-        title
-        userId
+      _id
+      title
+      userId
+      username
+      comments {
+        commentText
+        createdAt
         username
-        comments {
-          commentText
-          createdAt
-          username
-        } 
-        likes {
-          _id
-          username
-        }
       }
+      likes {
+        _id
+        username
+      }
+    }
   }
 `;
 
-
-
-export const QUERY_SOCIAL = gql `
-    query social ($username: String!) {
-        user (username: $username) {
-            _id
-            username
-            followers {
-                _id
-                username
-                baskets {
-                    _id
-                }
-            }
-            followings {
-                _id
-                username
-                baskets {
-                    _id
-                }
-            }
+export const QUERY_SOCIAL = gql`
+  query social($username: String!) {
+    user(username: $username) {
+      _id
+      username
+      followers {
+        _id
+        username
+        baskets {
+          _id
         }
+      }
+      followings {
+        _id
+        username
+        baskets {
+          _id
+        }
+      }
     }
-`
+  }
+`;
 
 export const BAR_DATA_QUERY = gql`
   query BarDataQuery($symbol: String!, $timeframe: String!, $limit: Int!, $days: Int!) {
@@ -76,7 +87,6 @@ export const BAR_DATA_QUERY = gql`
     }
   }
 `;
-
 
 export const BARS_DATA_QUERY = gql`
   query Query($symbols: [String]!, $timeframe: String!, $limit: Int!, $days: Int!) {
@@ -97,3 +107,32 @@ export const BARS_DATA_QUERY = gql`
   }
 `;
 
+export const GET_BASKETS = gql`
+  query Query {
+    baskets {
+      _id
+      createdAt
+      tickers {
+        market
+        _id
+        API
+        symbol
+      }
+    }
+  }
+`;
+
+export const GET_BASKET = gql`
+  query Query($id: ID!) {
+    basket(_id: $id) {
+      _id
+      createdAt
+      tickers {
+        API
+        market
+        symbol
+        _id
+      }
+    }
+  }
+`;
