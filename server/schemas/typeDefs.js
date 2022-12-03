@@ -20,10 +20,9 @@ const typeDefs = gql`
 
   type Post {
     _id: ID
-    userId: ID
+    author: User
     title: String
     createdAt: String
-    author: User
     basketId: String
     likes: [User]
     comments: [Comment]
