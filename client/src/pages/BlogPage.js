@@ -9,7 +9,12 @@ import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashb
 // mock
 // import POSTS from '../_mock/blog';
 
+import React, { useState } from 'react';
+
 import  {QUERY_POSTS, QUERY_POST } from '../utils/queries';
+
+//Import post modal
+import SinglePost from '../components/singlePost'
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +47,18 @@ export default function BlogPage() {
 
   //To keep track of the post that was selected
   const [selectedId, setSelectedId] = useState(null)
+  
+  //To Keep track of modal
+  const [modalOpen, setModalOpen] = useState(false);
+
+  //To keep track of the current post selected
+  const [currentPostId, setCurrentPostId] = useState();
+  
+  const toggleModal = (_id) => {
+    setCurrentPostId(_id);
+    setModalOpen(!modalOpen)
+  }
+
 
   return (
     <>
@@ -64,11 +81,24 @@ export default function BlogPage() {
           <BlogPostsSort options={SORT_OPTIONS} />
         </Stack>
 
+
         <Grid container spacing={3}>
 
+          {/* posts  */}
           {POSTS && POSTS.map((post, index) => (
-            <BlogPostCard key={post._id} post={post} index={index} setSelectedId={setSelectedId} selectedId={selectedId} />
+            <BlogPostCard key={post._id} post={post} index={index} modalToggle={toggleModal}/>
           ))}
+     
+          {/* Modal */}
+          {modalOpen && (
+            <SinglePost
+              open={modalOpen}
+              setOpen={setModalOpen}
+              currentPostId={currentPostId}
+            />
+          )}
+
+          
         </Grid>
       </Container>
     </>

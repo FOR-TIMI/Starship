@@ -62,39 +62,48 @@ BlogPostCard.propTypes = {
   index: PropTypes.number,
 };
 
-export default function BlogPostCard({ post, index, selected, setSelected }) {
+export default function BlogPostCard({ post, index, modalToggle }) {
   
-  const { coverPhoto, title,createdAt,commentCount,likeCount, author } = post
+  const { coverPhoto, title,createdAt,commentCount,likeCount, author, _id } = post
   
   // const { cover, title, view, comment, share, author, createdAt } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
   const POST_INFO = [
-    { number: commentCount, icon: 'eva:message-circle-fill' },
-    { number:likeCount, icon: 'eva:heart-outline' },
+    { number: commentCount, icon: 'eva:message-circle-fill',name: "comment" },
+    { number:likeCount, icon: 'eva:heart-outline', name: "like" },
   ];
  
-  if(selected){
-    return ( 
-    <AnimatePresence>
-      {selectedId && (
-        <motion.div layoutId={selectedId}>
-          <motion.h5>{item.subtitle}</motion.h5>
-          <motion.h2>{item.title}</motion.h2>
-          <motion.button onClick={() => setSelectedId(null)} />
-        </motion.div>
-      )}
-    </AnimatePresence>
-    )
+  // if(selected){
+  //   return ( 
+  //   <AnimatePresence>
+  //     {selectedId && (
+  //       <motion.div layoutId={selectedId}>
+  //         <motion.h5>{item.subtitle}</motion.h5>
+  //         <motion.h2>{item.title}</motion.h2>
+  //         <motion.button onClick={() => setSelectedId(null)} />
+  //       </motion.div>
+  //     )}
+  //   </AnimatePresence>
+  //   )
+  // }
+
+  const handleClick = (e) => {
+     console.log(e.target.dataset)
+     return;
   }
 
-
+ 
 
 
   return (
-    <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3} onClick={() => set}>
-      <Card sx={{ position: 'relative' }}>
+    <Grid 
+      item xs={12} 
+      sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}
+      
+    >
+      <Card sx={{ position: 'relative' }} onClick={() => modalToggle(post._id)}>
         <StyledCardMedia
           sx={{
             ...((latestPostLarge || latestPost) && {
@@ -157,7 +166,6 @@ export default function BlogPostCard({ post, index, selected, setSelected }) {
           }}
         >
           <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {/* {fDate(createdAt)} */}
             {createdAt}
           </Typography>
 
@@ -178,11 +186,14 @@ export default function BlogPostCard({ post, index, selected, setSelected }) {
           <StyledInfo>
             {POST_INFO.map((info, index) => (
               <Box
+                onClick={handleClick}
+                data-name={info.name}
                 key={index}
                 sx={{
-                  "&hover":{
-                      color: 'blue.500'
+                  "&:hover":{
+                      color: 'lightred'
                   },
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   ml: index === 0 ? 0 : 1.5,
@@ -192,7 +203,7 @@ export default function BlogPostCard({ post, index, selected, setSelected }) {
                 }}
               >
                 <Iconify icon={info.icon} sx={{ width: 16, height: 16, mr: 0.5 }} />
-                <Typography variant="caption">{fShortenNumber(info.number)}</Typography>
+                <Typography variant="caption">{fShortenNumber(info.number) || 0}</Typography>
               </Box>
             ))}
 
