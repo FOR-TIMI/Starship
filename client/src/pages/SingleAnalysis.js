@@ -30,14 +30,20 @@ export default function SingleAnalysis() {
     setModalOpen(!modalOpen);
   }
 
+// SetStates to use dropdwon menu for 'days' and 'time'
+
+  const [dayState, setDayState] = useState(30);
+ const [timeState, setTimeState] = useState('1D');
+
+
   let { symbol } = useParams();
   symbol = symbol.toUpperCase();
 
   const vars = {
     symbol: symbol,
-    timeframe: '1Day',
-    limit: 1000,
-    days: 50,
+    timeframe: timeState,
+    limit: 500,
+    days: dayState
   };
   const { data } = useQuery(BAR_DATA_QUERY, { variables: vars });
 
@@ -122,13 +128,17 @@ export default function SingleAnalysis() {
           <Grid item xs={12} md={6} lg={8}>
             <PriceLineChart
               title={symbol}
-              subheader="Close price"
+             
               chartData={[
                 {
                   name: 'Close Price',
                   data: closeP,
                 },
               ]}
+               setDayState={setDayState}
+               setTimeState={setTimeState}
+               dayState = {dayState}
+               timeState = {timeState}
             />
           </Grid>
 
