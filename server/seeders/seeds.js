@@ -191,6 +191,15 @@ for(let post of createdPosts){
             { $addToSet : { likes : userId}},
             { runValidators: true }
           )
+
+          /**
+           * Add to a user's liked posts
+           */
+          await User.updateOne(
+            { _id: userId},
+            { $addToSet:{ likedPosts: postId}},
+            { runValidators: true }
+          )
      }
   }
 

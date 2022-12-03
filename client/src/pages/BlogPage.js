@@ -40,6 +40,8 @@ export default function BlogPage() {
   const { loading,data } = useQuery(QUERY_POSTS);
   const POSTS = data?.posts || [];
 
+  //To keep track of the post that was selected
+  const [selectedId, setSelectedId] = useState(null)
 
   return (
     <>
@@ -65,7 +67,7 @@ export default function BlogPage() {
         <Grid container spacing={3}>
 
           {POSTS && POSTS.map((post, index) => (
-            <BlogPostCard key={post._id} post={post} index={index} />
+            <BlogPostCard key={post._id} post={post} index={index} setSelectedId={setSelectedId} selectedId={selectedId} />
           ))}
         </Grid>
       </Container>
