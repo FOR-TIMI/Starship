@@ -9,7 +9,12 @@ import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashb
 // mock
 // import POSTS from '../_mock/blog';
 
-import  {QUERY_POSTS, QUERY_POST } from '../utils/queries';
+import React, { useState } from 'react';
+
+import  {QUERY_POSTS } from '../utils/queries';
+
+//Import post modal
+import SinglePost from './SinglePost';
 
 // ----------------------------------------------------------------------
 
@@ -19,26 +24,24 @@ const SORT_OPTIONS = [
   { value: 'oldest', label: 'Oldest' },
 ];
 
-// const posts = [...Array(23)].map((_, index) => ({
-//   id: faker.datatype.uuid(),
-//   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
-//   title: POST_TITLES[index + 1],
-//   createdAt: faker.date.past(),
-//   view: faker.datatype.number(),
-//   comment: faker.datatype.number(),
-//   share: faker.datatype.number(),
-//   favorite: faker.datatype.number(),
-//   author: {
-//     name: faker.name.fullName(),
-//     avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
-//   },
-// }));
 // ----------------------------------------------------------------------
 
 export default function BlogPage() {
 
   const { loading,data } = useQuery(QUERY_POSTS);
   const POSTS = data?.posts || [];
+
+  
+  //To Keep track of modal
+  const [modalOpen, setModalOpen] = useState(false);
+
+  //To keep track of the current post selected
+  const [currentPostId, setCurrentPostId] = useState();
+  
+  const toggleModal = (_id) => {
+    setCurrentPostId(_id);
+    setModalOpen(!modalOpen)
+  }
 
 
   return (
@@ -62,11 +65,24 @@ export default function BlogPage() {
           <BlogPostsSort options={SORT_OPTIONS} />
         </Stack>
 
+
         <Grid container spacing={3}>
 
+          {/* posts  */}
           {POSTS && POSTS.map((post, index) => (
-            <BlogPostCard key={post._id} post={post} index={index} />
+            <BlogPostCard key={post._id} post={post} index={index} modalToggle={toggleModal}/>
           ))}
+     
+          {/* Modal */}
+          {modalOpen && (
+          <SinglePost
+             modalOpen={modalOpen}
+             setModalOpen={setModalOpen}
+             currentPostId={currentPostId}
+           />
+          )}
+
+          
         </Grid>
       </Container>
     </>

@@ -14,34 +14,30 @@ const typeDefs = gql`
     followerCount: Int
     followings: [User]
     followingCount: Int
+    likedPosts: [Post]
     posts: [Post]
   }
 
   type Post {
     _id: ID
-    userId: ID
+    author: User
     title: String
     createdAt: String
-    username: String
     basketId: String
-    likes: [Like]
+    likes: [User]
     comments: [Comment]
     commentCount: Int
     likeCount: Int
+    coverPhoto: String
   }
 
   type Comment {
     _id: ID
-    username: String
+    author: User
     commentText: String
     createdAt: String
   }
 
-  type Like {
-    _id: ID
-    username: String
-    likeCount: Int
-  }
 
   type Basket {
     _id: ID
@@ -62,14 +58,14 @@ const typeDefs = gql`
   }
 
   type Bardata {
-    Timestamp: String
-    OpenPrice: Float
-    HighPrice: Float
-    LowPrice: Float
-    ClosePrice: Float
-    Volume: Float
-    TradeCount: Float
-    VWAP: Float
+    Timestamp: String!
+    OpenPrice: Float!
+    HighPrice: Float!
+    LowPrice: Float!
+    ClosePrice: Float!
+    Volume: Int!
+    TradeCount: Int!
+    VWAP: Float!
   }
 
   type Bardata2 {
@@ -87,6 +83,24 @@ const typeDefs = gql`
   type Barsdata {
     Name: String
     Barsdata: [Bardata2]
+  }
+
+  type GNews {
+    title: String
+    link: String
+    pubDate: String
+    content: String
+    img: String
+  }
+
+  type Trade {
+    Timestamp: String
+    Exchange: String
+    Price: Float
+    Size: Float
+    Conditions: [String]
+    ID: Int
+    Tape: String
   }
 
   type Query {
@@ -110,7 +124,14 @@ const typeDefs = gql`
       limit: Int!
       days: Int!
     ): [Barsdata]
-    getDataFromBasket(id: ID!): [Bardata]
+    getDataFromBasket(
+      id: ID!
+      timeframe: String!
+      limit: Int!
+      days: Int!
+    ): [Bardata!]
+    getNews(ticker: String!): [GNews]
+    getLargeTrades(ticker: String!): [Trade]
   }
 
   type Mutation {
@@ -122,7 +143,7 @@ const typeDefs = gql`
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
     removeFollowing(followingId: ID!): User
-    addLike(postId: ID!): Like
+    addLike(postId: ID!): Post
     deleteBasket(basketId: ID!): Basket
   }
 `;

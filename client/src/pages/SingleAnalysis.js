@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 // @mui functions
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography, Button,  } from '@mui/material';
+import { Grid, Container, Typography, Button } from '@mui/material';
 import { BAR_DATA_QUERY } from '../utils/queries';
 import AddToBasket from 'src/components/add-to-basket';
 // components
@@ -21,14 +21,14 @@ import {
   CandleStick,
   PriceLineChart,
 } from '../sections/@dashboard/app';
-
+import AppNewsUpdate3 from '../sections/@dashboard/app/AppNewsUpdate3';
 
 export default function SingleAnalysis() {
   const theme = useTheme();
   let [modalOpen, setModalOpen] = useState(false);
   function handleOpen() {
     setModalOpen(!modalOpen);
-  };
+  }
 
 // SetStates to use dropdwon menu for 'days' and 'time'
 
@@ -49,21 +49,21 @@ export default function SingleAnalysis() {
 
   // initialising with hard-code data
   let candleData = { x: moment(), y: [0, 0, 0, 0] };
-  let closeP= { x: moment(), y: 0 };
+  let closeP = { x: moment(), y: 0 };
   let diff = 0;
-  let currentOpenPrice = 0; 
+  let currentOpenPrice = 0;
   let currentVolume = 0;
   if (data) {
     console.log(data.barDataQuery);
     // function for all 3
-    
-      const finalPrice = data.barDataQuery[data.barDataQuery.length - 1].ClosePrice;
-      const initialPrice = data.barDataQuery[0].ClosePrice;
-      diff = (finalPrice - initialPrice).toFixed(2);
-      
-      currentOpenPrice = data.barDataQuery[data.barDataQuery.length - 1].OpenPrice;
-      currentVolume = data.barDataQuery[data.barDataQuery.length - 1].Volume;
-  
+
+    const finalPrice = data.barDataQuery[data.barDataQuery.length - 1].ClosePrice;
+    const initialPrice = data.barDataQuery[0].ClosePrice;
+    diff = (finalPrice - initialPrice).toFixed(2);
+
+    currentOpenPrice = data.barDataQuery[data.barDataQuery.length - 1].OpenPrice;
+    currentVolume = data.barDataQuery[data.barDataQuery.length - 1].Volume;
+
     // functions end
     closeP = data.barDataQuery.map((e) => {
       return {
@@ -89,21 +89,19 @@ export default function SingleAnalysis() {
       </Helmet>
 
       <Container maxWidth="xl">
-        <Typography variant="h3" sx={{ mb: 5, display: "flex", justifyContent: "space-around" }}>
+        <Typography variant="h3" sx={{ mb: 5, display: 'flex', justifyContent: 'space-around' }}>
           {symbol} Summary
           <Button
-                onClick={() => {
-                  handleOpen();
-                }}
-                sx={{ ml: 1 }}
-                
-                variant="contained"
-                
-              >
-                <Typography variant="title2" sx={{ color: 'white' }}>
-                  Add to Basket
-                </Typography>
-              </Button>
+            onClick={() => {
+              handleOpen();
+            }}
+            sx={{ ml: 1 }}
+            variant="contained"
+          >
+            <Typography variant="title2" sx={{ color: 'white' }}>
+              Add to Basket
+            </Typography>
+          </Button>
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
@@ -115,7 +113,12 @@ export default function SingleAnalysis() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Current Open Price" total={currentOpenPrice} color="warning" icon={'ic:baseline-open-in-browser'} />
+            <AppWidgetSummary
+              title="Current Open Price"
+              total={currentOpenPrice}
+              color="warning"
+              icon={'ic:baseline-open-in-browser'}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -168,8 +171,9 @@ export default function SingleAnalysis() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate
-              title="News Update"
+            <AppNewsUpdate3
+              title="News"
+              ticker={symbol}
               list={[...Array(5)].map((_, index) => ({
                 id: faker.datatype.uuid(),
                 title: faker.name.jobTitle(),
