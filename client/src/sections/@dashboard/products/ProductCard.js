@@ -49,6 +49,7 @@ export default function ShopProductCard({ basket, basketKey }) {
         console.log(each, 'EACG');
         if (i === tickers.length - 1) {
           setData(theData);
+          console.log(theData);
           // console.log(theData, 'DAAATA');
         }
       }

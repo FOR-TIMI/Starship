@@ -61,14 +61,14 @@ const typeDefs = gql`
   }
 
   type Bardata {
-    Timestamp: String
-    OpenPrice: Float
-    HighPrice: Float
-    LowPrice: Float
-    ClosePrice: Float
-    Volume: Float
-    TradeCount: Float
-    VWAP: Float
+    Timestamp: String!
+    OpenPrice: Float!
+    HighPrice: Float!
+    LowPrice: Float!
+    ClosePrice: Float!
+    Volume: Int!
+    TradeCount: Int!
+    VWAP: Float!
   }
 
   type Bardata2 {
@@ -86,6 +86,14 @@ const typeDefs = gql`
   type Barsdata {
     Name: String
     Barsdata: [Bardata2]
+  }
+
+  type GNews {
+    title: String
+    link: String
+    pubDate: String
+    content: String
+    img: String
   }
 
   type Query {
@@ -109,7 +117,13 @@ const typeDefs = gql`
       limit: Int!
       days: Int!
     ): [Barsdata]
-    getDataFromBasket(id: ID!): [Bardata]
+    getDataFromBasket(
+      id: ID!
+      timeframe: String!
+      limit: Int!
+      days: Int!
+    ): [Bardata!]
+    getNews(ticker: String!): [GNews]
   }
 
   type Mutation {

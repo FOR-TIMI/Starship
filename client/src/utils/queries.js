@@ -102,3 +102,39 @@ export const GET_BASKETS = gql`
     }
   }
 `;
+
+export const GET_BASKET = gql`
+  query Query($id: ID!) {
+    basket(_id: $id) {
+      _id
+      createdAt
+      tickers {
+        API
+        market
+        symbol
+        _id
+      }
+    }
+  }
+`;
+
+export const GET_DATA_FROM_BASKET = gql`
+  query Query($getDataFromBasketId: ID!, $timeframe: String!, $limit: Int!, $days: Int!) {
+    getDataFromBasket(id: $getDataFromBasketId, timeframe: $timeframe, limit: $limit, days: $days) {
+      VWAP
+      Timestamp
+    }
+  }
+`;
+
+export const NEWS_QUERY = gql`
+  query Query($ticker: String!) {
+    getNews(ticker: $ticker) {
+      title
+      link
+      pubDate
+      content
+      img
+    }
+  }
+`;
