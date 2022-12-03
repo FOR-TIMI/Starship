@@ -7,16 +7,18 @@ import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
 import { useQuery } from '@apollo/client';
-import { BARS_DATA_QUERY, GET_BASKET } from '../utils/queries';
+import { BARS_DATA_QUERY, GET_BASKET, GET_DATA_FROM_BASKET } from '../utils/queries';
+
 import Iconify from '../components/iconify';
 // sections
 import {
   AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
+  AppNewsUpdate2,
+  AppOrderTimeline2,
+  AppCurrentVisits2,
+  AppWebsiteVisits2,
   AppTrafficBySite,
+  AppWidgetSummary2,
   AppWidgetSummary,
   AppCurrentSubject,
   AppConversionRates,
@@ -30,50 +32,56 @@ export default function DashboardAppPage() {
   const [parsedData, setParsedData] = useState();
   const [chartLabels, setChartLabels] = useState();
   const [timestamps, setTimestamps] = useState();
+  // const [weeklyChange, setWeeklyChange] = useState(0);
   let { basketId } = useParams();
-
-  let vars = {
-    id: basketId,
-  };
-
-  const { loading2, error2, data2 } = useQuery(GET_BASKET, {
-    variables: vars,
-  });
-  if (data2) {
-    console.log(data2, 'DATA 2');
-  }
-
-  const vars2 = {
-    symbols: ['MSFT', 'TSLA'],
-    timeframe: '1D',
-    limit: 15,
-    days: 15,
-  };
-  const { loading, error, data } = useQuery(BARS_DATA_QUERY, {
-    variables: vars2,
-  });
-  useEffect(() => {
-    if (data) {
-      console.log(data.barsDataQuery, 'THIS BARS');
-      setParsedData(data.barsDataQuery);
-      console.log(parsedData, 'THIS PARSED');
-      let timestamps = [];
-      for (let i = 0; i < data.barsDataQuery[0].Barsdata.length; i++) {
-        timestamps.push(data.barsDataQuery[0].Barsdata[i].Timestamp);
-        if (i == data.barsDataQuery[0].Barsdata.length - 1) {
-          setTimestamps(timestamps);
-        }
-      }
-    }
-  }, []);
+  // const vars2 = {
+  //   id: basketId,
+  // };
+  // const { loading2, error2, data2 } = useQuery(GET_BASKET, {
+  //   variables: vars2,
+  // });
+  // if (loading2) {
+  //   console.log('LOADING');
+  // }
+  // if (data2) {
+  //   console.log(data2, 'DATA 2');
+  // }
 
   const theme = useTheme();
+  const vars = {
+    getDataFromBasketId: basketId,
+    timeframe: '1D',
+    limit: 365,
+    days: 365,
+  };
 
-  if (loading) {
-    return <div>Loading</div>;
-  }
+  const { loading, error, data } = useQuery(GET_DATA_FROM_BASKET, {
+    variables: vars,
+  });
 
-  if (timestamps) {
+  if (data) {
+    // daily change
+    let dailyChange =
+      data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
+      data.getDataFromBasket[data.getDataFromBasket.length - 2].VWAP;
+    dailyChange = (dailyChange / data.getDataFromBasket[data.getDataFromBasket.length - 2].VWAP) * 100;
+
+    // weekly change
+    let weeklyChange =
+      data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
+      data.getDataFromBasket[data.getDataFromBasket.length - 7].VWAP;
+    weeklyChange = (weeklyChange / data.getDataFromBasket[data.getDataFromBasket.length - 7].VWAP) * 100;
+
+    // monthly change
+    let monthlyChange =
+      data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
+      data.getDataFromBasket[data.getDataFromBasket.length - 30].VWAP;
+    monthlyChange = (monthlyChange / data.getDataFromBasket[data.getDataFromBasket.length - 30].VWAP) * 100;
+
+    // yearly change
+    let yearlyChange = data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP - data.getDataFromBasket[0].VWAP;
+    yearlyChange = (yearlyChange / data.getDataFromBasket[0].VWAP) * 100;
+
     return (
       <>
         <Helmet>
@@ -82,50 +90,94 @@ export default function DashboardAppPage() {
 
         <Container maxWidth="xl">
           <Typography variant="h4" sx={{ mb: 5 }}>
-            Hi, Welcome back
+            Basket A
           </Typography>
 
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={3}>
-              <AppWidgetSummary title="Weekly Change" total={714000} icon={'ant-design:android-filled'} />
-            </Grid>
+            {dailyChange > 0 ? (
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary2
+                  title="Daily Change"
+                  total={dailyChange}
+                  color="info"
+                  icon={'fluent-mdl2:stock-up'}
+                />
+              </Grid>
+            ) : (
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary2
+                  title="Daily Change"
+                  total={dailyChange}
+                  color="error"
+                  icon={'fluent-mdl2:stock-down'}
+                />
+              </Grid>
+            )}
 
-            <Grid item xs={12} sm={6} md={3}>
-              <AppWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} />
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3}>
-              <AppWidgetSummary
-                title="Item Orders"
-                total={1723315}
-                color="warning"
-                icon={'ant-design:windows-filled'}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={3}>
-              <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
-            </Grid>
+            {weeklyChange > 0 ? (
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary2
+                  title="Weekly Change"
+                  total={weeklyChange}
+                  color="info"
+                  icon={'fluent-mdl2:stock-up'}
+                />
+              </Grid>
+            ) : (
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary2
+                  title="Weekly Change"
+                  total={weeklyChange}
+                  color="error"
+                  icon={'fluent-mdl2:stock-down'}
+                />
+              </Grid>
+            )}
+            {monthlyChange > 0 ? (
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary2
+                  title="Montly Change"
+                  total={monthlyChange}
+                  color="info"
+                  icon={'fluent-mdl2:stock-up'}
+                />
+              </Grid>
+            ) : (
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary2
+                  title="Montly Change"
+                  total={monthlyChange}
+                  color="error"
+                  icon={'fluent-mdl2:stock-down'}
+                />
+              </Grid>
+            )}
+            {yearlyChange > 0 ? (
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary2
+                  title="Yearly Change"
+                  total={yearlyChange}
+                  color="info"
+                  icon={'fluent-mdl2:stock-up'}
+                />
+              </Grid>
+            ) : (
+              <Grid item xs={12} sm={6} md={3}>
+                <AppWidgetSummary2
+                  title="Yearly Change"
+                  total={yearlyChange}
+                  color="error"
+                  icon={'fluent-mdl2:stock-down'}
+                />
+              </Grid>
+            )}
 
             <Grid item xs={12} md={6} lg={8}>
-              <AppWebsiteVisits
-                title="Website Visits"
-                subheader="(+43%) than last year"
-                chartLabels={[
-                  //   '01/01/2003',
-                  //   '02/01/2003',
-                  //   '03/01/2003',
-                  //   '04/01/2003',
-                  //   '05/01/2003',
-                  //   '06/01/2003',
-                  //   '07/01/2003',
-                  //   '08/01/2003',
-                  //   '09/01/2003',
-                  //   '10/01/2003',
-                  //   '11/01/2003',
-                  //
-                  ...timestamps,
-                ]}
+              <AppWebsiteVisits2
+                title="Basket A"
+                basketId={basketId}
+                data={data}
+                subheader={yearlyChange.toFixed(2) + '% over the last year'}
                 chartData={[
                   {
                     name: 'Team A',
@@ -148,10 +200,10 @@ export default function DashboardAppPage() {
                 ]}
               />
             </Grid>
-
             <Grid item xs={12} md={6} lg={4}>
-              <AppCurrentVisits
-                title="Current Visits"
+              <AppCurrentVisits2
+                title="Basket Makeup"
+                basketId={basketId}
                 chartData={[
                   { label: 'America', value: 4344 },
                   { label: 'Asia', value: 5435 },
@@ -166,7 +218,31 @@ export default function DashboardAppPage() {
                 ]}
               />
             </Grid>
-
+            <Grid item xs={12} md={6} lg={8}>
+              <AppNewsUpdate2
+                basketId={basketId}
+                title="News Update"
+                list={[...Array(5)].map((_, index) => ({
+                  id: faker.datatype.uuid(),
+                  title: faker.name.jobTitle(),
+                  description: faker.name.jobTitle(),
+                  image: `/assets/images/covers/cover_${index + 1}.jpg`,
+                  postedAt: faker.date.recent(),
+                }))}
+              />
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <AppCurrentSubject
+                title="Current Subject"
+                chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
+                chartData={[
+                  { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
+                  { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
+                  { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
+                ]}
+                chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
+              />
+            </Grid>
             <Grid item xs={12} md={6} lg={8}>
               <AppConversionRates
                 title="Conversion Rates"
@@ -187,33 +263,7 @@ export default function DashboardAppPage() {
             </Grid>
 
             <Grid item xs={12} md={6} lg={4}>
-              <AppCurrentSubject
-                title="Current Subject"
-                chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
-                chartData={[
-                  { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-                  { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-                  { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
-                ]}
-                chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6} lg={8}>
-              <AppNewsUpdate
-                title="News Update"
-                list={[...Array(5)].map((_, index) => ({
-                  id: faker.datatype.uuid(),
-                  title: faker.name.jobTitle(),
-                  description: faker.name.jobTitle(),
-                  image: `/assets/images/covers/cover_${index + 1}.jpg`,
-                  postedAt: faker.date.recent(),
-                }))}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6} lg={4}>
-              <AppOrderTimeline
+              <AppOrderTimeline2
                 title="Order Timeline"
                 list={[...Array(5)].map((_, index) => ({
                   id: faker.datatype.uuid(),
@@ -229,7 +279,6 @@ export default function DashboardAppPage() {
                 }))}
               />
             </Grid>
-
             <Grid item xs={12} md={6} lg={4}>
               <AppTrafficBySite
                 title="Traffic by Site"
@@ -257,7 +306,6 @@ export default function DashboardAppPage() {
                 ]}
               />
             </Grid>
-
             <Grid item xs={12} md={6} lg={8}>
               <AppTasks
                 title="Tasks"
@@ -275,4 +323,5 @@ export default function DashboardAppPage() {
       </>
     );
   }
+  // }
 }

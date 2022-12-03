@@ -136,3 +136,25 @@ export const GET_BASKET = gql`
     }
   }
 `;
+
+export const GET_DATA_FROM_BASKET = gql`
+  query Query($getDataFromBasketId: ID!, $timeframe: String!, $limit: Int!, $days: Int!) {
+    getDataFromBasket(id: $getDataFromBasketId, timeframe: $timeframe, limit: $limit, days: $days) {
+      VWAP
+      Timestamp
+    }
+  }
+`;
+
+export const NEWS_QUERY = gql`
+  query Query($ticker: String!) {
+    getNews(ticker: $ticker) {
+      title
+      link
+      pubDate
+      content
+      img
+    }
+  }
+`;
+
