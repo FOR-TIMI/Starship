@@ -14,13 +14,16 @@
   "dependencies": {
     "@alpacahq/alpaca-trade-api": "^2.16.1",
     "apollo-server-express": "^3.6.1",
+    "axios": "^1.2.0",
     "bcrypt": "^4.0.1",
+    "cheerio": "^1.0.0-rc.12",
     "express": "^4.17.2",
     "faker": "^5.5.3",
     "graphql": "^16.2.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "mongoose": "^5.13.15",
+    "puppeteer": "^19.3.0",
     "stripe": "^8.67.0"
   },
   "devDependencies": {

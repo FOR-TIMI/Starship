@@ -5,6 +5,7 @@ const {
   addBasketHelper,
   dataToBasket,
 } = require("../utils/API_calls/queries");
+const { searchGoogle } = require("../utils/API_calls/gnews");
 const { signToken } = require("../utils/auth");
 const { AuthenticationError } = require("apollo-server-express");
 
@@ -12,22 +13,21 @@ const resolvers = {
   Query: {
     barDataQuery: async (parent, { symbol, timeframe, limit, days }) => {
       let data = await getBarData(symbol, timeframe, limit, days);
-      // console.log(data);
+
       return data;
     },
 
     barsDataQuery: async (parent, { symbols, timeframe, limit, days }) => {
       let data = await getBarsData(symbols, timeframe, limit, days);
-      console.log(data);
       return data;
     },
 
-    // dataQuery: async () => {
-    //     let test = {name:"appl"};
-    //     // let data = await getBarData("AAPL", "1Min", 100, 2);
-    //     console.log(data);
-    //     return test;
-    //   },
+    getNews: async (parent, { ticker }) => {
+      // const basket = await Basket.find({ _id: basketId }).populate("ticker");
+      const sg = await searchGoogle(ticker);
+      console.log(sg);
+      return sg;
+    },
 
     //Get signedIn User
     signedInUser: async (parent, args, context) => {
@@ -104,18 +104,48 @@ const resolvers = {
       return await Post.findById(_id).populate("comments").populate("likes");
     },
 
-    getDataFromBasket: async (parent, { id }, context) => {
+    getDataFromBasket: async (
+      parent,
+      { id, timeframe, limit, days },
+      context
+    ) => {
       const basket = await Basket.find({ _id: id }).populate("ticker");
-      const symbols = [];
-      console.log(basket);
-      basket[0].tickers.map((each) => {
-        symbols.push(each.symbol);
-      });
+      console.log(basket, "basket");
+      const data = [];
+      let ret;
+      // basket[0].tickers.map(async (each, key) => {
+      for (let i = 0; i < basket[0].tickers.length; i++) {
+        let bData = {};
+        console.log(basket[0].tickers[i].symbol);
+        const barsData = await getBarData(
+          basket[0].tickers[i].symbol,
+          timeframe,
+          limit,
+          days
+        );
+        // console.log(barsData, i);
+        bData["Name"] = basket[0].tickers[i].symbol;
+        bData["Barsdata"] = barsData;
+        // bData.Barsdata[0].symbol = basket[0].tickers[i].symbol;
+        for (let b = 0; b < bData.Barsdata.length; b++) {
+          bData.Barsdata[b]["Symbol"] = basket[0].tickers[i].symbol;
 
-      const barsData = await getBarsData(symbols, "1D", 2, 2);
-      const endData = await dataToBasket(barsData);
-      console.log(barsData, "HELLO");
-      return endData;
+          // console.log(bData, "BDATA");
+          if (b == bData.Barsdata.length - 1) {
+            data.push(bData);
+          }
+          if (
+            i == basket[0].tickers.length - 1 &&
+            b == bData.Barsdata.length - 1
+          ) {
+            // // console.log("ending");
+            // console.log(data[0].Barsdata, "THJIS DATA");
+            // console.log(data[1].Barsdata, "THJIS DATA");
+            ret = await dataToBasket(data);
+            return ret;
+          }
+        }
+      }
     },
 
     //Get all Baskets

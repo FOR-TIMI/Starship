@@ -51,12 +51,14 @@ async function getBarsData(symbol, timeframe, limit, days) {
     const bars = await alpaca.getMultiBarsV2(symbol, {
       start: dateStart,
       end: datenow, // it cannot be latest time, we need to keep it 15min behind for free API data.
-      timeframe: timeframe, // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
+      timeframe: alpaca.newTimeframe(30, alpaca.timeframeUnit.MIN), // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
       limit: limit, // I have tested this upto 100000
     });
-
-    const allBars = [];
     for (const b of bars) {
+      console.log(b[1].length, "THIS BARS");
+    }
+    const allBars = [];
+    for await (const b of bars) {
       let barsData = {};
       barsData["Name"] = b[0];
       barsData["Barsdata"] = [];
@@ -84,26 +86,33 @@ async function getBarsData(symbol, timeframe, limit, days) {
 
 function dataToBasket(data) {
   return new Promise((resolve) => {
+    // console.log(data);
     console.log(data[0]);
-    const finalArr = [];
+    console.log(data[1]);
+    console.log(data, "THIS DATa");
 
     const VWAP = [];
     for (let i = 0; i < data.length; i++) {
       for (let b = 0; b < data[i].Barsdata.length; b++) {
-        if (b == 0) {
+        if (b == 0 && i == 0) {
           VWAP.push(data[i].Barsdata[b]);
+          console.log("pushing");
         }
-
         let unique = true;
         for (let x = 0; x < VWAP.length; x++) {
           if (data[i].Barsdata[b].Timestamp == VWAP[x].Timestamp) {
-            VWAP[x].VWAP += data[i].Barsdata[b].VWAP;
+            if (data[i].Barsdata[b].Symbol != VWAP[x].Symbol) {
+              console.log("same");
+              VWAP[x].VWAP += data[i].Barsdata[b].VWAP;
+
+              console.log(VWAP, "VWAP");
+            }
             unique = false;
           } else if (x == VWAP.length - 1 && unique == true) {
             VWAP.push(data[i].Barsdata[b]); //
           }
         }
-        if (b == data[i].Barsdata.length - 1) {
+        if (b == data[i].Barsdata.length - 1 && i == data.length - 1) {
           resolve(VWAP);
         }
       }
