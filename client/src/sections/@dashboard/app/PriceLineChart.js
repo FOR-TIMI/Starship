@@ -5,7 +5,7 @@ import { InputLabel, Select, Card, CardHeader, Box, MenuItem, TextField, CardAct
 // components
 import { useChart } from '../../../components/chart';
 // ----------------------------------------------------------------------
-
+import { useState } from 'react';
 PriceLineChart.propTypes = {
   title: PropTypes.string,
   subheader: PropTypes.string,
@@ -17,7 +17,7 @@ PriceLineChart.propTypes = {
 
 // },
 
-export default function PriceLineChart({ title, subheader, chartData }) {
+export default function PriceLineChart({ title, subheader, chartData, setDayState, setTimeState, dayState, timeState }) {
   const chartOptions = {
     xaxis: {
       type: 'datetime',
@@ -35,28 +35,34 @@ export default function PriceLineChart({ title, subheader, chartData }) {
       },
     },
   };
-
-  let options = [1, 2, 3];
+  
+  const handleDayChange = (e) => {
+    setDayState(e.target.value)
+   
+  }
+  const handleTimeChange = (e) => {
+    setTimeState(e.target.value)
+  }
+  // let options = [1, 2, 3];
 
   return (
     <Card>
-      <Box sx={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-evenly' }}>
+      <Box sx={{ backgroundColor: 'white', display: 'flex', justifyContent: 'space-between' }}>
         <CardHeader title={title} subheader={subheader} />
-        
         <CardActionArea sx={{ display:'flex'}}>
-          <InputLabel sx={{ display: 'inline', justifyContent: 'space-evenly' }} id="demo-simple-select-label">
-            Days
+          <InputLabel sx={{ display: 'inline', justifyContent: 'space-evenly' }} id="day-select-label" >
+           
           </InputLabel>
           <Select
-            sx={{ backgroundColor: 'white', justifyContent: 'space-evenly', width: '25%' }}
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            //value={age}
-            label="Age"
-            //onChange={handleChange}
+            sx={{ justifyContent: 'space-evenly', width: 'max-content', mt:"20px" }}
+            labelId="day-select-label"
+            id="day-select-label"
+            value={dayState}
+            displayEmpty
+            onChange={handleDayChange}
           >
             <MenuItem value={1}>1Day</MenuItem>
-            <MenuItem value={23}>3Days</MenuItem>
+            <MenuItem value={3}>3Days</MenuItem>
             <MenuItem value={5}>5Days</MenuItem>
             <MenuItem value={30}>1Month</MenuItem>
             <MenuItem value={90}>3Month</MenuItem>
@@ -69,16 +75,16 @@ export default function PriceLineChart({ title, subheader, chartData }) {
           </Select>
         </CardActionArea>
         <CardActionArea sx={{ display: 'inline' }}>
-          <InputLabel sx={{ display: 'inline', justifyContent: 'space-evenly' }} id="demo-simple-select-label">
-            Time
+          <InputLabel sx={{ display: 'inline', justifyContent: 'space-evenly' }} id="time-select-label">
+           
           </InputLabel>
           <Select
-            sx={{ backgroundColor: 'white', justifyContent: 'space-evenly', width: '25%' }}
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            //value={age}
-            label="Age"
-            //onChange={handleChange}
+            sx={{justifyContent: 'space-evenly', width: 'max-content', mt:"20px" }}
+            labelId="time-select-label"
+            id="time-select-label"
+            value={timeState}
+            displayEmpty
+            onChange={handleTimeChange}
           >
             <MenuItem value={'1Min'}>1Min</MenuItem>
             <MenuItem value={'5Min'}>5Min</MenuItem>
