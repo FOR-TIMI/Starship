@@ -3,7 +3,7 @@ const cheerio = require("cheerio");
 
 const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
-    console.log(searchQuery);
+    // console.log(searchQuery);
     const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
