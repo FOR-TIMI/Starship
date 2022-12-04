@@ -21,20 +21,15 @@ export default function AppWebsiteVisits({ basketId, data, title, subheader, ...
   const [chartData, setChartData] = useState();
 
   useEffect(() => {
-    console.log('using effect');
-    // if (data) {
-    console.log(data);
     let chartDataInput = {
       name: 'Basket A',
-      type: 'area',
+      type: 'line',
       fill: 'solid',
       data: [...data.getDataFromBasket.map((i) => i.VWAP.toFixed(2))],
     };
     let arr = [];
     arr.push(chartDataInput);
     setChartData(arr);
-    console.log(chartData);
-    // }
   }, []);
 
   const chartOptions = useChart({

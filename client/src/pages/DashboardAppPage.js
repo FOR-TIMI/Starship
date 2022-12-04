@@ -1,27 +1,91 @@
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
+import moment from 'moment';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
+import { BAR_DATA_QUERY } from '../utils/queries';
+import { useQuery } from '@apollo/client';
+import { useState, useEffect } from 'react';
 // sections
 import {
   AppTasks,
-  AppNewsUpdate,
+  AppNewsUpdate3,
   AppOrderTimeline,
   AppCurrentVisits,
   AppWebsiteVisits,
   AppTrafficBySite,
-  AppWidgetSummary,
+  AppWidgetSummary2,
   AppCurrentSubject,
   AppConversionRates,
+  PriceLineChart,
 } from '../sections/@dashboard/app';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+
+  const [dailyChange, setDailyChange] = useState();
+  const [weeklyChange, setWeeklyChange] = useState();
+  const [monthlyChange, setMonthlyChange] = useState();
+  const [yearlyChange, setYearlyChange] = useState();
+
+  let closeP = { x: moment(), y: 0 };
+
+  const vars = {
+    symbol: 'SPY',
+    timeframe: '1D',
+    limit: 365,
+    days: 365,
+  };
+  const { loading, error, data } = useQuery(BAR_DATA_QUERY, { variables: vars });
+
+  useEffect(() => {
+    if (data) {
+      let dc =
+        data.barDataQuery[data.barDataQuery.length - 1].ClosePrice -
+        data.barDataQuery[data.barDataQuery.length - 2].ClosePrice;
+      setDailyChange((dc / data.barDataQuery[data.barDataQuery.length - 2].ClosePrice) * 100);
+
+      // weekly change
+      let wc =
+        data.barDataQuery[data.barDataQuery.length - 1].ClosePrice -
+        data.barDataQuery[data.barDataQuery.length - 7].ClosePrice;
+      setWeeklyChange((wc / data.barDataQuery[data.barDataQuery.length - 7].ClosePrice) * 100);
+
+      // monthly change
+      let mc =
+        data.barDataQuery[data.barDataQuery.length - 1].ClosePrice -
+        data.barDataQuery[data.barDataQuery.length - 30].ClosePrice;
+      setMonthlyChange((mc / data.barDataQuery[data.barDataQuery.length - 30].ClosePrice) * 100);
+
+      // yearly change
+      let yc = data.barDataQuery[data.barDataQuery.length - 1].ClosePrice - data.barDataQuery[0].ClosePrice;
+      setYearlyChange((yc / data.barDataQuery[0].ClosePrice) * 100);
+    }
+  }, [data]);
+
+  if (error) {
+    console.log(error);
+  }
+  if (loading) {
+    return <div>Loading</div>;
+  }
+  if (data) {
+    console.log(data, 'DATASA');
+
+    closeP = data.barDataQuery.map((e) => {
+      return {
+        x: e.Timestamp,
+        y: e.ClosePrice,
+      };
+    });
+    // const newData = dataToBasket(data.barsDataQuery);
+    // setParsedData(newData);
+  }
 
   return (
     <>
@@ -35,7 +99,90 @@ export default function DashboardAppPage() {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+          {dailyChange ? (
+            <>
+              {dailyChange > 0 ? (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Daily Change"
+                    total={dailyChange}
+                    color="info"
+                    icon={'fluent-mdl2:stock-up'}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Daily Change"
+                    total={dailyChange}
+                    color="error"
+                    icon={'fluent-mdl2:stock-down'}
+                  />
+                </Grid>
+              )}
+
+              {weeklyChange > 0 ? (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Weekly Change"
+                    total={weeklyChange}
+                    color="info"
+                    icon={'fluent-mdl2:stock-up'}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Weekly Change"
+                    total={weeklyChange}
+                    color="error"
+                    icon={'fluent-mdl2:stock-down'}
+                  />
+                </Grid>
+              )}
+              {monthlyChange > 0 ? (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Montly Change"
+                    total={monthlyChange}
+                    color="info"
+                    icon={'fluent-mdl2:stock-up'}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Montly Change"
+                    total={monthlyChange}
+                    color="error"
+                    icon={'fluent-mdl2:stock-down'}
+                  />
+                </Grid>
+              )}
+              {yearlyChange > 0 ? (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Yearly Change"
+                    total={yearlyChange}
+                    color="info"
+                    icon={'fluent-mdl2:stock-up'}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Yearly Change"
+                    total={yearlyChange}
+                    color="error"
+                    icon={'fluent-mdl2:stock-down'}
+                  />
+                </Grid>
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+          {/* <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
           </Grid>
 
@@ -49,43 +196,15 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits
-              title="Website Visits"
-              subheader="(+43%) than last year"
-              chartLabels={[
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
-              ]}
+            <PriceLineChart
+              title={'Market Overview'}
               chartData={[
                 {
-                  name: 'Team A',
-                  type: 'column',
-                  fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                },
-                {
-                  name: 'Team B',
-                  type: 'area',
-                  fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                },
-                {
-                  name: 'Team C',
-                  type: 'line',
-                  fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+                  name: 'SP500',
+                  data: closeP,
                 },
               ]}
             />
@@ -110,39 +229,8 @@ export default function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates
-              title="Conversion Rates"
-              subheader="(+43%) than last year"
-              chartData={[
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
-              ]}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject
-              title="Current Subject"
-              chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
-              chartData={[
-                { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-                { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-                { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
-              ]}
-              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate
+            <AppNewsUpdate3
+              ticker={'SPY'}
               title="News Update"
               list={[...Array(5)].map((_, index) => ({
                 id: faker.datatype.uuid(),
@@ -169,47 +257,6 @@ export default function DashboardAppPage() {
                 type: `order${index + 1}`,
                 time: faker.date.past(),
               }))}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTrafficBySite
-              title="Traffic by Site"
-              list={[
-                {
-                  name: 'FaceBook',
-                  value: 323234,
-                  icon: <Iconify icon={'eva:facebook-fill'} color="#1877F2" width={32} />,
-                },
-                {
-                  name: 'Google',
-                  value: 341212,
-                  icon: <Iconify icon={'eva:google-fill'} color="#DF3E30" width={32} />,
-                },
-                {
-                  name: 'Linkedin',
-                  value: 411213,
-                  icon: <Iconify icon={'eva:linkedin-fill'} color="#006097" width={32} />,
-                },
-                {
-                  name: 'Twitter',
-                  value: 443232,
-                  icon: <Iconify icon={'eva:twitter-fill'} color="#1C9CEA" width={32} />,
-                },
-              ]}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppTasks
-              title="Tasks"
-              list={[
-                { id: '1', label: 'Create FireStone Logo' },
-                { id: '2', label: 'Add SCSS and JS files if required' },
-                { id: '3', label: 'Stakeholder Meeting' },
-                { id: '4', label: 'Scoping & Estimations' },
-                { id: '5', label: 'Sprint Showcase' },
-              ]}
             />
           </Grid>
         </Grid>

@@ -38,7 +38,6 @@ const typeDefs = gql`
     createdAt: String
   }
 
-
   type Basket {
     _id: ID
     createdAt: String
