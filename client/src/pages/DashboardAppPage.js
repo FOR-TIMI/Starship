@@ -33,13 +33,16 @@ export default function DashboardAppPage() {
   const [monthlyChange, setMonthlyChange] = useState();
   const [yearlyChange, setYearlyChange] = useState();
 
+  const [dayState, setDayState] = useState(30);
+  const [timeState, setTimeState] = useState('1D');
+
   let closeP = { x: moment(), y: 0 };
 
   const vars = {
     symbol: 'SPY',
-    timeframe: '1D',
-    limit: 365,
-    days: 365,
+    timeframe: timeState,
+    limit: 500,
+    days: dayState,
   };
   const { loading, error, data } = useQuery(BAR_DATA_QUERY, { variables: vars });
 
@@ -182,21 +185,6 @@ export default function DashboardAppPage() {
           ) : (
             <></>
           )}
-          {/* <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Item Orders" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
-          </Grid> */}
 
           <Grid item xs={12} md={6} lg={8}>
             <PriceLineChart
@@ -207,6 +195,10 @@ export default function DashboardAppPage() {
                   data: closeP,
                 },
               ]}
+              setDayState={setDayState}
+              setTimeState={setTimeState}
+              dayState={dayState}
+              timeState={timeState}
             />
           </Grid>
 
