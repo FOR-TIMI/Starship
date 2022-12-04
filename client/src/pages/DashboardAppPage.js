@@ -13,9 +13,10 @@ import { useState, useEffect } from 'react';
 import {
   AppTasks,
   AppNewsUpdate3,
-  AppOrderTimeline,
+  AppOrderTimeline3,
   AppCurrentVisits,
   AppWebsiteVisits,
+  AppWebsiteVisits3,
   AppTrafficBySite,
   AppWidgetSummary2,
   AppCurrentSubject,
@@ -33,16 +34,13 @@ export default function DashboardAppPage() {
   const [monthlyChange, setMonthlyChange] = useState();
   const [yearlyChange, setYearlyChange] = useState();
 
-  const [dayState, setDayState] = useState(30);
-  const [timeState, setTimeState] = useState('1D');
-
   let closeP = { x: moment(), y: 0 };
 
   const vars = {
     symbol: 'SPY',
-    timeframe: timeState,
-    limit: 500,
-    days: dayState,
+    timeframe: '1D',
+    limit: 365,
+    days: 365,
   };
   const { loading, error, data } = useQuery(BAR_DATA_QUERY, { variables: vars });
 
@@ -187,37 +185,11 @@ export default function DashboardAppPage() {
           )}
 
           <Grid item xs={12} md={6} lg={8}>
-            <PriceLineChart
-              title={'Market Overview'}
-              chartData={[
-                {
-                  name: 'SP500',
-                  data: closeP,
-                },
-              ]}
-              setDayState={setDayState}
-              setTimeState={setTimeState}
-              dayState={dayState}
-              timeState={timeState}
-            />
+            <AppWebsiteVisits3 title="SPY" data={data} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits
-              title="Current Visits"
-              chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
-              ]}
-              chartColors={[
-                theme.palette.primary.main,
-                theme.palette.info.main,
-                theme.palette.warning.main,
-                theme.palette.error.main,
-              ]}
-            />
+            <AppOrderTimeline3 title="Large Trades" />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -230,24 +202,6 @@ export default function DashboardAppPage() {
                 description: faker.name.jobTitle(),
                 image: `/assets/images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
-              }))}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline
-              title="Order Timeline"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: [
-                  '1983, orders, $4220',
-                  '12 Invoices have been paid',
-                  'Order #37745 from September',
-                  'New order placed #XF-2356',
-                  'New order placed #XF-2346',
-                ][index],
-                type: `order${index + 1}`,
-                time: faker.date.past(),
               }))}
             />
           </Grid>

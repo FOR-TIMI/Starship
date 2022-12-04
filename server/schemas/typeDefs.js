@@ -99,7 +99,7 @@ const typeDefs = gql`
     Price: Float
     Size: Float
     Conditions: [String]
-    ID: Int
+    ID: Float
     Tape: String
   }
 
