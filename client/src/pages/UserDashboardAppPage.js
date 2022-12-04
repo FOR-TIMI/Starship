@@ -264,7 +264,8 @@ export default function DashboardAppPage() {
 
             <Grid item xs={12} md={6} lg={4}>
               <AppOrderTimeline2
-                title="Order Timeline"
+                title="Largest Trades"
+                basketId={basketId}
                 list={[...Array(5)].map((_, index) => ({
                   id: faker.datatype.uuid(),
                   title: [
