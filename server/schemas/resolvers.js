@@ -220,19 +220,19 @@ const resolvers = {
 
     // userId will be my userId and the followId would be the userId of the person i'm following
     addFollowing: async (parent, { followingId }, context) => {
-      if ( followingId) {
+      if ( context.user && followingId) {
         try {
           //To update the person i'm following's follower list
           await User.findOneAndUpdate(
-            { _id: '63894d0f99c523a160c7ebcd' },
-            { $addToSet: { followers: '63894d0f99c523a160c7ebca'} },
+            { _id: followingId },
+            { $addToSet: { followers: context.user._id} },
             { new: true }
           );
 
           //update my following list and userImFollowing's follower list
           //To update my following list
           const updatedUser = await User.findOneAndUpdate(
-            { _id: '63894d0f99c523a160c7ebca' },
+            { _id: context.user._id },
             { $addToSet: { followings: followingId } },
             { new: true }
           );
@@ -245,9 +245,9 @@ const resolvers = {
     },
 
     removeFollowing: async (parent, { followingId }, context) => {
-      if (followingId) {
+      if (context.user && followingId) {
           const updatedUser = await User.findOneAndUpdate(
-            { _id: '63894d0f99c523a160c7ebca' },
+            { _id: context.user._id },
             { $pull: { followings: { $in: [followingId] }} },
             { new: true },
             function callback (err,data) {

@@ -32,8 +32,8 @@ export const QUERY_POST = gql`
 `;
 
 export const QUERY_SOCIAL = gql`
-  query social($username: String!) {
-    user(username: $username) {
+  query social($id: ID!) {
+    user(_id: $id) {
       _id
       username
       avatar

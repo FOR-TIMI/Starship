@@ -1,37 +1,25 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useState, useReducer } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Card,
-  Table,
   Stack,
-  Avatar,
-  TableRow,
-  TableBody,
-  TableCell,
   Container,
-  Typography,
   TableContainer,
   ToggleButton,
   ToggleButtonGroup
 } from '@mui/material';
 // components
 import { useQuery } from '@apollo/client';
-import { Link } from 'react-router-dom';
-import UnfollowButton from '../components/unfollow-button'
-import FollowButton from '../components/follow-button'
+import FollowingTable from '../components/following-table'
+import FollowerTable from 'src/components/follower-table';
 import Scrollbar from '../components/scrollbar';
-// sections
-import { UserListHead} from '../sections/@dashboard/user';
-//query
+//from utils
 import { QUERY_SOCIAL } from '../utils/queries';
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'followingBasket', label: 'See how their baskets are doing.', alignRight: false },
-  { id: '' },
-];
+
+
 
 // ----------------------------------------------------------------------
 
@@ -40,17 +28,23 @@ export default function UserPage() {
   
   // for toggling following/follower list:
   const [social, setSocial] = useState('following')
-  
+  const [toggle, setToggle] = useState(true)
+
+    
   // querying and unpacking data from user query [following] or [follower]:
       
-  const { loading, data } = useQuery(QUERY_SOCIAL, {
+  const { loading, data, refetch } = useQuery(QUERY_SOCIAL, {
     variables: { username: 'Justen40'}
   })
-
+    
   const users = data?.user || {}
-
   const userFollowers = users.followers
-  const userFollowings = users.followings 
+  const userFollowings = users.followings
+
+  useEffect(()=>{
+    refetch()
+  }, [social,toggle])
+  
 
   let userList
   if (social === 'following') {
@@ -65,8 +59,14 @@ export default function UserPage() {
 
   const [alignment, setAlignment] = React.useState('following');
 
-  const handleChangeSocial = (event, newAlignment) => {
+  
+  const handleToggle = () => {
+    setToggle(!toggle)
+  }
+
+  const handleChangeSocial = (event, newAlignment, id) => {
     setAlignment(newAlignment);
+    
   };
   // ---------------------------- //
   
@@ -77,7 +77,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> Following | StarShip </title>
+        <title> Socials | StarShip </title>
       </Helmet>
 
       <Container>
@@ -96,57 +96,12 @@ export default function UserPage() {
 
         <Card>
           
-
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <UserListHead
-                  headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
-                />
-                <TableBody>
-                  {userList.map( ( user, index) => {
-                      
-                      const id = user._id
-                      const name = user.username
-                      const avatarUrl = `/assets/images/avatars/${user.avatar}` 
-                      
-                    return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" >
-                        
-                        <TableCell padding="checkbox"/>
-
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-
-                        <TableCell align="left">
-                          <Link to="/">
-                            Click to view {name}'s basket
-                          </Link>
-                        </TableCell>
-
-                        
-                          {social==='following'? <UnfollowButton user= {user} />: 
-                          <FollowButton  user = {user} />}
-                        
-
-                          
- 
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+              {social === 'following'? <FollowingTable handleToggle={handleToggle} userFollowings={userFollowings}/>:<FollowerTable handleToggle={handleToggle} userFollowers={userFollowers}/>}
             </TableContainer>
           </Scrollbar>
 
-          
         </Card>
       </Container>
     </>
