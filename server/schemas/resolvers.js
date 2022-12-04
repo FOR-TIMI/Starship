@@ -16,7 +16,6 @@ const resolvers = {
   Query: {
     barDataQuery: async (parent, { symbol, timeframe, limit, days }) => {
       let data = await getBarData(symbol, timeframe, limit, days);
-
       return data;
     },
 

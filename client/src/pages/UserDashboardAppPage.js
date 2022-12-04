@@ -94,10 +94,10 @@ export default function DashboardAppPage() {
         <title> Dashboard | Starship </title>
       </Helmet>
 
-      <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Basket A
-        </Typography>
+        <Container maxWidth="xl">
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            Basket A
+          </Typography>
 
         <Grid container spacing={3}>
           {dailyChange ? (

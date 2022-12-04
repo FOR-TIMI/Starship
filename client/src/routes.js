@@ -12,10 +12,14 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import UserDashboardAppPage from './pages/UserDashboardAppPage';
 import SingleAnalysis from './pages/SingleAnalysis';
+import Auth from './utils/auth';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
+
+  const loggedIn = false;
+
   const routes = useRoutes([
     {
       path: '/dashboard',
