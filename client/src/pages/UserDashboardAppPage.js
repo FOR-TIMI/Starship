@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
 import { useQuery } from '@apollo/client';
-import { BARS_DATA_QUERY, GET_BASKET, GET_DATA_FROM_BASKET } from '../utils/queries';
+import { BARS_DATA_QUERY, GET_BASKET, GET_DATA_AND_BASKET } from '../utils/queries';
 
 import Iconify from '../components/iconify';
 // sections
@@ -42,9 +42,10 @@ export default function DashboardAppPage() {
     timeframe: '1D',
     limit: 365,
     days: 365,
+    id: basketId,
   };
 
-  const { loading, error, data } = useQuery(GET_DATA_FROM_BASKET, {
+  const { loading, error, data } = useQuery(GET_DATA_AND_BASKET, {
     variables: vars,
   });
 
@@ -82,9 +83,13 @@ export default function DashboardAppPage() {
       </Helmet>
 
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Basket A
-        </Typography>
+        {data ? (
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            {data.basket.basketName}
+          </Typography>
+        ) : (
+          <></>
+        )}
 
         <Grid container spacing={3}>
           {dailyChange ? (
@@ -173,7 +178,7 @@ export default function DashboardAppPage() {
           {yearlyChange ? (
             <Grid item xs={12} md={6} lg={8}>
               <AppWebsiteVisits2
-                title="Basket A"
+                title={data.basket.basketName}
                 basketId={basketId}
                 data={data}
                 subheader={yearlyChange.toFixed(2) + '% over the last year'}

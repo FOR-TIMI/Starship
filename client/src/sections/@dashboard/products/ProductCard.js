@@ -29,7 +29,7 @@ ShopProductCard.propTypes = {
 
 export default function ShopProductCard({ basket, basketKey }) {
   const [data, setData] = useState();
-  const { _id, createdAt, tickers } = basket;
+  const { _id, createdAt, tickers, basketName } = basket;
   const theme = useTheme();
   useEffect(() => {
     sortTickers(tickers);
@@ -55,7 +55,7 @@ export default function ShopProductCard({ basket, basketKey }) {
       <Card>
         <Grid>
           <AppCurrentVisits
-            title={'Basket ' + basketKey.toString()}
+            title={basketName}
             chartData={data}
             chartColors={[
               theme.palette.primary.main,

@@ -12,44 +12,44 @@ export const QUERY_ME = gql`
 `;
 
 export const QUERY_POSTS = gql`
-    query{
-      posts {
-        _id
-        title
-        coverPhoto
-        createdAt
-        commentCount
-        likeCount
-        author {
-          username
-          avatar
-        }
-      }
-    }
-`;
-
-export const QUERY_POST = gql`
-query($id: ID!){
-  post(_id: $id) {
-    author {
-      avatar
-      username
-    }
-    title
-    coverPhoto
-    comments {
-      commentText
+  query {
+    posts {
+      _id
+      title
+      coverPhoto
+      createdAt
+      commentCount
+      likeCount
       author {
+        username
         avatar
       }
     }
-    likes {
-      _id
-      username
-      avatar
+  }
+`;
+
+export const QUERY_POST = gql`
+  query ($id: ID!) {
+    post(_id: $id) {
+      author {
+        avatar
+        username
+      }
+      title
+      coverPhoto
+      comments {
+        commentText
+        author {
+          avatar
+        }
+      }
+      likes {
+        _id
+        username
+        avatar
+      }
     }
   }
-}
 `;
 
 export const QUERY_SOCIAL = gql`
@@ -149,6 +149,32 @@ export const GET_DATA_FROM_BASKET = gql`
     getDataFromBasket(id: $getDataFromBasketId, timeframe: $timeframe, limit: $limit, days: $days) {
       VWAP
       Timestamp
+    }
+  }
+`;
+
+export const GET_DATA_AND_BASKET = gql`
+  query GetDataFromBasket($getDataFromBasketId: ID!, $timeframe: String!, $limit: Int!, $days: Int!, $id: ID!) {
+    getDataFromBasket(id: $getDataFromBasketId, timeframe: $timeframe, limit: $limit, days: $days) {
+      Timestamp
+      OpenPrice
+      HighPrice
+      LowPrice
+      ClosePrice
+      Volume
+      TradeCount
+      VWAP
+    }
+    basket(_id: $id) {
+      _id
+      createdAt
+      basketName
+      tickers {
+        _id
+        symbol
+        market
+        API
+      }
     }
   }
 `;
