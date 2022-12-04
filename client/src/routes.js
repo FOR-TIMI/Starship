@@ -12,10 +12,14 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import UserDashboardAppPage from './pages/UserDashboardAppPage';
 import SingleAnalysis from './pages/SingleAnalysis';
+import Auth from './utils/auth';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
+
+  const loggedIn = Auth.loggedIn();
+
   const routes = useRoutes([
     {
       path: '/dashboard',
@@ -23,7 +27,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
-        // { path: 'following', element: <UserPage /> },
+        //{ path: 'following', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'user/:basketId', element: <UserDashboardAppPage /> },
         { path: 'tavern', element: <BlogPage /> },

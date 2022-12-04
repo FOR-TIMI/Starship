@@ -1,10 +1,13 @@
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
+import moment from 'moment';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
+import { BAR_DATA_QUERY } from '../utils/queries';
+import {useQuery} from "@apollo/client"
 // sections
 import {
   AppTasks,
@@ -16,12 +19,42 @@ import {
   AppWidgetSummary,
   AppCurrentSubject,
   AppConversionRates,
+  PriceLineChart,
 } from '../sections/@dashboard/app';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+
+  let closeP = { x: moment(), y: 0 };
+
+  const vars = {
+    symbol: 'SPY',
+    timeframe: '1D',
+    limit: 365,
+    days: 365,
+  };
+  const { loading, error, data } = useQuery(BAR_DATA_QUERY, { variables: vars });
+
+  if(error){
+    console.log(error)
+  }
+  if (loading) {
+    return <div>Loading</div>;
+  }
+  if (data) {
+    console.log(data,"DATASA");
+    
+    closeP = data.barDataQuery.map((e) => {
+      return {
+        x: e.Timestamp,
+        y: e.ClosePrice,
+      };
+    });
+    // const newData = dataToBasket(data.barsDataQuery);
+    // setParsedData(newData);
+  }
 
   return (
     <>
@@ -49,6 +82,18 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
+            <PriceLineChart
+            title = {'Market Overview'}
+            chartData ={[
+              {
+              name: 'SP500', 
+              data: closeP
+              }
+            ]} 
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
