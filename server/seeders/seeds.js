@@ -23,15 +23,19 @@ db.once('open', async () => {
 
   //all avatars
   const avatars = []
-
+  //all  post covers
+  const covers = []
+ 
+  // to add covers and avatars
   for(let i =1; i <= 24; i++){
     avatars.push(`avatar_${i}.jpg`)
+    covers.push(`cover_${i}.jpg`)
   }
 
   // create user data
   const userData = [];
  
-  // add 50 random users to userData array
+  // add 10 random users to userData array
   for (let i = 0; i < 10; i += 1) {
     const username = faker.internet.userName();
     const email = faker.internet.email(username);
@@ -82,7 +86,7 @@ db.once('open', async () => {
   // create Posts
   let createdPosts = [];
 
-  for(let i=0; i < 20; i++){
+  for(let i=0; i < 30; i++){
 
     /**
      * Make random 10 character titles for posts
@@ -93,13 +97,19 @@ db.once('open', async () => {
      * get a random user from the createdUser array
      */
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-    const { username, _id: userId} = createdUsers.ops[randomUserIndex];
-  
+    const {_id: userId} = createdUsers.ops[randomUserIndex];
+
+    //set author to the users Id
+    const author = userId
+    
+    //get random cover photo
+    const randomCoverIndex = Math.floor(Math.random() * covers.length);
+    const coverPhoto = covers[randomCoverIndex]
 
     /**
      * create a post
      */
-    const createdPost = await Post.create({ title, username, userId });
+    const createdPost = await Post.create({ title, author, coverPhoto});
    
     /**
      * Add post id to the posts field in the user's data
@@ -119,7 +129,7 @@ db.once('open', async () => {
 
 //Create Comments
 
-  for(let i=0; i <10; i++){
+  for(let i=0; i <20; i++){
     /**
      * Make random comment texts
      */
@@ -130,7 +140,7 @@ db.once('open', async () => {
      * get a random user from the createdUser array
      */
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length);
-    const { username } = createdUsers.ops[randomUserIndex];
+    const { _id : author } = createdUsers.ops[randomUserIndex];
 
       
     /**
@@ -144,7 +154,7 @@ db.once('open', async () => {
      */
     await Post.updateOne(
       { _id: postId },
-      { $push: { comments: { commentText,username }}},
+      { $push: { comments: { commentText,author }}},
       { runValidators: true }
     )
   }
@@ -158,30 +168,41 @@ console.log('\n ----- Added Comments ----- \n');
 /**
  *  Add Likes
  * */ 
+for(let post of createdPosts){
+      for(let i=0; i < 10; i++){
+           /**
+           * get a user from the createdUser array
+           */
+          const { _id : userId } = createdUsers.ops[i];
 
-  for(let i=0; i < 10; i++){
+        
 
-    /**
-     * get a user from the createdUser array
-     */
-    const { username } = createdUsers.ops[i];
-   
+          /**
+           * get a random post from the createdPost array
+          */
+          const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
+          const { _id : postId } = createdPosts[randomPostIndex];
+          
+          /**
+           * Add unique like to a post
+           */
+          await Post.updateOne(
+            { _id: postId },
+            { $addToSet : { likes : userId}},
+            { runValidators: true }
+          )
 
-    /**
-     * get a random post from the createdPost array
-    */
-    const randomPostIndex = Math.floor(Math.random() * createdPosts.length);
-    const { _id : postId } = createdPosts[randomPostIndex];
-    
-    /**
-     * Add unique like to a post
-     */
-    await Post.updateOne(
-      { _id: postId },
-      { $addToSet : { likes : { username }}},
-      { runValidators: true }
-    )
+          /**
+           * Add to a user's liked posts
+           */
+          await User.updateOne(
+            { _id: userId},
+            { $addToSet:{ likedPosts: postId}},
+            { runValidators: true }
+          )
+     }
   }
+
 
  console.log('\n ----- Added likes ----- \n');
 

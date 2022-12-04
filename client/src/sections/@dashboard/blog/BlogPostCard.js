@@ -62,25 +62,36 @@ BlogPostCard.propTypes = {
   index: PropTypes.number,
 };
 
-export default function BlogPostCard({ post, index }) {
+export default function BlogPostCard({ post, index, modalToggle }) {
   
-  const { title,createdAt,commentCount,likeCount, username } = post
+  const { coverPhoto, title,createdAt,commentCount,likeCount, author, _id } = post
+  
   // const { cover, title, view, comment, share, author, createdAt } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
   const POST_INFO = [
-    { number: commentCount, icon: 'eva:message-circle-fill' },
-    { number:likeCount, icon: 'eva:heart-outline' },
-    // { number: share, icon: 'eva:share-fill' },
+    { number: commentCount, icon: 'eva:message-circle-fill',name: "comment" },
+    { number:likeCount, icon: 'eva:heart-outline', name: "like" },
   ];
+ 
+ 
 
+  const handleClick = (e) => {
+     console.log(e.target.dataset)
+     return;
+  }
 
+ 
 
 
   return (
-    <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
-      <Card sx={{ position: 'relative' }}>
+    <Grid 
+      item xs={12} 
+      sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}
+      
+    >
+      <Card sx={{ position: 'relative' }} onClick={() => modalToggle(post._id)}>
         <StyledCardMedia
           sx={{
             ...((latestPostLarge || latestPost) && {
@@ -116,8 +127,8 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
           <StyledAvatar
-            alt={username}
-            // src={author.avatarUrl}
+            alt={author.username}
+            src={`/assets/images/avatars/${author.avatar}`}
             sx={{
               ...((latestPostLarge || latestPost) && {
                 zIndex: 9,
@@ -129,7 +140,7 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
 
-           <StyledCover alt={title}/>
+           <StyledCover alt={title} src={`/assets/images/covers/${coverPhoto}`}/>
         </StyledCardMedia>
 
         <CardContent
@@ -143,7 +154,6 @@ export default function BlogPostCard({ post, index }) {
           }}
         >
           <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {/* {fDate(createdAt)} */}
             {createdAt}
           </Typography>
 
@@ -155,6 +165,7 @@ export default function BlogPostCard({ post, index }) {
               ...(latestPostLarge && { typography: 'h5', height: 60 }),
               ...((latestPostLarge || latestPost) && {
                 color: 'common.white',
+                cursor: "pointer"
               }),
             }}
           >
@@ -164,8 +175,14 @@ export default function BlogPostCard({ post, index }) {
           <StyledInfo>
             {POST_INFO.map((info, index) => (
               <Box
+                onClick={handleClick}
+                data-name={info.name}
                 key={index}
                 sx={{
+                  "&:hover":{
+                      color: 'red'
+                  },
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   ml: index === 0 ? 0 : 1.5,
@@ -175,9 +192,10 @@ export default function BlogPostCard({ post, index }) {
                 }}
               >
                 <Iconify icon={info.icon} sx={{ width: 16, height: 16, mr: 0.5 }} />
-                <Typography variant="caption">{fShortenNumber(info.number)}</Typography>
+                <Typography variant="caption">{fShortenNumber(info.number) || 0}</Typography>
               </Box>
             ))}
+
           </StyledInfo>
         </CardContent>
       </Card>

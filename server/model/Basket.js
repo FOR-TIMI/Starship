@@ -10,6 +10,9 @@ const basketSchema = new Schema({
     default: Date.now,
     get: (currentTimestamp) => dateFormat(currentTimestamp),
   },
+  basketName: {
+    type: String,
+  },
   username: {
     type: String,
     required: true,

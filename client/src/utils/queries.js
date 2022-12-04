@@ -1,34 +1,55 @@
 import { gql } from '@apollo/client';
 
-export const QUERY_POSTS = gql`
-  query posts {
-    posts {
+export const QUERY_ME = gql`
+  query SignedInUser {
+    signedInUser {
+      username
       _id
-      title
-      likeCount
-      commentCount
+      avatar
+      email
     }
   }
 `;
 
-export const QUERY_POST = gql`
-  query post($id: ID!) {
-    post(_id: $id) {
-      _id
-      title
-      userId
-      username
-      comments {
-        commentText
-        createdAt
-        username
-      }
-      likes {
+export const QUERY_POSTS = gql`
+    query{
+      posts {
         _id
-        username
+        title
+        coverPhoto
+        createdAt
+        commentCount
+        likeCount
+        author {
+          username
+          avatar
+        }
       }
     }
+`;
+
+export const QUERY_POST = gql`
+query($id: ID!){
+  post(_id: $id) {
+    author {
+      avatar
+      username
+    }
+    title
+    coverPhoto
+    comments {
+      commentText
+      author {
+        avatar
+      }
+    }
+    likes {
+      _id
+      username
+      avatar
+    }
   }
+}
 `;
 
 export const QUERY_SOCIAL = gql`
@@ -102,6 +123,56 @@ export const GET_BASKETS = gql`
         API
         symbol
       }
+    }
+  }
+`;
+
+export const GET_BASKET = gql`
+  query Query($id: ID!) {
+    basket(_id: $id) {
+      _id
+      createdAt
+      tickers {
+        API
+        market
+        symbol
+        _id
+      }
+    }
+  }
+`;
+
+export const GET_DATA_FROM_BASKET = gql`
+  query Query($getDataFromBasketId: ID!, $timeframe: String!, $limit: Int!, $days: Int!) {
+    getDataFromBasket(id: $getDataFromBasketId, timeframe: $timeframe, limit: $limit, days: $days) {
+      VWAP
+      Timestamp
+    }
+  }
+`;
+
+export const NEWS_QUERY = gql`
+  query Query($ticker: String!) {
+    getNews(ticker: $ticker) {
+      title
+      link
+      pubDate
+      content
+      img
+    }
+  }
+`;
+
+export const GET_LARGE_TRADES = gql`
+  query Query($ticker: String!) {
+    getLargeTrades(ticker: $ticker) {
+      Timestamp
+      Exchange
+      Price
+      Size
+      Conditions
+      ID
+      Tape
     }
   }
 `;

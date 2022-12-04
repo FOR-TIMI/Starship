@@ -54,9 +54,11 @@ async function getBarsData(symbol, timeframe, limit, days) {
       timeframe: timeframe, // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
       limit: limit, // I have tested this upto 100000
     });
-
-    const allBars = [];
     for (const b of bars) {
+      console.log(b[1].length, "THIS BARS");
+    }
+    const allBars = [];
+    for await (const b of bars) {
       let barsData = {};
       barsData["Name"] = b[0];
       barsData["Barsdata"] = [];
@@ -84,14 +86,6 @@ async function getBarsData(symbol, timeframe, limit, days) {
 
 function dataToBasket(data) {
   return new Promise((resolve) => {
-    console.log(data[0]);
-    console.log(data[1]);
-    const finalArr = [];
-
-    // const allValues = [];
-
-    const uniqueTimeStampSymbolObjects = [];
-
     const VWAP = [];
     for (let i = 0; i < data.length; i++) {
       for (let b = 0; b < data[i].Barsdata.length; b++) {
@@ -109,7 +103,7 @@ function dataToBasket(data) {
             VWAP.push(data[i].Barsdata[b]); //
           }
         }
-        if (b == data[i].Barsdata.length - 1 && i == 1) {
+        if (b == data[i].Barsdata.length - 1 && i == data.length - 1) {
           resolve(VWAP);
         }
       }
@@ -137,7 +131,45 @@ function addBasketHelper(args) {
     });
   });
 }
-module.exports = { getBarData, dataToBasket, getBarsData, addBasketHelper };
+
+async function getLargeTrades(ticker) {
+  return new Promise(async (resolve) => {
+    let dateStart = moment().subtract(10, "days").format();
+    let datenow = moment().subtract(16, "minutes").format();
+
+    const trades = await alpaca.getTradesV2(ticker, {
+      start: dateStart,
+      end: datenow, // // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
+      limit: 10000,
+    });
+
+    let done = [];
+
+    for await (const b of trades) {
+      // console.log(b);
+      if (done.length < 5) {
+        done.push(b);
+      } else {
+        for (let i = 0; i < done.length; i++) {
+          let d = done.findIndex((e) => e.ID === b.ID);
+          if (done[i].Size <= b.Size && d == -1) {
+            done.splice(i, 1);
+            done.push(b);
+          }
+        }
+      }
+    }
+    resolve(done);
+  });
+}
+
+module.exports = {
+  getLargeTrades,
+  getBarData,
+  dataToBasket,
+  getBarsData,
+  addBasketHelper,
+};
 
 // (async (symbol)=>{
 

@@ -1,17 +1,21 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
-// mock
-import account from '../../../_mock/account';
+// gql queries
+import { QUERY_ME } from '../../../utils/queries';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 // components
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
+import Iconify from '../../../components/iconify';
+import Auth from '../../../utils/auth';
+
 //
 import navConfig from './config';
 
@@ -35,6 +39,9 @@ Nav.propTypes = {
 };
 
 export default function Nav({ openNav, onCloseNav }) {
+  const { data } = useQuery(QUERY_ME);
+  const loggedIn = Auth.loggedIn();
+
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
@@ -60,17 +67,30 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
-            <Avatar src={account.photoURL} alt="photoURL" />
-
-            <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
-              </Typography>
-
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
-              </Typography>
-            </Box>
+            {loggedIn && data ? (
+              <>
+                <Avatar src={`/assets/images/avatars/${data.signedInUser.avatar}`} alt="photoURL" />
+                <Box sx={{ ml: 2 }}>
+                  <Typography variant="h4" sx={{ color: 'text.primary' }}>
+                    {data.signedInUser.username}
+                  </Typography>
+                </Box>
+              </>
+            ) : (
+              <Button
+                onClick={() => {
+                  window.location.assign('/login');
+                }}
+                sx={{ py: 1 }}
+                fullWidth
+                variant="contained"
+                startIcon={<Iconify icon={'ic:round-lock-open'} width={20} />}
+              >
+                <Typography variant="title2" sx={{ color: 'white' }}>
+                  Login
+                </Typography>
+              </Button>
+            )}
           </StyledAccount>
         </Link>
       </Box>
@@ -81,25 +101,21 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
         <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-          <Box
-            component="img"
-            src="/assets/illustrations/illustration_avatar.png"
-            sx={{ width: 100, position: 'absolute', top: -50 }}
-          />
-
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Get more?
-            </Typography>
-
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              From only $69
-            </Typography>
-          </Box>
-
-          <Button href="https://material-ui.com/store/items/minimal-dashboard/" target="_blank" variant="contained">
-            Upgrade to Pro
-          </Button>
+          {loggedIn && data ? (
+            <Box
+              component="img"
+              src={`/assets/images/avatars/${data.signedInUser.avatar}`}
+              sx={{
+                borderRight: 3,
+                borderBottom: 2,
+                boxShadow: 15,
+                borderRadius: 50,
+                width: 150,
+                position: 'absolute',
+                top: -100,
+              }}
+            />
+          ) : null}
         </Stack>
       </Box>
     </Scrollbar>
