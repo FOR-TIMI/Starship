@@ -11,7 +11,7 @@ import { NEWS_QUERY, GET_BASKET } from '../../../utils/queries';
 // ----------------------------------------------------------------------
 
 export default function AppNewsUpdate3({ ticker, subheader }) {
-  console.log('HEREE');
+  
   return (
     <Card>
       <CardHeader title={'News'} subheader={subheader} />
@@ -41,8 +41,6 @@ function NewsContainer({ ticker }) {
   });
 
   if (data) {
-    console.log(data, 'THISDJLJKD');
-
     return (
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>

@@ -179,7 +179,7 @@ const resolvers = {
       // basket[0].tickers.map(async (each, key) => {
       for (let i = 0; i < basket[0].tickers.length; i++) {
         let bData = {};
-        console.log(basket[0].tickers[i].symbol);
+        // console.log(basket[0].tickers[i].symbol);
         const barsData = await getBarData(
           basket[0].tickers[i].symbol,
           timeframe,
@@ -272,18 +272,25 @@ const resolvers = {
     //use parent?
     deleteBasket: async (parent, { basketId }, context) => {
       if (context.user) {
-        let basket = await Basket.find().remove().exec();
-        console.log(basket);
-        console.log(basket);
+        try{
+        let basket = await Basket.findOneAndDelete({_id: basketId});
+        return basket;
+      }
+        catch{
+          throw new Error("Something went wrong");
+        }
+    
       }
     },
 
     addBasket: async (parent, args, context) => {
       if (context.user) {
         let tickers = await addBasketHelper(args);
+        let basketName = args.basketName;
         const basket = await Basket.create({
           tickers: tickers,
           username: context.user.username,
+          basketName: basketName
         });
 
         await User.findByIdAndUpdate(

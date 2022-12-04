@@ -8,7 +8,7 @@ import { useQuery } from '@apollo/client';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography, Button } from '@mui/material';
 import { BAR_DATA_QUERY } from '../utils/queries';
-// import AddToBasket from 'src/components/add-to-basket';
+import  AddToBasket  from '../components/add-to-basket/index';
 // components
 import Iconify from '../components/iconify';
 import {
@@ -54,12 +54,12 @@ export default function SingleAnalysis() {
   let currentOpenPrice = 0;
   let currentVolume = 0;
   if (data) {
-    console.log(data.barDataQuery);
+    
     // function for all 3
 
     const finalPrice = data.barDataQuery[data.barDataQuery.length - 1].ClosePrice;
     const initialPrice = data.barDataQuery[0].ClosePrice;
-    diff = (finalPrice - initialPrice).toFixed(2);
+    diff = parseInt((finalPrice - initialPrice).toFixed(2));
 
     currentOpenPrice = data.barDataQuery[data.barDataQuery.length - 1].OpenPrice;
     currentVolume = data.barDataQuery[data.barDataQuery.length - 1].Volume;
@@ -197,7 +197,7 @@ export default function SingleAnalysis() {
             />
           </Grid>
         </Grid>
-        {/* <AddToBasket modalOpen={modalOpen} handleOpen={handleOpen} /> */}
+        <AddToBasket modalOpen={modalOpen} handleOpen={handleOpen} />
       </Container>
     </>
   );

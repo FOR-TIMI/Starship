@@ -13,7 +13,7 @@ NavSection.propTypes = {
 };
 
 export default function NavSection({ data = [], ...other }) {
-  console.log(data);
+  
   const loggedIn = Auth.loggedIn();
   if (!loggedIn) {
     return (
