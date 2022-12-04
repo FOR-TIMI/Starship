@@ -13,7 +13,7 @@ import {
 // components
 import { useQuery } from '@apollo/client';
 import FollowingTable from '../components/following-table'
-import FollowerTable from 'src/components/follower-table';
+import FollowerTable from '../components/follower-table';
 import Scrollbar from '../components/scrollbar';
 //from utils
 import { QUERY_SOCIAL } from '../utils/queries';

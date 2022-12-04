@@ -8,7 +8,7 @@ import { useQuery } from '@apollo/client';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography, Button } from '@mui/material';
 import { BAR_DATA_QUERY } from '../utils/queries';
-import AddToBasket from 'src/components/add-to-basket';
+// import AddToBasket from 'src/components/add-to-basket';
 // components
 import Iconify from '../components/iconify';
 import {
@@ -197,7 +197,7 @@ export default function SingleAnalysis() {
             />
           </Grid>
         </Grid>
-        <AddToBasket modalOpen={modalOpen} handleOpen={handleOpen} />
+        {/* <AddToBasket modalOpen={modalOpen} handleOpen={handleOpen} /> */}
       </Container>
     </>
   );

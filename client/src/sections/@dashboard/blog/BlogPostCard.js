@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
 // utils
 import { fDate } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
@@ -58,21 +59,21 @@ const StyledCover = styled('img')({
 // ----------------------------------------------------------------------
 
 BlogPostCard.propTypes = {
-  post: PropTypes.object.isRequired,
+  // post: PropTypes.object.isRequired,
   index: PropTypes.number,
 };
 
-export default function BlogPostCard({ post, index, modalToggle }) {
+export default function BlogPostCard({ post, index, modalToggle,loading }) {
   
-  const { coverPhoto, title,createdAt,commentCount,likeCount, author, _id } = post
+
   
-  // const { cover, title, view, comment, share, author, createdAt } = post;
+  
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
   const POST_INFO = [
-    { number: commentCount, icon: 'eva:message-circle-fill',name: "comment" },
-    { number:likeCount, icon: 'eva:heart-outline', name: "like" },
+    { number: post ? post.commentCount : 0, icon: 'eva:message-circle-fill',name: "comment" },
+    { number: post ? post.likeCount : 0, icon: 'eva:heart-outline', name: "like" },
   ];
  
  
@@ -91,7 +92,7 @@ export default function BlogPostCard({ post, index, modalToggle }) {
       sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}
       
     >
-      <Card sx={{ position: 'relative' }} onClick={() => modalToggle(post._id)}>
+      <Card sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
             ...((latestPostLarge || latestPost) && {
@@ -113,7 +114,7 @@ export default function BlogPostCard({ post, index, modalToggle }) {
             }),
           }}
         >
-          <SvgColor
+          { post ? <SvgColor
             color="paper"
             src="/assets/icons/shape-avatar.svg"
             sx={{
@@ -125,22 +126,54 @@ export default function BlogPostCard({ post, index, modalToggle }) {
               color: 'background.paper',
               ...((latestPostLarge || latestPost) && { display: 'none' }),
             }}
-          />
-          <StyledAvatar
-            alt={author.username}
-            src={`/assets/images/avatars/${author.avatar}`}
-            sx={{
-              ...((latestPostLarge || latestPost) && {
-                zIndex: 9,
-                top: 24,
-                left: 24,
-                width: 40,
-                height: 40,
-              }),
-            }}
-          />
+          /> : (
+            <Skeleton variant='circular' sx={{
+              width: 36,
+              height: 36,
+              zIndex: 9,
+              left: 24,
+              bottom: -15,
+              position: 'absolute',
+              ...((latestPostLarge || latestPost) && { display: 'none' }),
+            }} />
+          ) }
 
-           <StyledCover alt={title} src={`/assets/images/covers/${coverPhoto}`}/>
+          {
+            post ? (
+            <StyledAvatar
+              alt={post.author.username}
+              src={`/assets/images/avatars/${post.author.avatar}`}
+              sx={{
+                ...((latestPostLarge || latestPost) && {
+                  zIndex: 9,
+                  top: 24,
+                  left: 24,
+                  width: 40,
+                  height: 40,
+                }),
+              }}
+              /> 
+              ) : (
+                <Skeleton variant="circular" sx={{
+                  ...((latestPostLarge || latestPost) && {
+                    position: 'absolute',
+                    zIndex: 9,
+                    top: 24,
+                    left: 24,
+                    width: 40,
+                    height: 40,
+                  }),
+                  ...((!latestPost && !latestPostLarge) && {
+                    display: "none"
+                  })
+                }} />
+              ) 
+            
+          }
+          
+         
+
+           {post && <StyledCover alt={post.title} src={`/assets/images/covers/${post.coverPhoto}`}/>}
         </StyledCardMedia>
 
         <CardContent
@@ -153,27 +186,44 @@ export default function BlogPostCard({ post, index, modalToggle }) {
             }),
           }}
         >
-          <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {createdAt}
+          { post ? (
+            <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
+            {post.createdAt}
           </Typography>
+          ) : (
+            <Skeleton variant="rectangular" width="60%" height="5"  />
+          )
+        
+        }
 
-          <StyledTitle
-            color="inherit"
-            variant="subtitle2"
-            underline="hover"
-            sx={{
-              ...(latestPostLarge && { typography: 'h5', height: 60 }),
-              ...((latestPostLarge || latestPost) && {
-                color: 'common.white',
+         {
+          post ? (
+            <StyledTitle
+              color="inherit"
+              variant="subtitle2"
+              underline="hover"
+              sx={{
+                ...(latestPostLarge && { typography: 'h5', height: 60 }),
+                ...((latestPostLarge || latestPost) && {
+                  color: 'common.white',
+                }),
                 cursor: "pointer"
-              }),
-            }}
-          >
-            {title}
-          </StyledTitle>
+              }}
+              onClick={() => modalToggle(post._id)}
+            >
+              {post.title}
+            </StyledTitle>
+          ) : (
+            <Skeleton width="100%" variant="rectangular"
+            sx={{
+              mt: 0.5
+            }}   
+          />
+          )
+         }
 
           <StyledInfo>
-            {POST_INFO.map((info, index) => (
+            {post ? POST_INFO.map((info, index) => (
               <Box
                 onClick={handleClick}
                 data-name={info.name}
@@ -191,10 +241,23 @@ export default function BlogPostCard({ post, index, modalToggle }) {
                   }), 
                 }}
               >
-                <Iconify icon={info.icon} sx={{ width: 16, height: 16, mr: 0.5 }} />
+                <Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />
                 <Typography variant="caption">{fShortenNumber(info.number) || 0}</Typography>
               </Box>
-            ))}
+            )) : (
+              <Box key={index}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                ml: index === 0 ? 0 : 1.5,
+              }}> 
+                <Skeleton variant="circular" sx={{ width: 20, height: 20, mr: 0.5 }} />
+                <Skeleton variant="circular"  sx={{ width: 20, height: 20, mr: 0.5 }} />
+              </Box>
+            )
+          
+          }
 
           </StyledInfo>
         </CardContent>
