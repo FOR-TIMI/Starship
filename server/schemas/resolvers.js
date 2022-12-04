@@ -300,17 +300,21 @@ const resolvers = {
     //ADD tickers to basket object, NTS ADD API and MARKET Arguments if need later on
     addTicker: async (parent, { basketId, ticker }, context) => {
       if (context.user) {
-        const tick = await Ticker.create({ ticker }); //need pass in user creds via args so that the basket can be associated to the user (?)
-        //NOT TOO SURE THIS WILL WORK WILL NEED TO DISCUSS
-        await Basket.findOneAndUpdate(
+        let symbol = ticker;
+        let b = await Basket.findById(basketId);
+        let c = b.tickers.map((e)=>{return e.symbol});
+        let t = c.includes(symbol);
+        // verifying if symbol already exists in basket if not find and update else return error
+        if(!t){
+        let basket = await Basket.findOneAndUpdate(
           { _id: basketId }, // get the user Id to access basket:[Basket]
-          {
-            $addToSet: { tickers: { ticker, username: context.user.username } },
-          }, // addtoSet to ensure no duplicate ticker objects are added,
+          { $addToSet: { tickers: {symbol} },}, // addtoSet not working ,
           { new: true, runValidators: true } // flag which tells mongo to return the updated document from the database
         );
+        return basket;
+      }
 
-        return tick;
+        return new Error("Already exists in basket");
       }
 
       throw new AuthenticationError("You need to be logged in!");

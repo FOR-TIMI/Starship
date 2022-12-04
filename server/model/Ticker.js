@@ -15,7 +15,7 @@ const tickerSchema = new Schema(
     //API houses the baseurl for making calls to the Web APIs ()
     API: {
       type: String,
-      required: true,
+      //required: true,
     },
   }
 );
