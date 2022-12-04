@@ -67,11 +67,8 @@ export default function BlogPage() {
 
 
         <Grid container spacing={3}>
-    
-        {/* (loading ? Array.from(new Array(10)) : POSTS) */}
-
           {/* posts  */}
-          {Array.from(new Array(10)).map((post,index) => (
+          {(loading ? Array.from(new Array(10)) : POSTS).map((post,index) => (
             <BlogPostCard 
                 key={post ? post._id : index} 
                 post={post} 
