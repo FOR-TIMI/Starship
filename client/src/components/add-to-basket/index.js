@@ -1,7 +1,14 @@
 
-import{Modal, Box, ToggleButtonGroup, ToggleButton, Button, TextField} from '@mui/material'
-import { useEffect, useState } from 'react';
 
+import{Modal, Box, ToggleButtonGroup, ToggleButton, Button, TextField} from '@mui/material'
+import { useEffect, useState} from 'react';
+import { GET_BASKETS } from '../../utils/queries';
+import { useQuery} from '@apollo/client';
+import { useMutation } from '@apollo/client';
+
+import { useParams } from 'react-router-dom';
+import { ADD_TICKER } from '../../utils/mutations';
+import { indexOf } from 'lodash';
 
 const style = {
     
@@ -52,23 +59,43 @@ function ChildModal() {
     );
   }
 
+  function Addb({basket, index}) {
+    let { symbol } = useParams();
+  // add ticker mutation
+  const [addTicker, { error }] = useMutation(ADD_TICKER);
+
+    const handleChange = () => {
+     
+      console.log(basket._id,symbol);
+      // query add to basket the ticker 
+      // 
+      
+    };
+
+    return   <ToggleButton value="module" aria-label="module" onClick={handleChange}>
+       {(basket.basketName === null) ?  (`Basket ${index+1}`):(basket.basketName) }
+     </ToggleButton>
+    
+  }
 
 
 export default function AddToBasket(props) {
     const [isToggled, setIsToggled] = useState(false);
     const { modalOpen, handleOpen } = props;
+    
+    // adding get query for all baskets
+  
+    const { data }  = useQuery(GET_BASKETS);
+  let baskets = [];
 
-   
-    
-      const [view, setView] = useState('list');
-    
-      const handleChange = (event, nextView) => {
-        setView(nextView);
-      };
-    
+    if( data){
+      baskets = data.baskets
+      console.log("data : " , data)
+    }
      
 
-    //add code to setIsToggled  to True if 'user._id' is in [following]
+      const [view, setView] = useState('list');
+    
 
     return (
         <Modal
@@ -83,17 +110,16 @@ export default function AddToBasket(props) {
       orientation="vertical"
       value={view}
       exclusive
-      onChange={handleChange}
+      
     >
       
       <ChildModal />
       
-      <ToggleButton value="module" aria-label="module">
-        basket 1
-      </ToggleButton>
-      <ToggleButton value="quilt" aria-label="quilt">
-        basket 2
-      </ToggleButton>
+      {baskets.map((basket,i) => {
+        console.log(basket._id)
+        return <Addb basket={basket} index={i}/>
+      } )}
+    
     </ToggleButtonGroup>
   </Box>
 </Modal>
