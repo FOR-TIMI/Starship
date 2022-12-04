@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 // post modal
-import PostModal from 'src/components/postModal'
+import PostModal from '../components/post-modal'
 
 // @apollo client
 import { useQuery} from '@apollo/client';

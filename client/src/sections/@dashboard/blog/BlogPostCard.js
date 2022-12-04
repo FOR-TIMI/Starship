@@ -91,7 +91,7 @@ export default function BlogPostCard({ post, index, modalToggle }) {
       sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}
       
     >
-      <Card sx={{ position: 'relative' }} onClick={() => modalToggle(post._id)}>
+      <Card sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
             ...((latestPostLarge || latestPost) && {
@@ -165,9 +165,10 @@ export default function BlogPostCard({ post, index, modalToggle }) {
               ...(latestPostLarge && { typography: 'h5', height: 60 }),
               ...((latestPostLarge || latestPost) && {
                 color: 'common.white',
-                cursor: "pointer"
               }),
+              cursor: "pointer"
             }}
+            onClick={() => modalToggle(post._id)}
           >
             {title}
           </StyledTitle>

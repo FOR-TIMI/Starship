@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const style = {
   position: 'absolute',
@@ -60,20 +61,27 @@ export default function SinglePost({open, setOpen, post, loading}) {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button onClick={handleOpen}></Button>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
-      >
+      >  
+      {loading ? (
+       <Box sx={{ ...style, width: 400, display:"flex", justifyContent:"center" }}>
+        <CircularProgress />
+       </Box>
+      ) : (
         <Box sx={{ ...style, width: 400 }}>
           <h2 id="parent-modal-title">{title}</h2>
           <p id="parent-modal-description">
  
           </p>
           <ChildModal />
-        </Box>
+        </Box>  
+      )}
+        
       </Modal>
     </div>
   );
