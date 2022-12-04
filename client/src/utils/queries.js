@@ -116,6 +116,7 @@ export const GET_BASKETS = gql`
   query Query {
     baskets {
       _id
+      basketName
       createdAt
       tickers {
         market
@@ -131,6 +132,7 @@ export const GET_BASKET = gql`
   query Query($id: ID!) {
     basket(_id: $id) {
       _id
+      basketName
       createdAt
       tickers {
         API

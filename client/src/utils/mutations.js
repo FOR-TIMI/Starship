@@ -55,3 +55,18 @@ export const ADD_TICKER = gql `
         }
     }
 `
+export const ADD_BASKET = gql `
+mutation Mutation($tickers: [String]!, $basketName: String) {
+    addBasket(tickers: $tickers, basketName: $basketName) {
+      _id
+      createdAt
+      basketName
+      tickers {
+        _id
+        symbol
+        market
+        API
+      }
+    }
+  }
+`

@@ -41,6 +41,7 @@ const typeDefs = gql`
   type Basket {
     _id: ID
     createdAt: String
+    basketName: String
     tickers: [Ticker]
   }
 
@@ -137,7 +138,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
     addTicker(basketId: ID!, ticker: String!): Basket
-    addBasket(tickers: [String]!): Basket
+    addBasket(tickers: [String]!, basketName: String): Basket
     addPost(title: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User

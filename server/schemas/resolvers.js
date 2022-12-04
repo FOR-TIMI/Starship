@@ -286,9 +286,11 @@ const resolvers = {
     addBasket: async (parent, args, context) => {
       if (context.user) {
         let tickers = await addBasketHelper(args);
+        let basketName = args.basketName;
         const basket = await Basket.create({
           tickers: tickers,
           username: context.user.username,
+          basketName: basketName
         });
 
         await User.findByIdAndUpdate(
