@@ -1,43 +1,44 @@
-const { Schema, model } = require("mongoose");
-const dateFormat =require('../utils/dateFormat');
+const { Schema, model } = require('mongoose');
+const dateFormat = require('../utils/dateFormat');
 
 // Imported Schemas 
-const likeSchema = require('./Like')
 const commentSchema = require('./Comment')
 
-const postSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-  },
-  userId:{
-    type: String,
-    required: true
-  },
-  title: {
-    type: String,
-    required: "You must add a title",
-    minLength: 1,
-    maxLength: 100,
-  },
-  basketId: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: timeStamp => dateFormat(timeStamp)
-  },
+const postSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: 'You must add a title',
+      minlength: 1,
+      maxlength: 100
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      get: timestamp => dateFormat(timestamp)
+    },
+    coverPhoto: {
+      type: String,
+      required: 'You must select a cover for your post',
+    },
+    author:{
+      type: Schema.Types.ObjectId, 
+      ref: 'User'
+    },
 
-  comments: [commentSchema],
-  likes: [likeSchema]
-},
-{
+    comments: [commentSchema],
+    likes: [ 
+      {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+     },
+    ]
+  },
+  {
     toJSON: {
-        getters: true,
-        virtuals: true
+      getters: true
     }
-}
+  }
 );
 
 postSchema
@@ -54,4 +55,5 @@ postSchema
 
 const Post = model('Post', postSchema);
 
-module.exports = Post
+
+module.exports = Post;

@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client';
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
 // gql queries
-import { QUERY_ME } from 'src/utils/queries';
+import { QUERY_ME } from '../../../utils/queries';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 // components

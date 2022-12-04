@@ -44,10 +44,16 @@ const userSchema = new Schema(
         ref: "Post",
       }
     ],
-    avatar: {
+    avatar:{
       type: String,
-      default: 'avatar_default.jpg',
-    }
+      default:"avatar_default.jpg"
+    },
+    likedPosts:[
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      }
+    ]
   },
   {
     toJSON: {

@@ -12,34 +12,44 @@ export const QUERY_ME = gql`
 `;
 
 export const QUERY_POSTS = gql`
-  query posts {
-    posts {
-      _id
-      title
-      likeCount
-      commentCount
+    query{
+      posts {
+        _id
+        title
+        coverPhoto
+        createdAt
+        commentCount
+        likeCount
+        author {
+          username
+          avatar
+        }
+      }
     }
-  }
 `;
 
 export const QUERY_POST = gql`
-  query post($id: ID!) {
-    post(_id: $id) {
-      _id
-      title
-      userId
+query($id: ID!){
+  post(_id: $id) {
+    author {
+      avatar
       username
-      comments {
-        commentText
-        createdAt
-        username
-      }
-      likes {
-        _id
-        username
+    }
+    title
+    coverPhoto
+    comments {
+      commentText
+      author {
+        avatar
       }
     }
+    likes {
+      _id
+      username
+      avatar
+    }
   }
+}
 `;
 
 export const QUERY_SOCIAL = gql`
