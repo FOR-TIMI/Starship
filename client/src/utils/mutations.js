@@ -26,27 +26,19 @@ export const ADD_USER = gql`
 `
 
 export const ADD_FOLLOWING = gql `
-    mutation addFollowing($id: ID!) {
-        addFollowing (followingId: $id) {
+    mutation addFollowing($followingId: ID!) {
+        addFollowing (followingId: $followingId) {
             _id
             username
-            following {
-                _id
-                username
-            }
         }
     }
 `
 
 export const REMOVE_FOLLOWING = gql `
-    mutation removeFollowing($id: ID!) {
-        removeFollowing (followingId: $id) {
+    mutation removeFollowing($followingId: ID!) {
+        removeFollowing (followingId: $followingId) {
             _id
             username
-            following {
-                _id
-                username
-            }
         }
     }
 `

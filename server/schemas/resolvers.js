@@ -8,7 +8,9 @@ const {
 } = require("../utils/API_calls/queries");
 const { searchGoogle } = require("../utils/API_calls/gnews");
 const { signToken } = require("../utils/auth");
+const mongoose = require('mongoose')
 const { AuthenticationError } = require("apollo-server-express");
+
 
 const resolvers = {
   Query: {
@@ -317,12 +319,12 @@ const resolvers = {
 
     // userId will be my userId and the followId would be the userId of the person i'm following
     addFollowing: async (parent, { followingId }, context) => {
-      if (context.user && followingId) {
+      if ( context.user && followingId) {
         try {
           //To update the person i'm following's follower list
           await User.findOneAndUpdate(
             { _id: followingId },
-            { $addToSet: { followers: context.user._id } },
+            { $addToSet: { followers: context.user._id} },
             { new: true }
           );
 
@@ -343,19 +345,18 @@ const resolvers = {
 
     removeFollowing: async (parent, { followingId }, context) => {
       if (context.user && followingId) {
-        try {
-          await User.findOneAndUpdate(
+          const updatedUser = await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $pull: { followings: followingId } },
-            { new: true }
-          );
-          return updatedUser;
-        } catch {
-          throw new AuthenticationError("Something went wrong");
+            { $pull: { followings: { $in: [followingId] }} },
+            { new: true },
+            function callback (err,data) {
+              console.log(data)
+            }
+          )
+          return updatedUser
         }
-      }
-      throw new AuthenticationError("You need to be logged in!");
-    },
+        throw new AuthenticationError("You need to be logged in!")
+        },
 
     addPost: async (parent, args, context) => {
       if (context.user) {
