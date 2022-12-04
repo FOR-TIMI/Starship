@@ -30,7 +30,6 @@ const resolvers = {
 
     getLargeTrades: async (parent, { ticker }) => {
       const trades = await getLargeTrades(ticker);
-      console.log(trades, "LARGE TRADES");
       return trades;
     },
 
@@ -90,76 +89,82 @@ const resolvers = {
           if (followings.length) {
             const friendsPosts = await Post.find({
               userId: { $in: followings },
-            }).populate("author")
-            .populate("likes")
-            .populate({ 
-              path: "comments",
-              populate: {
-                path: 'author',
-                model: 'User'
-              } 
-           }).sort({ createdAt: -1 }); 
+            })
+              .populate("author")
+              .populate("likes")
+              .populate({
+                path: "comments",
+                populate: {
+                  path: "author",
+                  model: "User",
+                },
+              })
+              .sort({ createdAt: -1 });
 
             const allPosts = await Post.find(params)
-                                        .populate("author")
-                                        .populate("likes")
-                                        .populate({ 
-                                          path: "comments",
-                                          populate: {
-                                            path: 'author',
-                                            model: 'User'
-                                          } 
-                                      }).sort({ createdAt: -1 }); 
+              .populate("author")
+              .populate("likes")
+              .populate({
+                path: "comments",
+                populate: {
+                  path: "author",
+                  model: "User",
+                },
+              })
+              .sort({ createdAt: -1 });
 
             return [...friendsPosts, ...allPosts];
           }
 
           return Post.find(params)
-          .populate("author")
-          .populate("likes")
-          .populate({ 
-            path: "comments",
-            populate: {
-              path: 'author',
-              model: 'User'
-            } 
-         }).sort({ createdAt: -1 }); 
+            .populate("author")
+            .populate("likes")
+            .populate({
+              path: "comments",
+              populate: {
+                path: "author",
+                model: "User",
+              },
+            })
+            .sort({ createdAt: -1 });
         } catch {
           return Post.find(params)
-          .populate("author")
-          .populate("likes")
-          .populate({ 
-            path: "comments",
-            populate: {
-              path: 'author',
-              model: 'User'
-            } 
-         }).sort({ createdAt: -1 });  // if the user doesn't have friends
+            .populate("author")
+            .populate("likes")
+            .populate({
+              path: "comments",
+              populate: {
+                path: "author",
+                model: "User",
+              },
+            })
+            .sort({ createdAt: -1 }); // if the user doesn't have friends
+        }
       }
-    }
       return Post.find(params)
-      .populate("author")
-      .populate("likes")
-      .populate({ 
-        path: "comments",
-        populate: {
-          path: 'author',
-          model: 'User'
-        } 
-     }).sort({ createdAt: -1 }); // when a user is not signed in
+        .populate("author")
+        .populate("likes")
+        .populate({
+          path: "comments",
+          populate: {
+            path: "author",
+            model: "User",
+          },
+        })
+        .sort({ createdAt: -1 }); // when a user is not signed in
     },
 
     post: async (parent, { _id }) => {
       return Post.findById(_id)
-      .populate("author")
-      .populate("likes")
-      .populate({ 
-        path: "comments",
-        populate: {
-          path: 'author',
-          model: 'User'
-        } 
-     })
+        .populate("author")
+        .populate("likes")
+        .populate({
+          path: "comments",
+          populate: {
+            path: "author",
+            model: "User",
+          },
+        });
     },
 
     getDataFromBasket: async (
@@ -168,7 +173,6 @@ const resolvers = {
       context
     ) => {
       const basket = await Basket.find({ _id: id }).populate("ticker");
-      console.log(basket, "basket");
       const data = [];
       let ret;
       // basket[0].tickers.map(async (each, key) => {
@@ -184,7 +188,6 @@ const resolvers = {
         // console.log(barsData, i);
         bData["Name"] = basket[0].tickers[i].symbol;
         bData["Barsdata"] = barsData;
-        // bData.Barsdata[0].symbol = basket[0].tickers[i].symbol;
         for (let b = 0; b < bData.Barsdata.length; b++) {
           bData.Barsdata[b]["Symbol"] = basket[0].tickers[i].symbol;
 
@@ -196,9 +199,6 @@ const resolvers = {
             i == basket[0].tickers.length - 1 &&
             b == bData.Barsdata.length - 1
           ) {
-            // // console.log("ending");
-            // console.log(data[0].Barsdata, "THJIS DATA");
-            // console.log(data[1].Barsdata, "THJIS DATA");
             ret = await dataToBasket(data);
             return ret;
           }
@@ -394,7 +394,7 @@ const resolvers = {
       if (context.user) {
         const updatedPost = await Post.findOneAndUpdate(
           { _id: postId },
-          { $addToSet: { likes: { _id : context.user._id } } },
+          { $addToSet: { likes: { _id: context.user._id } } },
           { new: true }
         );
         return updatedPost;
