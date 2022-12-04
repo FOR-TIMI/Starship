@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Grid } from '@mui/material';
 import ShopProductCard from './ProductCard';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import { useQuery } from '@apollo/client';
 import { GET_BASKETS } from '../../../utils/queries';
@@ -15,10 +15,11 @@ ProductList.propTypes = {
 export default function ProductList({ baskets, ...other }) {
   const { loading, error, data } = useQuery(GET_BASKETS);
   const [clicked, setClicked] = useState(false);
+  const navigate = useNavigate();
 
-  function handleClick() {
+  function handleClick(id) {
     console.log('hello');
-    setClicked(true);
+    navigate('/dashboard/user/' + id);
   }
 
   if (loading) {
@@ -28,14 +29,21 @@ export default function ProductList({ baskets, ...other }) {
     console.log(error);
   }
   if (data) {
-    console.log('got data');
-    console.log(data.baskets);
+    console.log(data, 'THIS DATA BASKETS');
 
     return (
       <Grid container spacing={3} {...other}>
         {data.baskets.map((basket, key) => (
-          <Grid key={basket.id} onClick={handleClick} item xs={12} sm={6} md={3}>
-            {clicked ? <Navigate to={'/dashboard/user/' + basket._id} /> : <></>}
+          <Grid
+            key={basket._id}
+            onClick={() => {
+              handleClick(basket._id);
+            }}
+            item
+            xs={12}
+            sm={6}
+            md={3}
+          >
             <ShopProductCard basket={basket} basketKey={key + 1} />
           </Grid>
         ))}
