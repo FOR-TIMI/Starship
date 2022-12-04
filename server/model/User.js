@@ -46,7 +46,8 @@ const userSchema = new Schema(
     ],
     avatar:{
       type: String,
-      default:"avatar_default.jpg"
+      default:"avatar_default.jpg",
+      match: [/avatar_(2[0-4]|1[0-9]|[1-9]|default).jpg/, "Not a valid avatar"]
     },
     likedPosts:[
       {
