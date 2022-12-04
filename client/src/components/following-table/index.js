@@ -9,7 +9,8 @@ import {
     Typography
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import UnfollowButton from '../unfollow-button'
+import UnfollowButton from '../unfollow-button';
+import NoFollowing from '../noFollowing';
 import { UserListHead } from '../../sections/@dashboard/user';
 
 const TABLE_HEAD = [
@@ -20,7 +21,8 @@ const TABLE_HEAD = [
 
 export default function FollowingTable (props) {
     const {userFollowings, handleToggle} = props
-    console.log(userFollowings)
+    
+
     return (
         <Table>
                 <UserListHead
@@ -28,30 +30,31 @@ export default function FollowingTable (props) {
                   rowCount={userFollowings.length}
                 />
                 <TableBody>
-                  {userFollowings.map((user) => {
-                      const id = user._id
-                      const name = user.username
-                      const avatarUrl = `/assets/images/avatars/${user.avatar}` 
+                  {!userFollowings.length? <NoFollowing/> : 
+                  userFollowings.map((user) => {
+                    const id = user._id
+                    const name = user.username
+                    const avatarUrl = `/assets/images/avatars/${user.avatar}` 
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" >
-                        <TableCell padding="checkbox"/>
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">
-                          <Link to="/" /* change to path for basket using ${user._id} */ >
-                            Click to view {name}'s basket
-                          </Link>
-                        </TableCell>
-                        <UnfollowButton user= {user} handleToggle={handleToggle} />          
-                      </TableRow>
-                    );
-                  })}
+                  <TableRow hover key={id} tabIndex={-1} role="checkbox" >
+                    <TableCell padding="checkbox"/>
+                    <TableCell component="th" scope="row" padding="none">
+                      <Stack direction="row" alignItems="center" spacing={2}>
+                        <Avatar alt={name} src={avatarUrl} />
+                        <Typography variant="subtitle2" noWrap>
+                          {name}
+                        </Typography>
+                      </Stack>
+                    </TableCell>
+                    <TableCell align="left">
+                      <Link to={`/dashboard/baskets/${name}`}/* change to path for basket using ${user._id} */ >
+                        Click to view {name}'s basket
+                      </Link>
+                    </TableCell>
+                    <UnfollowButton user= {user} handleToggle={handleToggle} />          
+                  </TableRow>
+                    )})}
+   
                 </TableBody>
         </Table>
     )

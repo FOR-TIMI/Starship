@@ -37,7 +37,8 @@ const resolvers = {
     //Get signedIn User
     signedInUser: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id })
+        try{
+          const userData = await User.findOne({ _id: context.user._id })
           .select("-__v -password")
           .populate("followers")
           .populate("followings")
@@ -45,6 +46,9 @@ const resolvers = {
           .populate("baskets");
 
         return userData;
+        } catch (error) {
+          console.error(error)
+        }
       }
       throw new AuthenticationError("You're currently not signed in");
     },
@@ -61,12 +65,16 @@ const resolvers = {
 
     //Get a user by username
     user: async (parent, { username }) => {
-      return User.findOne({ username })
-        .select("-__v -password")
-        .populate("followers")
-        .populate("followings")
-        .populate("posts")
-        .populate("baskets");
+      if(username) {
+        return User.findOne({ username })
+          .select("-__v -password")
+          .populate("followers")
+          .populate("followings")
+          .populate("posts")
+          .populate("baskets");
+      } else {
+        return new Error("Username parameter empty.");
+      }
     },
 
     //Get all posts
@@ -222,7 +230,18 @@ const resolvers = {
     basket: async (parent, { _id }) => {
       return Basket.findOne({ _id });
     },
+    socialBaskets: async (parent, args, context) => {
+  
+      if (args.username) {
+        const params = args.username;
+        return Basket.find({ username: params }).sort({ createdAt: -1 });
+      } else {
+        throw new Error("No username provided.");
+      }}
   },
+
+  
+  
 
   Mutation: {
     addUser: async (parent, { username, email, password }) => {

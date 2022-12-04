@@ -12,13 +12,14 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import UserDashboardAppPage from './pages/UserDashboardAppPage';
 import SingleAnalysis from './pages/SingleAnalysis';
-import Auth from './utils/auth';
+import SocialProductsPage from './pages/SocialProductsPage';
+
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
 
-  const loggedIn = false;
+  
 
   const routes = useRoutes([
     {
@@ -32,6 +33,7 @@ export default function Router() {
         { path: 'user/:basketId', element: <UserDashboardAppPage /> },
         { path: 'tavern', element: <BlogPage /> },
         { path: 'analysis/:symbol', element: <SingleAnalysis /> },
+        { path: 'baskets/:username', element: <SocialProductsPage /> }
       ],
     },
     {
