@@ -67,11 +67,20 @@ export default function BlogPage() {
 
 
         <Grid container spacing={3}>
+    
+        {/* (loading ? Array.from(new Array(10)) : POSTS) */}
 
           {/* posts  */}
-          {POSTS && POSTS.map((post, index) => (
-            <BlogPostCard key={post._id} post={post} index={index} modalToggle={toggleModal}/>
-          ))}
+          {Array.from(new Array(10)).map((post,index) => (
+            <BlogPostCard 
+                key={post ? post._id : index} 
+                post={post} 
+                index={index} 
+                modalToggle={toggleModal}
+                loading={loading}
+              />  
+          ) 
+          )}
      
           {/* Modal */}
           {modalOpen && (
