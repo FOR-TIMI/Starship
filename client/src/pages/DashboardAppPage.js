@@ -8,6 +8,7 @@ import { Grid, Container, Typography } from '@mui/material';
 import Iconify from '../components/iconify';
 import { BAR_DATA_QUERY } from '../utils/queries';
 import {useQuery} from "@apollo/client"
+import {useState,useEffect} from "react"
 // sections
 import {
   AppTasks,
@@ -26,6 +27,11 @@ import {
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+
+  // const [dailyChange, setDailyChange] = useState();
+  // const [weeklyChange, setWeeklyChange] = useState();
+  // const [monthlyChange, setMonthlyChange] = useState();
+  // const [yearlyChange, setYearlyChange] = useState();
 
   let closeP = { x: moment(), y: 0 };
 
@@ -55,6 +61,31 @@ export default function DashboardAppPage() {
     // const newData = dataToBasket(data.barsDataQuery);
     // setParsedData(newData);
   }
+
+  // useEffect(() => {
+  //   if (data) {
+  //     let dc =
+  //       data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
+  //       data.getDataFromBasket[data.getDataFromBasket.length - 2].VWAP;
+  //     setDailyChange((dc / data.getDataFromBasket[data.getDataFromBasket.length - 2].VWAP) * 100);
+
+  //     // weekly change
+  //     let wc =
+  //       data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
+  //       data.getDataFromBasket[data.getDataFromBasket.length - 7].VWAP;
+  //     setWeeklyChange((wc / data.getDataFromBasket[data.getDataFromBasket.length - 7].VWAP) * 100);
+
+  //     // monthly change
+  //     let mc =
+  //       data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
+  //       data.getDataFromBasket[data.getDataFromBasket.length - 30].VWAP;
+  //     setMonthlyChange((mc / data.getDataFromBasket[data.getDataFromBasket.length - 30].VWAP) * 100);
+
+  //     // yearly change
+  //     let yc = data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP - data.getDataFromBasket[0].VWAP;
+  //     setYearlyChange((yc / data.getDataFromBasket[0].VWAP) * 100);
+  //   }
+  // }, [data]);
 
   return (
     <>

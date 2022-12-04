@@ -1,15 +1,14 @@
 import { gql } from '@apollo/client';
 
-
 export const QUERY_ME = gql`
-query SignedInUser {
-  signedInUser {
-    username
-    _id
-    avatar
-    email
+  query SignedInUser {
+    signedInUser {
+      username
+      _id
+      avatar
+      email
+    }
   }
-}
 `;
 
 export const QUERY_POSTS = gql`
@@ -54,13 +53,15 @@ query($id: ID!){
 `;
 
 export const QUERY_SOCIAL = gql`
-  query social($username: String!) {
-    user(username: $username) {
+  query social($id: ID!) {
+    user(_id: $id) {
       _id
       username
+      avatar
       followers {
         _id
         username
+        avatar
         baskets {
           _id
         }
@@ -68,6 +69,7 @@ export const QUERY_SOCIAL = gql`
       followings {
         _id
         username
+        avatar
         baskets {
           _id
         }
@@ -161,3 +163,16 @@ export const NEWS_QUERY = gql`
   }
 `;
 
+export const GET_LARGE_TRADES = gql`
+  query Query($ticker: String!) {
+    getLargeTrades(ticker: $ticker) {
+      Timestamp
+      Exchange
+      Price
+      Size
+      Conditions
+      ID
+      Tape
+    }
+  }
+`;

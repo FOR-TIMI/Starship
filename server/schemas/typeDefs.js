@@ -9,6 +9,7 @@ const typeDefs = gql`
     avatar: String
     email: String
     friendCount: Int
+    avatar: String
     baskets: [Basket]
     followers: [User]
     followerCount: Int
