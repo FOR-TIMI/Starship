@@ -53,8 +53,8 @@ query($id: ID!){
 `;
 
 export const QUERY_SOCIAL = gql`
-  query social($id: ID!) {
-    user(_id: $id) {
+  query social($username: String) {
+    user (username: $username) {
       _id
       username
       avatar
@@ -115,6 +115,22 @@ export const BARS_DATA_QUERY = gql`
 export const GET_BASKETS = gql`
   query Query {
     baskets {
+      _id
+      basketName
+      createdAt
+      tickers {
+        market
+        _id
+        API
+        symbol
+      }
+    }
+  }
+`;
+
+export const GET_SOCIAL_BASKETS = gql`
+  query Query ($username: String!) {
+    socialBaskets(username: $username) {
       _id
       basketName
       createdAt

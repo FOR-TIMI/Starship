@@ -106,11 +106,12 @@ const typeDefs = gql`
   type Query {
     users: [User]
     baskets: [Basket]
+    socialBaskets (username: String!): [Basket]
     posts: [Post]
     signedInUser: User
     post(_id: ID!): Post
     friendsPosts(_id: ID!): [Post]
-    user(username: String!): User
+    user(username: String): User
     basket(_id: ID!): Basket
     barDataQuery(
       symbol: String!
