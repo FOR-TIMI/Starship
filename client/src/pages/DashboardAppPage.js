@@ -17,7 +17,7 @@ import {
   AppCurrentVisits,
   AppWebsiteVisits,
   AppTrafficBySite,
-  AppWidgetSummary,
+  AppWidgetSummary2,
   AppCurrentSubject,
   AppConversionRates,
   PriceLineChart,
@@ -28,10 +28,10 @@ import {
 export default function DashboardAppPage() {
   const theme = useTheme();
 
-  // const [dailyChange, setDailyChange] = useState();
-  // const [weeklyChange, setWeeklyChange] = useState();
-  // const [monthlyChange, setMonthlyChange] = useState();
-  // const [yearlyChange, setYearlyChange] = useState();
+  const [dailyChange, setDailyChange] = useState();
+  const [weeklyChange, setWeeklyChange] = useState();
+  const [monthlyChange, setMonthlyChange] = useState();
+  const [yearlyChange, setYearlyChange] = useState();
 
   let closeP = { x: moment(), y: 0 };
 
@@ -42,6 +42,31 @@ export default function DashboardAppPage() {
     days: 365,
   };
   const { loading, error, data } = useQuery(BAR_DATA_QUERY, { variables: vars });
+  
+  useEffect(() => {
+    if (data) {
+      let dc =
+        data.barDataQuery[data.barDataQuery.length - 1].ClosePrice -
+        data.barDataQuery[data.barDataQuery.length - 2].ClosePrice;
+      setDailyChange((dc / data.barDataQuery[data.barDataQuery.length - 2].ClosePrice) * 100);
+
+      // weekly change
+      let wc =
+        data.barDataQuery[data.barDataQuery.length - 1].ClosePrice -
+        data.barDataQuery[data.barDataQuery.length - 7].ClosePrice;
+      setWeeklyChange((wc / data.barDataQuery[data.barDataQuery.length - 7].ClosePrice) * 100);
+
+      // monthly change
+      let mc =
+        data.barDataQuery[data.barDataQuery.length - 1].ClosePrice -
+        data.barDataQuery[data.barDataQuery.length - 30].ClosePrice;
+     setMonthlyChange((mc / data.barDataQuery[data.barDataQuery.length - 30].ClosePrice) * 100);
+
+      // yearly change
+      let yc = data.barDataQuery[data.barDataQuery.length - 1].ClosePrice - data.barDataQuery[0].ClosePrice;
+      setYearlyChange((yc / data.barDataQuery[0].ClosePrice) * 100);
+    }
+  }, [data]);
 
   if(error){
     console.log(error)
@@ -62,30 +87,6 @@ export default function DashboardAppPage() {
     // setParsedData(newData);
   }
 
-  // useEffect(() => {
-  //   if (data) {
-  //     let dc =
-  //       data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
-  //       data.getDataFromBasket[data.getDataFromBasket.length - 2].VWAP;
-  //     setDailyChange((dc / data.getDataFromBasket[data.getDataFromBasket.length - 2].VWAP) * 100);
-
-  //     // weekly change
-  //     let wc =
-  //       data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
-  //       data.getDataFromBasket[data.getDataFromBasket.length - 7].VWAP;
-  //     setWeeklyChange((wc / data.getDataFromBasket[data.getDataFromBasket.length - 7].VWAP) * 100);
-
-  //     // monthly change
-  //     let mc =
-  //       data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP -
-  //       data.getDataFromBasket[data.getDataFromBasket.length - 30].VWAP;
-  //     setMonthlyChange((mc / data.getDataFromBasket[data.getDataFromBasket.length - 30].VWAP) * 100);
-
-  //     // yearly change
-  //     let yc = data.getDataFromBasket[data.getDataFromBasket.length - 1].VWAP - data.getDataFromBasket[0].VWAP;
-  //     setYearlyChange((yc / data.getDataFromBasket[0].VWAP) * 100);
-  //   }
-  // }, [data]);
 
   return (
     <>
@@ -99,7 +100,90 @@ export default function DashboardAppPage() {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+        {dailyChange ? (
+            <>
+              {dailyChange > 0 ? (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Daily Change"
+                    total={dailyChange}
+                    color="info"
+                    icon={'fluent-mdl2:stock-up'}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Daily Change"
+                    total={dailyChange}
+                    color="error"
+                    icon={'fluent-mdl2:stock-down'}
+                  />
+                </Grid>
+              )}
+
+              {weeklyChange > 0 ? (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Weekly Change"
+                    total={weeklyChange}
+                    color="info"
+                    icon={'fluent-mdl2:stock-up'}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Weekly Change"
+                    total={weeklyChange}
+                    color="error"
+                    icon={'fluent-mdl2:stock-down'}
+                  />
+                </Grid>
+              )}
+              {monthlyChange > 0 ? (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Montly Change"
+                    total={monthlyChange}
+                    color="info"
+                    icon={'fluent-mdl2:stock-up'}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Montly Change"
+                    total={monthlyChange}
+                    color="error"
+                    icon={'fluent-mdl2:stock-down'}
+                  />
+                </Grid>
+              )}
+              {yearlyChange > 0 ? (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Yearly Change"
+                    total={yearlyChange}
+                    color="info"
+                    icon={'fluent-mdl2:stock-up'}
+                  />
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary2
+                    title="Yearly Change"
+                    total={yearlyChange}
+                    color="error"
+                    icon={'fluent-mdl2:stock-down'}
+                  />
+                </Grid>
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+          {/* <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
           </Grid>
 
@@ -113,7 +197,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} md={6} lg={8}>
             <PriceLineChart

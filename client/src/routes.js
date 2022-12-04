@@ -18,7 +18,7 @@ import Auth from './utils/auth';
 
 export default function Router() {
 
-  const loggedIn = Auth.loggedIn();
+  const loggedIn = false;
 
   const routes = useRoutes([
     {
