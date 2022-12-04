@@ -34,20 +34,7 @@ export default function DashboardAppPage() {
   const [weeklyChange, setWeeklyChange] = useState();
   const [monthlyChange, setMonthlyChange] = useState();
   const [yearlyChange, setYearlyChange] = useState();
-  // const [weeklyChange, setWeeklyChange] = useState(0);
   let { basketId } = useParams();
-  // const vars2 = {
-  //   id: basketId,
-  // };
-  // const { loading2, error2, data2 } = useQuery(GET_BASKET, {
-  //   variables: vars2,
-  // });
-  // if (loading2) {
-  //   console.log('LOADING');
-  // }
-  // if (data2) {
-  //   console.log(data2, 'DATA 2');
-  // }
 
   const theme = useTheme();
   const vars = {
@@ -94,10 +81,10 @@ export default function DashboardAppPage() {
         <title> Dashboard | Starship </title>
       </Helmet>
 
-        <Container maxWidth="xl">
-          <Typography variant="h4" sx={{ mb: 5 }}>
-            Basket A
-          </Typography>
+      <Container maxWidth="xl">
+        <Typography variant="h4" sx={{ mb: 5 }}>
+          Basket A
+        </Typography>
 
         <Grid container spacing={3}>
           {dailyChange ? (
@@ -224,12 +211,12 @@ export default function DashboardAppPage() {
             <AppCurrentVisits2
               title="Basket Makeup"
               basketId={basketId}
-              chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
-              ]}
+              // chartData={[
+              //   { label: 'America', value: 4344 },
+              //   { label: 'Asia', value: 5435 },
+              //   { label: 'Europe', value: 1443 },
+              //   { label: 'Africa', value: 4443 },
+              // ]}
               chartColors={[
                 theme.palette.primary.main,
                 theme.palette.info.main,
@@ -252,36 +239,6 @@ export default function DashboardAppPage() {
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject
-              title="Current Subject"
-              chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
-              chartData={[
-                { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-                { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-                { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
-              ]}
-              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates
-              title="Conversion Rates"
-              subheader="(+43%) than last year"
-              chartData={[
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
-              ]}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline2
               title="Largest Trades"
               basketId={basketId}
@@ -299,49 +256,8 @@ export default function DashboardAppPage() {
               }))}
             />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTrafficBySite
-              title="Traffic by Site"
-              list={[
-                {
-                  name: 'FaceBook',
-                  value: 323234,
-                  icon: <Iconify icon={'eva:facebook-fill'} color="#1877F2" width={32} />,
-                },
-                {
-                  name: 'Google',
-                  value: 341212,
-                  icon: <Iconify icon={'eva:google-fill'} color="#DF3E30" width={32} />,
-                },
-                {
-                  name: 'Linkedin',
-                  value: 411213,
-                  icon: <Iconify icon={'eva:linkedin-fill'} color="#006097" width={32} />,
-                },
-                {
-                  name: 'Twitter',
-                  value: 443232,
-                  icon: <Iconify icon={'eva:twitter-fill'} color="#1C9CEA" width={32} />,
-                },
-              ]}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={8}>
-            <AppTasks
-              title="Tasks"
-              list={[
-                { id: '1', label: 'Create FireStone Logo' },
-                { id: '2', label: 'Add SCSS and JS files if required' },
-                { id: '3', label: 'Stakeholder Meeting' },
-                { id: '4', label: 'Scoping & Estimations' },
-                { id: '5', label: 'Sprint Showcase' },
-              ]}
-            />
-          </Grid>
         </Grid>
       </Container>
     </>
   );
-  // }
-  // }
 }
