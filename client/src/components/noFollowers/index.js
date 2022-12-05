@@ -16,7 +16,7 @@ export default function NoFollowers () {
                 }}
             >
                 <Typography variant="body2">
-                You have no followers yet!
+                    You have no followers yet!
                 </Typography>
             </Paper>
             </TableCell>

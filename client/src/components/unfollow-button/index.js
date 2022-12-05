@@ -9,13 +9,7 @@ export default function UnfollowButton (props) {
     const {user, handleToggle} = props
  
     const handleUnfollow = async (user, event) => {
-        //const token = Auth.loggedIn() ? Auth.getToken() : null;
         const followingId = user._id
-        /* 
-            if (!token) {
-                return false
-            }
-        */
             try {
                 await removeFollowing({
                     variables: { followingId }
