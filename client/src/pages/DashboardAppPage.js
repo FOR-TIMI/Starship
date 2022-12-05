@@ -200,7 +200,7 @@ export default function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline3 title="Large Trades" />
+            <AppOrderTimeline3 title="Large Trades" ticker="SPY" />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
