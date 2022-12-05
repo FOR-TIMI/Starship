@@ -8,6 +8,7 @@ export const QUERY_ME = gql`
       avatar
       email
       baskets {
+        _id
         basketName
       }
     }

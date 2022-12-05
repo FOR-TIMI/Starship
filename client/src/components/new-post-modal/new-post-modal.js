@@ -52,11 +52,8 @@ export default function NewPostModal({open,setOpen}) {
 
   const {loading,data } = useQuery(QUERY_ME)
 
-  let isBasket = true
-
-  if(!data?.signedInUser.baskets.length){
-    isBasket = false
-  }
+ 
+  const baskets = data?.signedInUser.baskets || []
 
   
   const handleBasketIdChange = (e) => {
@@ -145,7 +142,7 @@ export default function NewPostModal({open,setOpen}) {
 
         
             <FormControl sx={{ minWidth: 120, width:"100%", height:"50px", marginTop:"20px" }} size="small">
-              <InputLabel   id="demo-select-small">{isBasket ? 'Basket' : 'You have no baskets' }</InputLabel>
+              <InputLabel   id="demo-select-small">{baskets.length ? 'Basket' : 'You have no baskets' }</InputLabel>
               <Select
                 labelId="demo-select-small"
                 id="demo-select-small"
@@ -153,14 +150,17 @@ export default function NewPostModal({open,setOpen}) {
                 label="Basket"
                 onChange={handleBasketIdChange}
                 sx={{ height: "100%"}}
-                disabled={!isBasket}
+                disabled={!baskets.length ? true : false}
               >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                  { 
+                  baskets.length && baskets.map( b => (
+                     <MenuItem key={b._id} value={b._id}>{b.basketName}</MenuItem>
+                  )) 
+
+                  }
               </Select>
             </FormControl>
 
