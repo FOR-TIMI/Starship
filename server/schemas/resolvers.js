@@ -19,7 +19,7 @@ const resolvers = {
       return data;
     },
 
-    barsDataQuery: async (parent, { symbols, timeframe, limit, days }) => {
+    barsDataQuery: async (parent, {symbols, timeframe, limit, days}) => {
       let data = await getBarsData(symbols, timeframe, limit, days);
       return data;
     },
