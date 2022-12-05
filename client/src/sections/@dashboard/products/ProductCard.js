@@ -29,11 +29,8 @@ ShopProductCard.propTypes = {
 
 export default function ShopProductCard({ basket, basketKey }) {
   const [data, setData] = useState();
-  // const { name, cover, price, colors, status, priceSale } = basket;
-  const { _id, createdAt, tickers } = basket;
+  const { _id, createdAt, tickers, basketName } = basket;
   const theme = useTheme();
-  // if (tickers) {
-  // console.log(tickers.length, 'THIS TICKERS');
   useEffect(() => {
     sortTickers(tickers);
   }, []);
@@ -46,30 +43,20 @@ export default function ShopProductCard({ basket, basketKey }) {
         each['label'] = tickers[i].symbol;
         each['value'] = 100;
         theData.push(each);
-        console.log(each, 'EACG');
         if (i === tickers.length - 1) {
           setData(theData);
-          console.log(theData);
-          // console.log(theData, 'DAAATA');
         }
       }
     }
   }
 
   if (data) {
-    console.log(data, 'THISSS');
     return (
       <Card>
         <Grid>
           <AppCurrentVisits
-            title={'Basket ' + basketKey.toString()}
+            title={basketName}
             chartData={data}
-            // chartData={[
-            //   { label: 'America', value: 4344 },
-            //   { label: 'Asia', value: 5435 },
-            //   { label: 'Europe', value: 1443 },
-            //   { label: 'Africa', value: 4443 },
-            // ]}
             chartColors={[
               theme.palette.primary.main,
               theme.palette.info.main,

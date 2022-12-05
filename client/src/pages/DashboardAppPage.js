@@ -13,9 +13,10 @@ import { useState, useEffect } from 'react';
 import {
   AppTasks,
   AppNewsUpdate3,
-  AppOrderTimeline,
+  AppOrderTimeline3,
   AppCurrentVisits,
   AppWebsiteVisits,
+  AppWebsiteVisits3,
   AppTrafficBySite,
   AppWidgetSummary2,
   AppCurrentSubject,
@@ -32,6 +33,7 @@ export default function DashboardAppPage() {
   const [weeklyChange, setWeeklyChange] = useState();
   const [monthlyChange, setMonthlyChange] = useState();
   const [yearlyChange, setYearlyChange] = useState();
+  const [quote, setQuote] = useState('Super Quote Incoming');
 
   let closeP = { x: moment(), y: 0 };
 
@@ -42,6 +44,16 @@ export default function DashboardAppPage() {
     days: 365,
   };
   const { loading, error, data } = useQuery(BAR_DATA_QUERY, { variables: vars });
+
+  useEffect(() => {
+    let quotes = [
+      '"Rule No. 1: Never lose money. Rule No. 2: Never forget rule No.1"- Warren Buffet',
+      '“If you aren’t willing to own a stock for 10 years, don’t even think about owning it for 10 minutes.”- Warren Buffet',
+      '“Price is what you pay, value is what you get.”- Warren Buffet',
+      '“Risk comes from not knowing what you are doing.”- Warren Buffet',
+    ];
+    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -95,7 +107,7 @@ export default function DashboardAppPage() {
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          {quote}
         </Typography>
 
         <Grid container spacing={3}>
@@ -182,50 +194,13 @@ export default function DashboardAppPage() {
           ) : (
             <></>
           )}
-          {/* <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Item Orders" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
-          </Grid> */}
 
           <Grid item xs={12} md={6} lg={8}>
-            <PriceLineChart
-              title={'Market Overview'}
-              chartData={[
-                {
-                  name: 'SP500',
-                  data: closeP,
-                },
-              ]}
-            />
+            <AppWebsiteVisits3 title="SPY" data={data} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits
-              title="Current Visits"
-              chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
-              ]}
-              chartColors={[
-                theme.palette.primary.main,
-                theme.palette.info.main,
-                theme.palette.warning.main,
-                theme.palette.error.main,
-              ]}
-            />
+            <AppOrderTimeline3 title="Large Trades" />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -238,24 +213,6 @@ export default function DashboardAppPage() {
                 description: faker.name.jobTitle(),
                 image: `/assets/images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
-              }))}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline
-              title="Order Timeline"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: [
-                  '1983, orders, $4220',
-                  '12 Invoices have been paid',
-                  'Order #37745 from September',
-                  'New order placed #XF-2356',
-                  'New order placed #XF-2346',
-                ][index],
-                type: `order${index + 1}`,
-                time: faker.date.past(),
               }))}
             />
           </Grid>

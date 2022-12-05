@@ -37,7 +37,8 @@ const resolvers = {
     //Get signedIn User
     signedInUser: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id })
+        try{
+          const userData = await User.findOne({ _id: context.user._id })
           .select("-__v -password")
           .populate("followers")
           .populate("followings")
@@ -45,6 +46,9 @@ const resolvers = {
           .populate("baskets");
 
         return userData;
+        } catch (error) {
+          console.error(error)
+        }
       }
       throw new AuthenticationError("You're currently not signed in");
     },
@@ -61,12 +65,16 @@ const resolvers = {
 
     //Get a user by username
     user: async (parent, { username }) => {
-      return User.findOne({ username })
-        .select("-__v -password")
-        .populate("followers")
-        .populate("followings")
-        .populate("posts")
-        .populate("baskets");
+      if(username) {
+        return User.findOne({ username })
+          .select("-__v -password")
+          .populate("followers")
+          .populate("followings")
+          .populate("posts")
+          .populate("baskets");
+      } else {
+        return new Error("Username parameter empty.");
+      }
     },
 
     //Get all posts
@@ -179,7 +187,7 @@ const resolvers = {
       // basket[0].tickers.map(async (each, key) => {
       for (let i = 0; i < basket[0].tickers.length; i++) {
         let bData = {};
-        console.log(basket[0].tickers[i].symbol);
+        // console.log(basket[0].tickers[i].symbol);
         const barsData = await getBarData(
           basket[0].tickers[i].symbol,
           timeframe,
@@ -222,7 +230,18 @@ const resolvers = {
     basket: async (parent, { _id }) => {
       return Basket.findOne({ _id });
     },
+    socialBaskets: async (parent, args, context) => {
+  
+      if (args.username) {
+        const params = args.username;
+        return Basket.find({ username: params }).sort({ createdAt: -1 });
+      } else {
+        throw new Error("No username provided.");
+      }}
   },
+
+  
+  
 
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
@@ -272,18 +291,25 @@ const resolvers = {
     //use parent?
     deleteBasket: async (parent, { basketId }, context) => {
       if (context.user) {
-        let basket = await Basket.find().remove().exec();
-        console.log(basket);
-        console.log(basket);
+        try{
+        let basket = await Basket.findOneAndDelete({_id: basketId});
+        return basket;
+      }
+        catch{
+          throw new Error("Something went wrong");
+        }
+    
       }
     },
 
     addBasket: async (parent, args, context) => {
       if (context.user) {
         let tickers = await addBasketHelper(args);
+        let basketName = args.basketName;
         const basket = await Basket.create({
           tickers: tickers,
           username: context.user.username,
+          basketName: basketName
         });
 
         await User.findByIdAndUpdate(
@@ -300,17 +326,21 @@ const resolvers = {
     //ADD tickers to basket object, NTS ADD API and MARKET Arguments if need later on
     addTicker: async (parent, { basketId, ticker }, context) => {
       if (context.user) {
-        const tick = await Ticker.create({ ticker }); //need pass in user creds via args so that the basket can be associated to the user (?)
-        //NOT TOO SURE THIS WILL WORK WILL NEED TO DISCUSS
-        await Basket.findOneAndUpdate(
+        let symbol = ticker;
+        let b = await Basket.findById(basketId);
+        let c = b.tickers.map((e)=>{return e.symbol});
+        let t = c.includes(symbol);
+        // verifying if symbol already exists in basket if not find and update else return error
+        if(!t){
+        let basket = await Basket.findOneAndUpdate(
           { _id: basketId }, // get the user Id to access basket:[Basket]
-          {
-            $addToSet: { tickers: { ticker, username: context.user.username } },
-          }, // addtoSet to ensure no duplicate ticker objects are added,
+          { $addToSet: { tickers: {symbol} },}, // addtoSet not working ,
           { new: true, runValidators: true } // flag which tells mongo to return the updated document from the database
         );
+        return basket;
+      }
 
-        return tick;
+        return new Error("Already exists in basket");
       }
 
       throw new AuthenticationError("You need to be logged in!");

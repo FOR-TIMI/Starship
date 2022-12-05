@@ -41,6 +41,7 @@ const typeDefs = gql`
   type Basket {
     _id: ID
     createdAt: String
+    basketName: String
     tickers: [Ticker]
   }
 
@@ -98,18 +99,19 @@ const typeDefs = gql`
     Price: Float
     Size: Float
     Conditions: [String]
-    ID: Int
+    ID: Float
     Tape: String
   }
 
   type Query {
     users: [User]
     baskets: [Basket]
+    socialBaskets (username: String!): [Basket]
     posts: [Post]
     signedInUser: User
     post(_id: ID!): Post
     friendsPosts(_id: ID!): [Post]
-    user(username: String!): User
+    user(username: String): User
     basket(_id: ID!): Basket
     barDataQuery(
       symbol: String!
@@ -137,7 +139,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!, avatar:String): Auth
     addTicker(basketId: ID!, ticker: String!): Basket
-    addBasket(tickers: [String]!): Basket
+    addBasket(tickers: [String]!, basketName: String): Basket
     addPost(title: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
