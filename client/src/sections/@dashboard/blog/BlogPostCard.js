@@ -163,7 +163,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
                   }),
                   }}
                 /> 
-                <FollowButton user={post.author}/>
+                <FollowButton styleProps={{zIndex: 9}} user={post.author}/>
               </div>
            
               ) 

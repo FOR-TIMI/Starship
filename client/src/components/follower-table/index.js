@@ -52,7 +52,7 @@ export default function FollowerTable (props) {
                         </Link>
                       </TableCell>
                       <TableCell align="left">
-                        <FollowButton user= {user} handleToggle={handleToggle} /> 
+                        <FollowButton styleProps={{width: 75}} user= {user} handleToggle={handleToggle} /> 
                       </TableCell>
                                
                     </TableRow>
