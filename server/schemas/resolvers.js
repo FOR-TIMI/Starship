@@ -262,6 +262,26 @@ const resolvers = {
         }
       }
     },
+
+    updateUser: async (parent, { avatar }, context) => {
+      // First we create the user
+      const update = { avatar:avatar };
+      if (context.user) {
+      try {
+        let user = User.findOneAndUpdate(
+          { _id: context.user._id },
+          update,
+          { new: true }
+        );
+        return user;
+      } catch (err) {
+        console.error(err);
+      }}
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
+
+
     login: async (parent, { email, password }) => {
       // Look up the user by the provided email address. Since the `email` field is unique, we know that only one person will exist with that email
       const user = await User.findOne({ email });

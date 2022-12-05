@@ -18,18 +18,18 @@ export default function ProductList({ baskets, ...other }) {
   const navigate = useNavigate();
 
   function handleClick(id) {
-    console.log('hello');
+    
     navigate('/dashboard/user/' + id);
   }
 
-  if (loading) {
-    console.log('loading');
-  }
-  if (error) {
-    console.log(error);
-  }
+  // if (loading) {
+  //   console.log('loading');
+  // }
+  // if (error) {
+  //   console.log(error);
+  // }
   if (data) {
-    console.log(data, 'THIS DATA BASKETS');
+    // console.log(data, 'THIS DATA BASKETS');
 
     return (
       <Grid container spacing={3} {...other}>

@@ -70,3 +70,13 @@ mutation Mutation($tickers: [String]!, $basketName: String) {
     }
   }
 `
+
+export const UPDATE_USER = gql `
+mutation Mutation( $avatar: String) {
+    updateUser( avatar: $avatar) {
+      avatar
+      email
+      username
+    }
+  }
+`

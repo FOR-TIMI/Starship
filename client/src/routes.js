@@ -13,6 +13,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import UserDashboardAppPage from './pages/UserDashboardAppPage';
 import SingleAnalysis from './pages/SingleAnalysis';
 import SocialProductsPage from './pages/SocialProductsPage';
+import SettingUser from './pages/SettingUser';
 
 
 // ----------------------------------------------------------------------
@@ -33,7 +34,9 @@ export default function Router() {
         { path: 'user/:basketId', element: <UserDashboardAppPage /> },
         { path: 'tavern', element: <BlogPage /> },
         { path: 'analysis/:symbol', element: <SingleAnalysis /> },
-        { path: 'baskets/:username', element: <SocialProductsPage /> }
+        { path: 'baskets/:username', element: <SocialProductsPage /> },
+        { path: 'user', element: <SettingUser /> },
+
       ],
     },
     {

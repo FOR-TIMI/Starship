@@ -9,6 +9,7 @@ import Iconify from '../components/iconify';
 import { BAR_DATA_QUERY } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import { useState, useEffect } from 'react';
+
 // sections
 import {
   AppTasks,
