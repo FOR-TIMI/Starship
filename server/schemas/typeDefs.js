@@ -141,7 +141,7 @@ const typeDefs = gql`
     updateUser( avatar: String): User
     addTicker(basketId: ID!, ticker: String!): Basket
     addBasket(tickers: [String]!, basketName: String): Basket
-    addPost(title: String!): Post
+    addPost(title: String!, basketId: String): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
     removeFollowing(followingId: ID!): User

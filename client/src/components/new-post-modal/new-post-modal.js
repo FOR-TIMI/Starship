@@ -6,7 +6,6 @@ import Modal from '@mui/material/Modal';
 
 import Checkbox from '@mui/material/Checkbox';
 
-
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
@@ -21,8 +20,17 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
 
 
+//Apollo client
+import { useMutation, useQuery } from '@apollo/client';
+
 //Icons
 import AddIcon from '@mui/icons-material/Add';
+
+//graphQl queries
+import { QUERY_ME, QUERY_POSTS } from '../../utils/queries'
+
+//graphQl Mutations
+import { ADD_POST} from '../../utils/mutations'
 
 const style = {
   position: 'absolute',
@@ -41,65 +49,80 @@ const formStyle = {
   margin: '0 auto'
 }
 
-// const coverPhotoList = [
-//   'cover_1.jpg','cover_2.jpg','cover_3.jpg','cover_4.jpg','cover_5.jpg','cover_6.jpg',
-//   'cover_7.jpg','cover_8.jpg','cover_9.jpg','cover_10.jpg','cover_11.jpg','cover_12.jpg',
-//   'cover_13.jpg','cover_14.jpg','cover_15.jpg','cover_16.jpg','cover_17.jpg','cover_18.jpg',
-//   'cover_19.jpg','cover_20.jpg','cover_21.jpg','cover_22.jpg','cover_23.jpg','cover_24.jpg'
-// ]
-
-
-// const randomCoverPhotoSet = () => {
-//     const coverPhotos = []
-//     for(let i =0; i < 8; i++ ){
-//         const coverPhotoListIndex = Math.floor(Math.random() * coverPhotoList.length)
-//         if(!(coverPhotos.includes(coverPhotoList[coverPhotoListIndex]))){
-//           coverPhotos.push(coverPhotoList[coverPhotoListIndex])
-//         } else{
-//           i--
-//         }
-//     }
-// }
 
 
 export default function NewPostModal({open,setOpen}) {
 
 
-  const [title, setTitle] = useState()
-  const [basket,setBasket] = useState()
-  const [error, setError] = useState(null)
-  const [coverPhoto,setCoverPhoto] = useState('')
+  const [title, setTitle] = useState('')
+  const [basketId,setBasketId] = useState('');
 
-  // const handleS = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const {loading,data } = useQuery(QUERY_ME)
 
-  // }
-  console.log({title, basket,coverPhoto})
-  
-  // const coverPhotos = randomCoverPhotoSet();
-  // console.log(coverPhotos)
-  
-  const handleBasketChange = (e) => {
-    setBasket(e.target.basket)
+  let isBasket = true
+
+  if(!data?.signedInUser.baskets.length){
+    isBasket = false
   }
-  const handleCoverPhotoChange = (e) => {
-     setCoverPhoto(e.target.coverPhoto)
+
+  console.log(isBasket)
+  
+  const handleBasketIdChange = (e) => {
+    setBasketId(e.target.value)
+    console.log(basketId)
   }
-        
-   
+  
+  console.log(basketId)
 
   const handleClose = () => {
     setOpen(false);
   }
 
   const handleChange = (e) => {
-    console.log(e.target.value)
-      setName(e.target.value)
+    setTitle(e.target.value)
+    console.log(title)
   }
 
-  const handleSubmit = (e) => {
-     if(error){
 
-     }
+  // To add new posts to cache
+  const [addPost, { error }] = useMutation(ADD_POST, {
+      update(cache, { data: { addPost }}){
+        // To handle errors
+        try{
+          // signed in user's cache
+          const { signedInUser } = cache.readQuery({ query : QUERY_ME });
+           //To add to cache
+            cache.writeQuery({
+              query: QUERY_ME,
+              data: { signedInUser:{...signedInUser, posts: [...signedInUser.posts, addPost]}},
+            });
+        }catch (e) {
+          console.warn("This is the signed in user's first post")
+        }
+
+         // update posts array's cache
+         const { posts } = cache.readQuery({ query: QUERY_POSTS });
+         cache.writeQuery({
+           query: QUERY_POSTS,
+           data: { posts: [addPost, ...posts] },
+         });
+      }
+  });
+
+  
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    try{
+      await addPost({
+        variables: { title, basketId }
+      });
+
+      //To clear the form
+      setTitle('');
+      setBasketId('');
+    } catch(e){
+      console.error(e);
+    }
   }
   
   return (
@@ -114,6 +137,7 @@ export default function NewPostModal({open,setOpen}) {
         <Box sx={style}>
           <form action="" style={formStyle} onSubmit={handleSubmit}>
           <h2>New Post</h2>
+          <p>Title</p>
               <FormControl required fullWidth label="fullWidth" id="fullWidth">
                 <InputLabel htmlFor="component-outlined">Title</InputLabel>
                 <OutlinedInput
@@ -126,43 +150,18 @@ export default function NewPostModal({open,setOpen}) {
 
               </FormControl>
 
-              {/* <FormControlLabel
-                  control={
-                      <Checkbox checked={false} />
-                  }
-                  label={
-                      <React.Fragment>
-                          <img src='/assets/images/covers/cover_1.jpg' className="profile-img" width="60px" height="60px" style={{ marginRight: "5px" }} />
-                          My text
-                      </React.Fragment>
-                  }
-               /> */}
-            <FormControl>
-              <FormLabel id='cover-label'>
-                Select a cover
-              </FormLabel>
-              <RadioGroup
-                name='cover'
-                value={coverPhoto}
-                onChange={handleCoverPhotoChange}
-                aria-labelledby='cover-label'
-              />
-                <FormControlLabel control={<Radio/>} label='1' value='1' />
-                <FormControlLabel control={<Radio/>} label='2' value='2' />
-                <FormControlLabel control={<Radio/>} label='3' value='3' />
-              <RadioGroup/>
-            </FormControl>
 
-
-            <p>Share a basket</p>
-            <FormControl sx={{ minWidth: 120, width:"100%" }} size="small">
-              <InputLabel id="demo-select-small">Basket</InputLabel>
+        
+            <FormControl sx={{ minWidth: 120, width:"100%", height:"50px", marginTop:"20px" }} size="small">
+              <InputLabel   id="demo-select-small">{isBasket ? 'Basket' : 'You have no baskets' }</InputLabel>
               <Select
                 labelId="demo-select-small"
                 id="demo-select-small"
-                value={basket}
+                value={basketId}
                 label="Basket"
-                onChange={handleBasketChange}
+                onChange={handleBasketIdChange}
+                sx={{ height: "100%"}}
+                disabled={!isBasket}
               >
                 <MenuItem value="">
                   <em>None</em>
@@ -181,23 +180,7 @@ export default function NewPostModal({open,setOpen}) {
  
 
           </form>
-          {/* <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-          <FormControlLabel
-            control={
-                <Checkbox checked={false} />
-            }
-            label={
-                <React.Fragment>
-                    <img src='/assets/images/covers/cover_1.jpg' className="profile-img" width="40px" height="auto" style={{ marginRight: "5px" }} />
-                    My text
-                </React.Fragment>
-            }
-        /> */}
+
         </Box>
       </Modal>
     </div>
