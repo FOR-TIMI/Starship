@@ -48,6 +48,21 @@ postSchema
         return this.comments.length
     })
 
+//To add random cover photo to posts
+postSchema.pre("save", function(){
+  //all  post covers
+  const covers = []
+    // to add covers and avatars
+  for(let i =1; i <= 24; i++){
+    covers.push(`cover_${i}.jpg`)
+  }
+  //get random cover photo
+  const randomCoverIndex = Math.floor(Math.random() * covers.length);
+  
+  this.coverPhoto = covers[randomCoverIndex]
+});
+
+
 postSchema
     .virtual('likeCount')
     .get(function(){
