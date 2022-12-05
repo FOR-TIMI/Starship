@@ -98,7 +98,7 @@ export default function AppCurrentVisits({
   }
 
   return (
-    <Card {...other} className="pointer">
+    <Card {...other}>
       <div className="card-header">
         <CardHeader title={title} subheader={subheader} />
         <Iconify
@@ -112,6 +112,7 @@ export default function AppCurrentVisits({
       </div>
 
       <StyledChartWrapper
+        className="pointer"
         dir="ltr"
         onClick={() => {
           handleClick(basketId);
