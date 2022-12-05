@@ -81,7 +81,6 @@ mutation Mutation( $avatar: String) {
   }
 `
 
-`;
 
 export const DELETE_BASKET = gql`
   mutation Mutation($basketId: ID!) {
