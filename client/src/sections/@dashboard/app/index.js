@@ -1,13 +1,16 @@
 export { default as AppTasks } from './AppTasks';
 export { default as AppNewsUpdate } from './AppNewsUpdate';
 export { default as AppNewsUpdate2 } from './AppNewsUpdate2';
+export { default as AppNewsUpdate3 } from './AppNewsUpdate3';
 export { default as AppCurrentVisits } from './AppCurrentVisits';
 export { default as AppCurrentVisits2 } from './AppCurrentVisits2';
 export { default as AppOrderTimeline } from './AppOrderTimeline';
 export { default as AppOrderTimeline2 } from './AppOrderTimeline2';
+export { default as AppOrderTimeline3 } from './AppOrderTimeline3';
 export { default as AppTrafficBySite } from './AppTrafficBySite';
 export { default as AppWebsiteVisits } from './AppWebsiteVisits';
 export { default as AppWebsiteVisits2 } from './AppWebsiteVisits2';
+export { default as AppWebsiteVisits3 } from './AppWebsiteVisits3';
 export { default as AppWidgetSummary } from './AppWidgetSummary';
 export { default as AppWidgetSummary2 } from './AppWidgetSummary2';
 export { default as AppCurrentSubject } from './AppCurrentSubject';

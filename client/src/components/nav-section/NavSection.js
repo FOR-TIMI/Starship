@@ -4,6 +4,7 @@ import { NavLink as RouterLink } from 'react-router-dom';
 import { Box, List, ListItemText } from '@mui/material';
 //
 import { StyledNavItem, StyledNavItemIcon } from './styles';
+import Auth from '../../utils/auth';
 
 // ----------------------------------------------------------------------
 
@@ -12,15 +13,31 @@ NavSection.propTypes = {
 };
 
 export default function NavSection({ data = [], ...other }) {
-  return (
-    <Box {...other}>
-      <List disablePadding sx={{ p: 1 }}>
-        {data.map((item) => (
-          <NavItem key={item.title} item={item} />
-        ))}
-      </List>
-    </Box>
-  );
+  
+  const loggedIn = Auth.loggedIn();
+  if (!loggedIn) {
+    return (
+      <Box {...other}>
+        <List disablePadding sx={{ p: 1 }}>
+          {data
+            .filter((item) => item.title === 'dashboard')
+            .map((filteredItem) => (
+              <NavItem key={filteredItem.title} item={filteredItem} />
+            ))}
+        </List>
+      </Box>
+    );
+  } else {
+    return (
+      <Box {...other}>
+        <List disablePadding sx={{ p: 1 }}>
+          {data.map((item) => (
+            <NavItem key={item.title} item={item} />
+          ))}
+        </List>
+      </Box>
+    );
+  }
 }
 
 // ----------------------------------------------------------------------

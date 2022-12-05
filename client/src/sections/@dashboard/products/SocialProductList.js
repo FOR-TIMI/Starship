@@ -2,38 +2,28 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Grid } from '@mui/material';
 import ShopProductCard from './ProductCard';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useQuery } from '@apollo/client';
-import { GET_BASKETS } from '../../../utils/queries';
+
 // ----------------------------------------------------------------------
 
-ProductList.propTypes = {
-  products: PropTypes.array.isRequired,
+SocialProductList.propTypes = {
+  baskets: PropTypes.array.isRequired,
 };
 
-export default function ProductList({ baskets, ...other }) {
-  const { loading, error, data } = useQuery(GET_BASKETS);
-  const [clicked, setClicked] = useState(false);
+
+export default function SocialProductList({ baskets, ...other }) {
+  
   const navigate = useNavigate();
 
   function handleClick(id) {
-    console.log('hello');
     navigate('/dashboard/user/' + id);
   }
 
-  if (loading) {
-    console.log('loading');
-  }
-  if (error) {
-    console.log(error);
-  }
-  if (data) {
-    console.log(data, 'THIS DATA BASKETS');
-
     return (
       <Grid container spacing={3} {...other}>
-        {data.baskets.map((basket, key) => (
+        {baskets.map((basket, key) => (
           <Grid
             key={basket._id}
             onClick={() => {
@@ -50,4 +40,3 @@ export default function ProductList({ baskets, ...other }) {
       </Grid>
     );
   }
-}

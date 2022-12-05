@@ -13,10 +13,11 @@ import {
 // components
 import { useQuery } from '@apollo/client';
 import FollowingTable from '../components/following-table'
-import FollowerTable from 'src/components/follower-table';
+import FollowerTable from '../components/follower-table';
 import Scrollbar from '../components/scrollbar';
 //from utils
 import { QUERY_SOCIAL } from '../utils/queries';
+import { QUERY_ME } from '../utils/queries'
 
 
 
@@ -29,13 +30,26 @@ export default function UserPage() {
   // for toggling following/follower list:
   const [social, setSocial] = useState('following')
   const [toggle, setToggle] = useState(true)
+ 
 
-    
+//  const {username: myUser } = useParams();
+ 
+ const {loading: userLoading, data: signedInData} = useQuery(QUERY_ME)
+ const signedInUser = signedInData?.signedInUser || {}
+ const myUser = signedInUser.username
+
   // querying and unpacking data from user query [following] or [follower]:
-      
+  
   const { loading, data, refetch } = useQuery(QUERY_SOCIAL, {
-    variables: { username: 'Justen40'}
-  })
+    variables: {username: myUser}
+    
+  },
+  {
+    // The query will not execute until the userId exists
+    enabled: !!myUser,
+  }
+  
+  )
     
   const users = data?.user || {}
   const userFollowers = users.followers
@@ -97,8 +111,11 @@ export default function UserPage() {
         <Card>
           
           <Scrollbar>
+            
             <TableContainer sx={{ minWidth: 800 }}>
-              {social === 'following'? <FollowingTable handleToggle={handleToggle} userFollowings={userFollowings}/>:<FollowerTable handleToggle={handleToggle} userFollowers={userFollowers}/>}
+              {social === 'following'? 
+                <FollowingTable handleToggle={handleToggle} userFollowings={userFollowings}/>:
+                <FollowerTable handleToggle={handleToggle} userFollowers={userFollowers}/>}
             </TableContainer>
           </Scrollbar>
 

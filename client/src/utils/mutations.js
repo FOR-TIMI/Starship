@@ -42,3 +42,31 @@ export const REMOVE_FOLLOWING = gql `
         }
     }
 `
+
+export const ADD_TICKER = gql `
+    mutation AddTicker($basketId: ID!, $ticker: String!) {
+        addTicker(basketId: $basketId, ticker: $ticker) {
+        _id
+        createdAt
+        tickers {
+            symbol
+            _id
+        }
+        }
+    }
+`
+export const ADD_BASKET = gql `
+mutation Mutation($tickers: [String]!, $basketName: String) {
+    addBasket(tickers: $tickers, basketName: $basketName) {
+      _id
+      createdAt
+      basketName
+      tickers {
+        _id
+        symbol
+        market
+        API
+      }
+    }
+  }
+`
