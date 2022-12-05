@@ -9,6 +9,7 @@ import Iconify from '../components/iconify';
 import { BAR_DATA_QUERY } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import { useState, useEffect } from 'react';
+
 // sections
 import {
   AppTasks,
@@ -200,7 +201,7 @@ export default function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline3 title="Large Trades" />
+            <AppOrderTimeline3 title="Large Trades" ticker="SPY" />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
