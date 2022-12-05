@@ -1,24 +1,17 @@
 import React,{ useState } from 'react'
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-
-
-import Checkbox from '@mui/material/Checkbox';
-
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-
-import { FormControlLabel, Radio, RadioGroup,FormLabel } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Stack from '@mui/material/Stack';
 
 //Form Elements
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Box from '@mui/material/Box';
 
+// Modal
+import Modal from '@mui/material/Modal';
 
 //Apollo client
 import { useMutation, useQuery } from '@apollo/client';
@@ -65,14 +58,11 @@ export default function NewPostModal({open,setOpen}) {
     isBasket = false
   }
 
-  console.log(isBasket)
   
   const handleBasketIdChange = (e) => {
     setBasketId(e.target.value)
-    console.log(basketId)
   }
-  
-  console.log(basketId)
+
 
   const handleClose = () => {
     setOpen(false);
@@ -80,7 +70,6 @@ export default function NewPostModal({open,setOpen}) {
 
   const handleChange = (e) => {
     setTitle(e.target.value)
-    console.log(title)
   }
 
 
@@ -114,12 +103,15 @@ export default function NewPostModal({open,setOpen}) {
     e.preventDefault();
     try{
       await addPost({
-        variables: { title, basketId }
+        variables: { title, basketId, author: data.signedInUser}
       });
 
       //To clear the form
       setTitle('');
       setBasketId('');
+
+      //To close modal
+      setOpen(false);
     } catch(e){
       console.error(e);
     }

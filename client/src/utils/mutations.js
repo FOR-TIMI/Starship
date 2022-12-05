@@ -81,7 +81,7 @@ export const ADD_POST = gql`
       createdAt
       commentCount
       likeCount
-      author {
+      author{
         username
         avatar
       }

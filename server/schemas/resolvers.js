@@ -403,17 +403,17 @@ const resolvers = {
 
     addPost: async (parent, args, context) => {
       if (context.user) {
-        const post = await Post.create({
+        const {_id} = await Post.create({
           ...args,
           author : context.user._id
-        });
+        })
 
         await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $push: { posts: post._id } },
+          { $push: { posts: _id } },
           { new: true }
         );
-        return post;
+        return Post.findById(_id).populate("author")
       }
       throw new AuthenticationError("You need to be logged in!");
     },
