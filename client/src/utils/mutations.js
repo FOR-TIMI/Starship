@@ -68,6 +68,19 @@ export const ADD_BASKET = gql`
       }
     }
   }
+
+`
+
+export const UPDATE_USER = gql `
+mutation Mutation( $avatar: String) {
+    updateUser( avatar: $avatar) {
+      avatar
+      email
+      username
+    }
+  }
+`
+
 `;
 
 export const DELETE_BASKET = gql`
@@ -85,3 +98,4 @@ export const DELETE_BASKET = gql`
     }
   }
 `;
+

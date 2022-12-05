@@ -16,6 +16,7 @@ export default function ProductList({ baskets, ...other }) {
   const [thedata, setThedata] = useState();
   const [clicked, setClicked] = useState(false);
 
+
   if (data && !thedata) {
     setThedata(data);
   }

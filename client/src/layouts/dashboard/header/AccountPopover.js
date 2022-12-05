@@ -5,6 +5,7 @@ import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover 
 // mocks_
 import account from '../../../_mock/account';
 import Auth from '../../../utils/auth';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -17,30 +18,41 @@ const MENU_OPTIONS = [
     label: 'Profile',
     icon: 'eva:person-fill',
   },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-  },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover(data) {
   const [open, setOpen] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
   const handleClose = (e) => {
-    setOpen(null);
+    switch (e.target.innerText) {
+      case 'Home':
+        setOpen(null);
+        navigate('/dashboard/app');
+
+        break;
+      case 'Profile':
+        setOpen(null);
+        navigate('/dashboard/user');
+
+        break;
+
+      default:
+        setOpen(null);
+        break;
+    }
   };
 
   const handleLogOut = (e) => {
     Auth.logout();
     setOpen(null);
   };
-
 
   return (
     <>
@@ -85,7 +97,7 @@ export default function AccountPopover(data) {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-         { data.data.username}
+            {data.data.username}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {data.data.email}
