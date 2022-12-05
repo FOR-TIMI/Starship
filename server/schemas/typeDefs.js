@@ -107,7 +107,7 @@ const typeDefs = gql`
     users: [User]
     baskets: [Basket]
     socialBaskets (username: String!): [Basket]
-    posts: [Post]
+    posts(userId:String): [Post]
     signedInUser: User
     post(_id: ID!): Post
     friendsPosts(_id: ID!): [Post]
