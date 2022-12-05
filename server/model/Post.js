@@ -19,7 +19,8 @@ const postSchema = new Schema(
     },
     coverPhoto: {
       type: String,
-      required: 'You must select a cover for your post',
+      default:"cover_22.jpg",
+      match: [/cover_(2[0-4]|1[0-9]|[1-9]).jpg/, "Not a valid cover photo"]
     },
     author:{
       type: Schema.Types.ObjectId, 

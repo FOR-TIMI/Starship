@@ -391,8 +391,7 @@ const resolvers = {
       if (context.user) {
         const post = await Post.create({
           ...args,
-          username: context.user.username,
-          userId: context.user._id,
+          author : context.user._id
         });
 
         await User.findOneAndUpdate(
@@ -400,7 +399,7 @@ const resolvers = {
           { $push: { posts: post._id } },
           { new: true }
         );
-        return updatedUser;
+        return post;
       }
       throw new AuthenticationError("You need to be logged in!");
     },
