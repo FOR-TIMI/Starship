@@ -41,7 +41,10 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
   },
 }));
 const StyledPopper = styled((props) => <Popper placement="bottom-start" {...props} />)({
-  width: ' inherit !important',
+  width: ' 60% !important',
+  '& li': {
+    backgroundColor: '#eceef0',
+  },
 });
 
 // ----------------------------------------------------------------------
@@ -50,7 +53,7 @@ export default function Searchbar() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const navigate = useNavigate();
-  
+
   const handleOpen = () => {
     setValue(null);
     setOpen(!open);
@@ -58,14 +61,12 @@ export default function Searchbar() {
 
   const handleClose = () => {
     setOpen(false);
-    
   };
   const handleSearch = () => {
-    
     setOpen(false);
-  //  console.log(value);
+    //  console.log(value);
 
-  // navigate link to single ticker analysis page
+    // navigate link to single ticker analysis page
     navigate(`/dashboard/analysis/${value}`);
   };
 
@@ -90,7 +91,7 @@ export default function Searchbar() {
               getOptionLabel={(post) => post}
               options={qqqsymbols}
               value={value}
-              onChange={(event,newValue)=> setValue(newValue)}
+              onChange={(event, newValue) => setValue(newValue)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               renderInput={(params) => (
                 <TextField
