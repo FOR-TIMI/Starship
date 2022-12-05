@@ -71,6 +71,24 @@ export const ADD_BASKET = gql`
 
 `
 
+export const ADD_POST = gql`
+  mutation($title: String!, $basketId: String){
+    addPost(title: $title, basketId: $basketId){
+      _id
+      title
+      coverPhoto
+      basketId
+      createdAt
+      commentCount
+      likeCount
+      author{
+        username
+        avatar
+      }
+    } 
+  }
+`
+
 export const UPDATE_USER = gql `
 mutation Mutation( $avatar: String) {
     updateUser( avatar: $avatar) {

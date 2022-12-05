@@ -7,6 +7,10 @@ export const QUERY_ME = gql`
       _id
       avatar
       email
+      baskets {
+        _id
+        basketName
+      }
     }
   }
 `;

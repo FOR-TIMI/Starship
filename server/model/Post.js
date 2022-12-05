@@ -19,7 +19,8 @@ const postSchema = new Schema(
     },
     coverPhoto: {
       type: String,
-      required: 'You must select a cover for your post',
+      default:"cover_22.jpg",
+      match: [/cover_(2[0-4]|1[0-9]|[1-9]).jpg/, "Not a valid cover photo"]
     },
     author:{
       type: Schema.Types.ObjectId, 
@@ -46,6 +47,21 @@ postSchema
     .get(function(){
         return this.comments.length
     })
+
+//To add random cover photo to posts
+postSchema.pre("save", function(){
+  //all  post covers
+  const covers = []
+    // to add covers and avatars
+  for(let i =1; i <= 24; i++){
+    covers.push(`cover_${i}.jpg`)
+  }
+  //get random cover photo
+  const randomCoverIndex = Math.floor(Math.random() * covers.length);
+  
+  this.coverPhoto = covers[randomCoverIndex]
+});
+
 
 postSchema
     .virtual('likeCount')

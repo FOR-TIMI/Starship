@@ -78,17 +78,12 @@ const resolvers = {
     },
 
     //Get all posts
-    posts: async (parent, { username }, context) => {
-      /**
-       * used to search for all posts related to a user or all posts
-       * if the user has followers, it should return all the posts of the followers from the most recent post
-       */
-      const params = username ? { username } : {};
+    posts: async (parent, { userId }, context) => {
 
       /**
        * If a user is signed in, it gets the following id and trys to find all the posts
        */
-
+      const params = userId ? { author: userId} : {}
       if (context.user) {
         try {
           const [{ followings }] = await User.find({
@@ -97,7 +92,7 @@ const resolvers = {
 
           if (followings.length) {
             const friendsPosts = await Post.find({
-              userId: { $in: followings },
+              author: { $in: followings },
             })
               .populate("author")
               .populate("likes")
@@ -110,7 +105,8 @@ const resolvers = {
               })
               .sort({ createdAt: -1 });
 
-            const allPosts = await Post.find(params)
+            //Include posts that weren't made by the users followings
+            const allPosts = await Post.find({ $nor : followings})
               .populate("author")
               .populate("likes")
               .populate({
@@ -124,7 +120,6 @@ const resolvers = {
 
             return [...friendsPosts, ...allPosts];
           }
-
           return Post.find(params)
             .populate("author")
             .populate("likes")
@@ -137,7 +132,7 @@ const resolvers = {
             })
             .sort({ createdAt: -1 });
         } catch {
-          return Post.find(params)
+          return Post.find()
             .populate("author")
             .populate("likes")
             .populate({
@@ -159,8 +154,7 @@ const resolvers = {
             path: "author",
             model: "User",
           },
-        })
-        .sort({ createdAt: -1 }); // when a user is not signed in
+        }).sort({ createdAt: -1 }); // when a user is not signed in
     },
 
     post: async (parent, { _id }) => {
@@ -409,18 +403,17 @@ const resolvers = {
 
     addPost: async (parent, args, context) => {
       if (context.user) {
-        const post = await Post.create({
+        const {_id} = await Post.create({
           ...args,
-          username: context.user.username,
-          userId: context.user._id,
-        });
+          author : context.user._id
+        })
 
         await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $push: { posts: post._id } },
+          { $push: { posts: _id } },
           { new: true }
         );
-        return updatedUser;
+        return Post.findById(_id).populate("author")
       }
       throw new AuthenticationError("You need to be logged in!");
     },
