@@ -1,8 +1,25 @@
-# Starship[Work In Progress]
-<img  alt="starship-logo" src="https://via.placeholder.com/500x300"/>
+
+<p align="center">
+  <img src="https://github.com/FOR-TIMI/Starship/blob/main/client/public/assets/logo.svg?raw=true" width="250px" height="150px"/>
+  <p align="center">
+  <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"/>
+  <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white"/>
+  <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB"/>
+  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
+  <img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white"/>
+  <img src="https://img.shields.io/badge/heroku-%23430098.svg?style=for-the-badge&logo=heroku&logoColor=white"/>
+  <img src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white"/>
+  <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
+</p>
+</p>
+<br/>
+
+
+
+<br/>
+
 
 ## Description
-
 `StarShip` provides users the platform to track stock market data. Users are able to track the market in general or they can search up a specific stock. After searching for a specific stock and checking it's performance through different analyses tools and visualizations (e.g. Fear & Greed Index, Zoomable Time Series, News etc.), the user can decide whether to add the stock in a basket where they can track a shortlist of stocks they were interested in. 
 
 But that's not all! 
