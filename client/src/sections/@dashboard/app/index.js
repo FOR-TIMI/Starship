@@ -19,3 +19,5 @@ export { default as AppConversionRates } from './AppConversionRates';
 export { default as FearGreedSummary } from './FearGreedSummary';
 export { default as CandleStick } from './CandleStick';
 export { default as PriceLineChart } from './PriceLineChart';
+export { default as TreeMapChart } from './TreeMapChart';
+

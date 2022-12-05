@@ -23,6 +23,7 @@ import {
   AppCurrentSubject,
   AppConversionRates,
   PriceLineChart,
+  TreeMapChart
 } from '../sections/@dashboard/app';
 
 // ----------------------------------------------------------------------
@@ -88,7 +89,7 @@ export default function DashboardAppPage() {
     return <div>Loading</div>;
   }
   if (data) {
-    console.log(data, 'DATASA');
+    // console.log(data, 'DATASA');
 
     closeP = data.barDataQuery.map((e) => {
       return {
@@ -202,6 +203,10 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline3 title="Large Trades" ticker="SPY" />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
+            <TreeMapChart />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
