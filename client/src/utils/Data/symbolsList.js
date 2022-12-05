@@ -2,7 +2,6 @@ const qqqsymbols = [
   'AAPL',
   'MSFT',
   'AMZN',
-  'FB',
   'GOOGL',
   'GOOG',
   'INTC',

@@ -8,13 +8,12 @@ import { useQuery } from '@apollo/client';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography, Button } from '@mui/material';
 import { BAR_DATA_QUERY } from '../utils/queries';
-import  AddToBasket  from '../components/add-to-basket/index';
+import AddToBasket from '../components/add-to-basket/index';
 // components
 import Iconify from '../components/iconify';
 import {
   AppNewsUpdate,
-  AppCurrentVisits,
-  AppWebsiteVisits,
+  AppOrderTimeline3,
   AppWidgetSummary,
   AppCurrentSubject,
   FearGreedSummary,
@@ -30,11 +29,10 @@ export default function SingleAnalysis() {
     setModalOpen(!modalOpen);
   }
 
-// SetStates to use dropdwon menu for 'days' and 'time'
+  // SetStates to use dropdwon menu for 'days' and 'time'
 
   const [dayState, setDayState] = useState(30);
- const [timeState, setTimeState] = useState('1D');
-
+  const [timeState, setTimeState] = useState('1D');
 
   let { symbol } = useParams();
   symbol = symbol.toUpperCase();
@@ -43,7 +41,7 @@ export default function SingleAnalysis() {
     symbol: symbol,
     timeframe: timeState,
     limit: 500,
-    days: dayState
+    days: dayState,
   };
   const { data } = useQuery(BAR_DATA_QUERY, { variables: vars });
 
@@ -54,7 +52,6 @@ export default function SingleAnalysis() {
   let currentOpenPrice = 0;
   let currentVolume = 0;
   if (data) {
-    
     // function for all 3
 
     const finalPrice = data.barDataQuery[data.barDataQuery.length - 1].ClosePrice;
@@ -128,36 +125,21 @@ export default function SingleAnalysis() {
           <Grid item xs={12} md={6} lg={8}>
             <PriceLineChart
               title={symbol}
-             
               chartData={[
                 {
                   name: 'Close Price',
                   data: closeP,
                 },
               ]}
-               setDayState={setDayState}
-               setTimeState={setTimeState}
-               dayState = {dayState}
-               timeState = {timeState}
+              setDayState={setDayState}
+              setTimeState={setTimeState}
+              dayState={dayState}
+              timeState={timeState}
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits
-              title="Current Visits"
-              chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
-              ]}
-              chartColors={[
-                theme.palette.primary.main,
-                theme.palette.info.main,
-                theme.palette.warning.main,
-                theme.palette.error.main,
-              ]}
-            />
+            <AppOrderTimeline3 title="Large Trades" ticker={symbol} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -181,19 +163,6 @@ export default function SingleAnalysis() {
                 image: `/assets/images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
               }))}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject
-              title="Current Subject"
-              chartLabels={['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math']}
-              chartData={[
-                { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-                { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-                { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
-              ]}
-              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
             />
           </Grid>
         </Grid>
