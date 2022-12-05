@@ -64,6 +64,11 @@ export default function Searchbar() {
   };
   const handleSearch = () => {
     setOpen(false);
+
+    if (!value) {
+      return;
+    };
+
     //  console.log(value);
 
     // navigate link to single ticker analysis page
