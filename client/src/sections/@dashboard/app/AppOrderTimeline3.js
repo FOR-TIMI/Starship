@@ -47,7 +47,7 @@ function OrderTimeline({ symbol, title, subheader, list }) {
 // ----------------------------------------------------------------------
 
 function OrderItem({ item, isLast, symbol }) {
-  console.log(symbol);
+  // console.log(symbol);
   const { Timestamp, Exchange, Price, Size, Conditions, ID, Tape } = item;
   return (
     <TimelineItem>
