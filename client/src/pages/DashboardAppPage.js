@@ -33,6 +33,7 @@ export default function DashboardAppPage() {
   const [weeklyChange, setWeeklyChange] = useState();
   const [monthlyChange, setMonthlyChange] = useState();
   const [yearlyChange, setYearlyChange] = useState();
+  const [quote, setQuote] = useState('Super Quote Incoming');
 
   let closeP = { x: moment(), y: 0 };
 
@@ -43,6 +44,16 @@ export default function DashboardAppPage() {
     days: 365,
   };
   const { loading, error, data } = useQuery(BAR_DATA_QUERY, { variables: vars });
+
+  useEffect(() => {
+    let quotes = [
+      '"Rule No. 1: Never lose money. Rule No. 2: Never forget rule No.1"- Warren Buffet',
+      '“If you aren’t willing to own a stock for 10 years, don’t even think about owning it for 10 minutes.”- Warren Buffet',
+      '“Price is what you pay, value is what you get.”- Warren Buffet',
+      '“Risk comes from not knowing what you are doing.”- Warren Buffet',
+    ];
+    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -96,7 +107,7 @@ export default function DashboardAppPage() {
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          {quote}
         </Typography>
 
         <Grid container spacing={3}>
