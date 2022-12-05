@@ -51,7 +51,10 @@ export default function FollowerTable (props) {
                           Click to view {name}'s basket
                         </Link>
                       </TableCell>
-                      <FollowButton user= {user} handleToggle={handleToggle} />          
+                      <TableCell align="left">
+                        <FollowButton styleProps={{width: 75}} user= {user} handleToggle={handleToggle} /> 
+                      </TableCell>
+                               
                     </TableRow>
                   );
                 })
