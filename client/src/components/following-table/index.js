@@ -51,7 +51,10 @@ export default function FollowingTable (props) {
                         Click to view {name}'s basket
                       </Link>
                     </TableCell>
-                    <UnfollowButton user= {user} handleToggle={handleToggle} />          
+                    <TableCell align="left">
+                      <UnfollowButton styleProps={{width: 75}} user= {user} handleToggle={handleToggle} />  
+                    </TableCell>
+                            
                   </TableRow>
                     )})}
    
