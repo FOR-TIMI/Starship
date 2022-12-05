@@ -25,6 +25,7 @@ export const QUERY_POSTS = gql`
       commentCount
       likeCount
       author {
+        _id
         username
         avatar
       }
@@ -36,6 +37,7 @@ export const QUERY_POST = gql`
   query ($id: ID!) {
     post(_id: $id) {
       author {
+        _id
         avatar
         username
       }

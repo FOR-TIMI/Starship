@@ -2,18 +2,20 @@ import PropTypes from 'prop-types';
 
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Box, Link, Card, Grid, Avatar, Typography, CardContent} from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import SvgColor from '../../../components/svg-color';
 import Iconify from '../../../components/iconify';
+import FollowButton from '../../../components/follow-button';
 
 //
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
+
 
 
 
@@ -98,6 +100,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
       sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}
       
     >
+      
       <Card sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
@@ -143,23 +146,28 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
               ...((latestPostLarge || latestPost) && { display: 'none' }),
             }} />
           ) }
-
+          
           {
             post ? (
-            <StyledAvatar
-              alt={post.author.username}
-              src={`/assets/images/avatars/${post.author.avatar}`}
-              sx={{
-                ...((latestPostLarge || latestPost) && {
+              <div>
+                <StyledAvatar
+                  alt={post.author.username}
+                  src={`/assets/images/avatars/${post.author.avatar}`}
+                  sx={{
+                  ...((latestPostLarge || latestPost) && {
                   zIndex: 9,
                   top: 24,
                   left: 24,
                   width: 40,
                   height: 40,
-                }),
-              }}
-              /> 
-              ) : (
+                  }),
+                  }}
+                /> 
+                <FollowButton user={post.author}/>
+              </div>
+           
+              ) 
+              : (
                 <Skeleton variant="circular" sx={{
                   ...((latestPostLarge || latestPost) && {
                     position: 'absolute',
@@ -176,6 +184,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
               ) 
             
           }
+
           
          
 

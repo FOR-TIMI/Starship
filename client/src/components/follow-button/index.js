@@ -11,7 +11,7 @@ export default function FollowButton (props) {
     const HandleFollow = async (user, event) => {
         
         const followingId = user._id
-
+        
         try {
             await addFollowing({
                 variables: { followingId }
@@ -22,13 +22,13 @@ export default function FollowButton (props) {
     }
     
     return (
-        <TableCell align="left">
-            <Button  sx={{ width: 75 }} onClick={(event)=>{
-                HandleFollow(user, event);
-            }}>
-                Follow
-            </Button>
-        </TableCell>
+        
+        <Button  sx={{ width: 75, zIndex: 9 }} onClick={(event)=>{
+            HandleFollow(user, event);
+        }}>
+            Follow
+        </Button>
+        
     )
 }
 

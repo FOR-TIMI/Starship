@@ -61,7 +61,7 @@ export default function BlogPage() {
       <Helmet>
         <title> Tavern </title>
       </Helmet>
-
+      
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -70,6 +70,7 @@ export default function BlogPage() {
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleNewPostModal}>
             New Post
           </Button>
+          
         </Stack>
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
