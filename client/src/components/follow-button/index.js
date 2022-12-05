@@ -9,20 +9,16 @@ export default function FollowButton (props) {
     const {user} = props
     
     const HandleFollow = async (user, event) => {
-        //const token = Auth.loggedIn()? Auth.getToken() : null;
         
         const followingId = user._id
 
-        //if (!token) {
-        //     return false
-        // }
         try {
-                    await addFollowing({
-                        variables: { followingId }
-                    })
-                } catch (err) {
-                    console.error(err)
-                }
+            await addFollowing({
+                variables: { followingId }
+            })
+        } catch (err) {
+            console.error(err)
+        }
     }
     
     return (

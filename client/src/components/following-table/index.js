@@ -47,7 +47,7 @@ export default function FollowingTable (props) {
                       </Stack>
                     </TableCell>
                     <TableCell align="left">
-                      <Link to={`/dashboard/baskets/${name}`}/* change to path for basket using ${user._id} */ >
+                      <Link to={`/dashboard/baskets/${name}`}>
                         Click to view {name}'s basket
                       </Link>
                     </TableCell>
