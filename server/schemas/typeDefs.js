@@ -133,6 +133,7 @@ const typeDefs = gql`
     ): [Bardata!]
     getNews(ticker: String!): [GNews]
     getLargeTrades(ticker: String!): [Trade]
+    checkLike(postId: String!): Boolean!
   }
 
   type Mutation {

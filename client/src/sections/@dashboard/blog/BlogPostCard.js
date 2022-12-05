@@ -70,6 +70,7 @@ BlogPostCard.propTypes = {
 const label = { inputProps: { 'aria-label': 'Checkbox' } };
 
 export default function BlogPostCard({ post, index, modalToggle,loading }) {
+
   
 
   
@@ -87,6 +88,10 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
   const handleClick = (e) => {
      console.log(e.target.dataset)
      return;
+  }
+
+  const handleLike = (e) => {
+    
   }
 
  
@@ -247,7 +252,11 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
                 }}
               >
                 { info.name === 'like' ? 
-                 (<Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />}/>)
+                 (<Checkbox {...label} 
+                    icon={<FavoriteBorder />} 
+                    checkedIcon={<Favorite />} 
+                    onChange={handleLike}
+                  />)
                  : (<Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />)
                 }
                 

@@ -8,7 +8,7 @@ const {
 } = require("../utils/API_calls/queries");
 const { searchGoogle } = require("../utils/API_calls/gnews");
 const { signToken } = require("../utils/auth");
-const mongoose = require('mongoose')
+
 const { AuthenticationError } = require("apollo-server-express");
 
 
@@ -38,14 +38,14 @@ const resolvers = {
     signedInUser: async (parent, args, context) => {
       if (context.user) {
         try{
-          const userData = await User.findOne({ _id: context.user._id })
+          return User.findOne({ _id: context.user._id })
           .select("-__v -password")
           .populate("followers")
           .populate("followings")
+          .populate("likedPosts")
           .populate("posts")
           .populate("baskets");
 
-        return userData;
         } catch (error) {
           console.error(error)
         }
@@ -59,6 +59,7 @@ const resolvers = {
         .select("-__v -password")
         .populate("followers")
         .populate("followings")
+        .populate("likedPosts")
         .populate("posts")
         .populate("baskets");
     },
@@ -70,6 +71,7 @@ const resolvers = {
           .select("-__v -password")
           .populate("followers")
           .populate("followings")
+          .populate("likesPosts")
           .populate("posts")
           .populate("baskets");
       } else {
@@ -157,6 +159,26 @@ const resolvers = {
         }).sort({ createdAt: -1 }); // when a user is not signed in
     },
 
+    //check like
+    //Expect that the arguement is gonna be One post Id
+    //get liked Posts array from the signed in user
+    //Check if the current post Id is included in array of liked posts
+    checkLike: async(parent, {postId},context) => {
+      if(context.user){
+         try{
+           //query user liked posts
+           const [{likedPosts}] = await User.find(
+            { _id : context.user._id},      
+           )
+           //check if likedPosts includes postId
+           return likedPosts.includes(postId)
+
+         }catch(err){
+           console.error(err)
+         }
+      }
+    },
+
     post: async (parent, { _id }) => {
       return Post.findById(_id)
         .populate("author")
@@ -224,14 +246,17 @@ const resolvers = {
     basket: async (parent, { _id }) => {
       return Basket.findOne({ _id });
     },
+
     socialBaskets: async (parent, args, context) => {
-  
       if (args.username) {
         const params = args.username;
         return Basket.find({ username: params }).sort({ createdAt: -1 });
       } else {
         throw new Error("No username provided.");
-      }}
+     }
+    },
+
+
   },
 
   
@@ -435,11 +460,19 @@ const resolvers = {
 
     addLike: async (parent, { postId }, context) => {
       if (context.user) {
+
+        await User.findOneAndUpdate(
+          {_id: context.user._id},
+          { $addToSet: {likedPosts: { _id : postId } }},
+          { new: true }
+        )
+
         const updatedPost = await Post.findOneAndUpdate(
           { _id: postId },
           { $addToSet: { likes: { _id: context.user._id } } },
           { new: true }
         );
+
         return updatedPost;
       }
       throw new AuthenticationError("You need to be logged In!");
