@@ -19,7 +19,7 @@ const resolvers = {
       return data;
     },
 
-    barsDataQuery: async (parent, { symbols, timeframe, limit, days }) => {
+    barsDataQuery: async (parent, {symbols, timeframe, limit, days}) => {
       let data = await getBarsData(symbols, timeframe, limit, days);
       return data;
     },
@@ -418,7 +418,7 @@ const resolvers = {
             { $pull: { followings: { $in: [followingId] }} },
             { new: true },
             function callback (err,data) {
-              console.log(data)
+              console.error(err);
             }
           )
           return updatedUser

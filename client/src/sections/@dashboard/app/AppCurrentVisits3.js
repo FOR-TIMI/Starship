@@ -93,7 +93,7 @@ export default function AppCurrentVisits({
   }
 
   if (data) {
-    console.log(data);
+    // console.log(data);
     setThedata(data);
   }
 

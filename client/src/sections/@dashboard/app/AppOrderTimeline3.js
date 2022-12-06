@@ -20,7 +20,7 @@ function OrderTimeline({ symbol, title, subheader, list }) {
     variables: variables,
   });
   if (error) {
-    console.log(error);
+    // console.log(error);
   }
   if (data) {
     return (

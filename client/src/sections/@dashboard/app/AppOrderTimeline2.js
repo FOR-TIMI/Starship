@@ -12,15 +12,15 @@ export default function AppOrderTimeline2({ basketId, title, subheader, list }) 
   const variables = {
     id: basketId,
   };
-  console.log(variables, 'VAARSS');
+  // console.log(variables, 'VAARSS');
   const { loading, error, data } = useQuery(GET_BASKET, {
     variables: variables,
   });
   if (error) {
-    console.log(error);
+    // console.log(error);
   }
   if (data) {
-    console.log(data, 'THISDFOSDHJF');
+    // console.log(data, 'THISDFOSDHJF');
     return <OrderTimeline title={title} subheader={subheader} list={list} symbol={data.basket.tickers[0].symbol} />;
   }
 }

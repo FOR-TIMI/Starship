@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useQuery } from '@apollo/client';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Box, Stack, AppBar, Toolbar, IconButton} from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // components
@@ -14,6 +14,7 @@ import AccountPopover from './AccountPopover';
 import NotificationsPopover from './NotificationsPopover';
 import { QUERY_ME } from '../../../utils/queries';
 import Auth from '../../../utils/auth';
+import StripeButton from '../../../components/Stripe';
 
 
 
@@ -67,6 +68,8 @@ export default function Header({ onOpenNav }) {
         <Searchbar />
         <Box sx={{ flexGrow: 1 }} />
 
+
+
         <Stack
           direction="row"
           alignItems="center"
@@ -75,6 +78,8 @@ export default function Header({ onOpenNav }) {
             sm: 1,
           }}
         >
+          <StripeButton/>
+          
            {loggedIn && data ? (<>
           {/* <NotificationsPopover /> */}
           <AccountPopover data={data.signedInUser} />

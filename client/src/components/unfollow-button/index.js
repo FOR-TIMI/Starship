@@ -6,16 +6,10 @@ import { REMOVE_FOLLOWING } from '../../utils/mutations'
 export default function UnfollowButton (props) {
     
     const [removeFollowing, {error}] = useMutation(REMOVE_FOLLOWING)
-    const {user, handleToggle} = props
+    const {styleProps, user, handleToggle} = props
  
     const handleUnfollow = async (user, event) => {
-        //const token = Auth.loggedIn() ? Auth.getToken() : null;
         const followingId = user._id
-        /* 
-            if (!token) {
-                return false
-            }
-        */
             try {
                 await removeFollowing({
                     variables: { followingId }
@@ -28,12 +22,12 @@ export default function UnfollowButton (props) {
     }
 
     return(
-        <TableCell align="left">
-            <Button sx={{ width: 75 }} onClick={(event)=>{
+        
+            <Button sx={styleProps} onClick={(event)=>{
                 handleUnfollow(user, event)
             }}>
                 Unfollow
             </Button>
-        </TableCell>
+        
     )
 }
