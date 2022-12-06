@@ -103,9 +103,15 @@ const typeDefs = gql`
     Tape: String
   }
 
+  type Images {
+    url: String
+    prompt: String
+  }
+
   type Query {
     users: [User]
     baskets: [Basket]
+    images: [Images]
     socialBaskets (username: String!): [Basket]
     posts(userId:String): [Post]
     signedInUser: User
@@ -144,6 +150,7 @@ const typeDefs = gql`
     addPost(title: String!, basketId: String): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
+    addImage(url: String!, prompt: String!): Images
     removeFollowing(followingId: ID!): User
     addLike(postId: ID!): Post
     deleteBasket(basketId: ID!): Basket
