@@ -49,6 +49,10 @@ const userSchema = new Schema(
       default:"avatar_default.jpg",
       match: [/avatar_(2[0-4]|1[0-9]|[1-9]|default).jpg/, "Not a valid avatar"]
     },
+    isVerified:{
+      type: Boolean,
+      default: false
+    },
     likedPosts:[
       {
         type: Schema.Types.ObjectId,

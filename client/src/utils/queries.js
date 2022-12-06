@@ -4,6 +4,7 @@ export const QUERY_ME = gql`
   query SignedInUser {
     signedInUser {
       username
+      isVerified
       _id
       avatar
       email

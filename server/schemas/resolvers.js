@@ -1,4 +1,4 @@
-const { User, Basket, Like, Post, Ticker, Comment } = require("../model");
+const { User, Basket, Like, Post, Ticker, Comment, Image } = require("../model");
 const {
   getBarData,
   getBarsData,
@@ -61,6 +61,11 @@ const resolvers = {
         .populate("followings")
         .populate("posts")
         .populate("baskets");
+    },
+
+    //Get all images
+    images: async () => {
+      return Image.find();
     },
 
     //Get a user by username
@@ -271,6 +276,29 @@ const resolvers = {
       } catch (err) {
         console.error(err);
       }}
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
+    addVerification: async (parent, { user }, context) => {
+      if (context.user) {
+      try {
+        let user = User.findOneAndUpdate(
+          { _id: context.user._id },
+          { isVerified: true},
+          { new: true }
+        );
+        return user;
+      } catch (err) {
+        console.error(err);
+      }}
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
+    addImage: async (parent, {url, prompt}, context)=>{
+      if (context.user) {
+        let image = await Image.create({url, prompt});
+        return image;
+      }
       throw new AuthenticationError("You need to be logged in!");
     },
 
