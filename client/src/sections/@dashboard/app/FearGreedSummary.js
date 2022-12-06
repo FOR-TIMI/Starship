@@ -77,12 +77,16 @@ switch (true) {
         py: 2,
         boxShadow: 0,
         textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'center', 
+        alignItems: 'center',      
         color: (theme) => theme.palette[color].darker,
         bgcolor: (theme) => theme.palette[color].lighter,
         ...sx,
       }}
       {...other}
     >
+      <div>
       <StyledIcon
         sx={{
           color: (theme) => theme.palette[color].dark,
@@ -108,6 +112,7 @@ switch (true) {
         {fearGreedRating} is driving <br></br>
         the US market
       </Typography>
+      </div>
     </Card>
   );
 }
