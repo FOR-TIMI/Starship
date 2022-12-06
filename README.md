@@ -31,6 +31,10 @@ Users can also make connections by users they follow and users who follow them. 
 Try it for yourself and visit the website here!
 [StarShip](insert URL here)
 
+## Support the project ⭐
+If you feel awesome and want to support us in a small way, please consider checking out our other projects, starring and sharing this repo! This helps us getting known and grow the community. 🙏
+ 
+ ![image](https://raw.githubusercontent.com/lusaxweb/vuesax/master/public/github-vuesax-star.gif)
 
 ## User Story
 ### AS A USER:
