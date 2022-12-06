@@ -12,17 +12,14 @@ import { BARS_DATA_QUERY, GET_BASKET, GET_DATA_AND_BASKET } from '../utils/queri
 import Iconify from '../components/iconify';
 // sections
 import {
-  AppTasks,
+  
   AppNewsUpdate2,
   AppOrderTimeline2,
   AppCurrentVisits2,
   AppWebsiteVisits2,
   AppWebsiteVisits,
-  AppTrafficBySite,
   AppWidgetSummary2,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates,
+ 
 } from '../sections/@dashboard/app';
 
 // import { dataToBasket } from '../utils/dataToBasket';
@@ -188,7 +185,7 @@ export default function DashboardAppPage() {
             <Grid item xs={12} md={6} lg={8}>
               <AppWebsiteVisits
                 title="Basket A"
-                basketId={basketId}
+                // basketId={basketId}
                 chartData={[
                   {
                     name: 'Team A',

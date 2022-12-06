@@ -393,7 +393,7 @@ const resolvers = {
             { $pull: { followings: { $in: [followingId] }} },
             { new: true },
             function callback (err,data) {
-              console.log(data)
+              console.error(err);
             }
           )
           return updatedUser

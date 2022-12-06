@@ -47,7 +47,7 @@ export default function SettingUser() {
     window.location.reload();
   }
   catch(e){
-    console.log(e);
+    console.error(e);
   }
 
   }

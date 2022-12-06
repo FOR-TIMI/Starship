@@ -49,15 +49,15 @@ export default function AppCurrentVisits2({ basketId, title, subheader, chartCol
   const variables = {
     id: basketId,
   };
-  console.log(variables);
+  // console.log(variables);
   const { loading, error, data } = useQuery(GET_BASKET, {
     variables: variables,
   });
   if (error) {
-    console.log(error);
+    // console.log(error);
   }
   if (data) {
-    console.log(data, 'THE DAATA');
+    // console.log(data, 'THE DAATA');
   }
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function AppCurrentVisits2({ basketId, title, subheader, chartCol
       setChartLabels(chl);
       let chs = theData.map((i) => i.value);
       setChartSeries(chs);
-      console.log(chs, 'CHS');
+      // console.log(chs, 'CHS');
     }
   }, [data, theData]);
 
@@ -101,10 +101,10 @@ export default function AppCurrentVisits2({ basketId, title, subheader, chartCol
         each['label'] = tickers[i].symbol;
         each['value'] = 100;
         d.push(each);
-        console.log(each, 'EACG');
+        // console.log(each, 'EACG');
         if (i === tickers.length - 1) {
           setTheData(d);
-          console.log(d, 'DDDD');
+          // console.log(d, 'DDDD');
 
           // console.log(theData, 'DAAATA');
         }

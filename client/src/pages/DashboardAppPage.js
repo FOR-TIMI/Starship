@@ -81,7 +81,7 @@ export default function DashboardAppPage() {
   }, [data]);
 
   if (error) {
-    console.log(error);
+    console.error(error);
   }
   if (loading) {
     return <div>Loading</div>;

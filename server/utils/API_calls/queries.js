@@ -36,7 +36,7 @@ async function getBarData(symbol, timeframe, limit, days) {
       }
       barsData.push(barsDataParsed);
     }
-    console.table(barsData);
+    // console.table(barsData);
 
     resolve(barsData);
   });
@@ -116,13 +116,13 @@ function addBasketHelper(args) {
     let tickers = [];
     args.tickers.map(async (each, key) => {
       const tick = await Ticker.findOne({ symbol: each });
-      console.log(tick);
+      // console.log(tick);
       if (tick == null) {
         let tick = await Ticker.create({ symbol: each, API: "alpaca" });
         tickers.push(tick);
-        console.log("creating", tick);
+        // console.log("creating", tick);
       } else {
-        console.log("already", tick);
+        // console.log("already", tick);
         tickers.push(tick);
       }
       if (key == args.tickers.length - 1) {

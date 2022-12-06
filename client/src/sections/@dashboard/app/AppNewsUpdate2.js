@@ -25,7 +25,7 @@ export default function AppNewsUpdate2({ title, basketId, subheader, list, ...ot
   });
 
   if (data) {
-    console.log(data.basket.tickers[0].symbol, 'THIS DDaaaD');
+    // console.log(data.basket.tickers[0].symbol, 'THIS DDaaaD');
 
     return (
       <Card {...other}>
@@ -57,7 +57,7 @@ function NewsContainer({ ticker }) {
   });
 
   if (data) {
-    console.log(data, 'THISDJLJKD');
+    // console.log(data, 'THISDJLJKD');
 
     return (
       <Scrollbar>
