@@ -52,9 +52,9 @@ If you feel awesome and want to support us in a small way, please consider check
 * [Contributors](#contributors)
 
 ## Local Installation
-* Clone the code into your machine and open in your code editor (e.g. VS Code).
+* `Clone` the code into your machine and open in your code editor (e.g. VS Code).
 
-* Go to the root directory for the app.
+* Go to the `root` directory for the app.
 
 * Run `npm i` in your terminal to install all the needed packages
 
@@ -63,7 +63,42 @@ If you feel awesome and want to support us in a small way, please consider check
 * Run `npm run develop` to start the server and build the website.
 
 ## Usage
- [insert usage here]
+#### Landing Page
+* Upon loading the website, you are led into the landing page.
+  - If you are not logged in, there will be a `Login` button.
+  - A `search bar` at the top of the page.
+  - Market Overview for SPY stock (SPDR S&P 500 ETF Trust) and related SPY news.
+#### Login/Sign-Up:
+ * On the landing page, press on the `login` button. 
+ * If you have an account, input your `email` and `password`.
+ * If you do not have an account, click on the `sign-up link` and set your `username`, `email` and `password`.
+
+#### Tickers and Basekts:
+ * There is a `search bar` located at the top of the page. Click on the `search bar` and input a stock symbol (e.g. AAPL for Apple Inc, GOOG for Alphabet Inc Class C etc.)
+ * Click on `Search` button. This will lead you to the market summary page of the stock (e.g. Fear and Greed Index, Current Open Price, Zoomable Time Series etc.)
+ * After going through the summary you can add the stock/ticker to a `basket`. Click on `Add To Basket`.
+ * You have an option to add the ticker to an existing basket or you can create a new basket by clicking `Create New Basket`.
+ * You can see all your `baskets` by clicking on `Product` on the side navigation bar.
+ * You can click on each `basket` to see a summary of the performance of all the `tickers` added to the basket.
+
+ #### Socials: Followers
+ * The `Socials` page provides a list of either the users are currently following (`Following`) or users who are following you (`Followers`).
+ * You can access the either the `Following` or `Follower` list by click the `toggle button` at the top.
+ * The list provides the `avatar, username, link to the user's baskets page` and either an `Unfollow` button under the Following list or a `Follow` button under the Followers list.
+ 
+ #### Tavern
+ * The `Tavern` pages provides posts from other users signed up on the website. Their posts contain either a `text, a basket of tickers, or both`.
+ * The user can click on each post and go to the `basket's page`.
+ * From the tavern, the `user can also follow other users`, which are then added to their Following list under the `Socials` page.
+
+ #### Premium
+ * Users can pay a `premium` to have their account `verified`. A verified user will have a `blue ribbon` beside their name.
+
+ #### Edit Profile
+ * Users can `edit their avatar` by clicking on their avatar on the top left of the page.
+ * This button is a drop down menu. If the user clicks on `Profile`, they are taken to a page where they can pick a new avatar.
+ * The other buttons are `Home`, which brings the user back to the `landing page`, and `Logout`, which `logs the user out`.
+
 
 ## Technologies Used:
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
