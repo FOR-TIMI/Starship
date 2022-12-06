@@ -279,6 +279,21 @@ const resolvers = {
       throw new AuthenticationError("You need to be logged in!");
     },
 
+    addVerification: async (parent, { user }, context) => {
+      if (context.user) {
+      try {
+        let user = User.findOneAndUpdate(
+          { _id: context.user._id },
+          { isVerified: true},
+          { new: true }
+        );
+        return user;
+      } catch (err) {
+        console.error(err);
+      }}
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
     addImage: async (parent, {url, prompt}, context)=>{
       if (context.user) {
         let image = await Image.create({url, prompt});

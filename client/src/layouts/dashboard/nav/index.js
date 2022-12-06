@@ -43,7 +43,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const loggedIn = Auth.loggedIn();
 
   const { pathname } = useLocation();
-
+ 
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -72,8 +72,10 @@ export default function Nav({ openNav, onCloseNav }) {
                 <Avatar src={`/assets/images/avatars/${data.signedInUser.avatar}`} alt="photoURL" />
                 <Box sx={{ ml: 2 }}>
                   <Typography variant="h4" sx={{ color: 'text.primary' }}>
-                    {data.signedInUser.username}
+                    {data.signedInUser.username} {data.signedInUser.isVerified?<Iconify icon={'icon-park:success'} width={30} />:null} 
                   </Typography>
+                  
+                 
                 </Box>
               </>
             ) : (

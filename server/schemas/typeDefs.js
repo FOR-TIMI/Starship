@@ -8,6 +8,7 @@ const typeDefs = gql`
     username: String
     avatar: String
     email: String
+    isVerified: Boolean
     friendCount: Int
     baskets: [Basket]
     followers: [User]
@@ -145,6 +146,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser( avatar: String): User
+    addVerification( user: String): User
     addTicker(basketId: ID!, ticker: String!): Basket
     addBasket(tickers: [String]!, basketName: String): Basket
     addPost(title: String!, basketId: String): Post

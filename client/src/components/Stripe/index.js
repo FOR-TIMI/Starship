@@ -16,8 +16,8 @@ async function handleCheckout() {
         },
       ],
       mode: 'payment',
-      //will need to implement payment routes if necessary, good enough for demo 
-      successUrl: `http://localhost:3000/dashboard/app`,
+      //successUrl render success.js from stripe folder used to update user verification 
+      successUrl: `http://localhost:3000/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`,
       cancelUrl: `http://localhost:3000/dashboard/app`,
       customerEmail: 'customer@email.com',
     });
