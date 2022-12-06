@@ -4,6 +4,7 @@ export const QUERY_ME = gql`
   query SignedInUser {
     signedInUser {
       username
+      isVerified
       _id
       avatar
       email
@@ -67,6 +68,7 @@ export const QUERY_SOCIAL = gql`
       followers {
         _id
         username
+        isVerified
         avatar
         baskets {
           _id
@@ -75,6 +77,7 @@ export const QUERY_SOCIAL = gql`
       followings {
         _id
         username
+        isVerified
         avatar
         baskets {
           _id

@@ -14,14 +14,11 @@ import UserDashboardAppPage from './pages/UserDashboardAppPage';
 import SingleAnalysis from './pages/SingleAnalysis';
 import SocialProductsPage from './pages/SocialProductsPage';
 import SettingUser from './pages/SettingUser';
-
+import StripeSuccess from './components/Stripe/success';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-
-  
-
   const routes = useRoutes([
     {
       path: '/dashboard',
@@ -36,12 +33,15 @@ export default function Router() {
         { path: 'analysis/:symbol', element: <SingleAnalysis /> },
         { path: 'baskets/:username', element: <SocialProductsPage /> },
         { path: 'user', element: <SettingUser /> },
-
       ],
     },
     {
       path: 'login',
       element: <LoginPage />,
+    },
+    {
+      path: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+      element: <StripeSuccess />,
     },
 
     {

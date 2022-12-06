@@ -99,6 +99,16 @@ mutation Mutation( $avatar: String) {
   }
 `
 
+export const VERIFY_USER = gql `
+mutation Mutation {
+  addVerification {
+    isVerified
+    username
+  }
+}
+`
+
+
 
 export const DELETE_BASKET = gql`
   mutation Mutation($basketId: ID!) {

@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import FollowButton from '../follow-button'
 import NoFollower from '../noFollowers';
 import { UserListHead } from '../../sections/@dashboard/user';
+import Iconify from '../iconify/Iconify';
 
 const TABLE_HEAD = [
     { id: 'name', label: 'Name', alignRight: false },
@@ -34,6 +35,7 @@ export default function FollowerTable (props) {
                   userFollowers.map((user) => {
                     const id = user._id
                     const name = user.username
+                    const isVerified = user.isVerified
                     const avatarUrl = `/assets/images/avatars/${user.avatar}` 
                   return (
                     <TableRow hover key={id} tabIndex={-1} role="checkbox" >
@@ -44,6 +46,7 @@ export default function FollowerTable (props) {
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>
+                          {isVerified?<Iconify icon={'icon-park:success'} width={20} />:null}
                         </Stack>
                       </TableCell>
                       <TableCell align="left">

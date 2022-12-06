@@ -8,6 +8,7 @@ const typeDefs = gql`
     username: String
     avatar: String
     email: String
+    isVerified: Boolean
     friendCount: Int
     baskets: [Basket]
     followers: [User]
@@ -103,9 +104,15 @@ const typeDefs = gql`
     Tape: String
   }
 
+  type Images {
+    url: String
+    prompt: String
+  }
+
   type Query {
     users: [User]
     baskets: [Basket]
+    images: [Images]
     socialBaskets (username: String!): [Basket]
     posts(userId:String): [Post]
     signedInUser: User
@@ -140,11 +147,13 @@ const typeDefs = gql`
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser( avatar: String): User
+    addVerification( user: String): User
     addTicker(basketId: ID!, ticker: String!): Basket
     addBasket(tickers: [String]!, basketName: String): Basket
     addPost(title: String!, basketId: String): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
+    addImage(url: String!, prompt: String!): Images
     removeFollowing(followingId: ID!): User
     addLike(postId: ID!): Post
     deleteBasket(basketId: ID!): Basket
