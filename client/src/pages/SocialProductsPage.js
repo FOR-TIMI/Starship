@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Container, Stack, Typography } from '@mui/material';
 // components
 import { ProductSort, SocialProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
-// mock
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { GET_SOCIAL_BASKETS } from '../utils/queries'
@@ -28,17 +27,19 @@ export default function ProductsPage() {
     variables: {username: username}
   })
 
+  
+
   return (
     <>
       <Helmet>
         <title> Dashboard: Products | Minimal UI </title>
       </Helmet>
-
+      
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Baskets
+          {`${username}'s Baskets`}
         </Typography>
-
+        
         <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
             <ProductFilterSidebar
@@ -51,7 +52,9 @@ export default function ProductsPage() {
         </Stack>
 
         {data?<SocialProductList baskets={data.socialBaskets} />: null}
+
         <ProductCartWidget />
+        
       </Container>
     </>
   );

@@ -9,19 +9,15 @@ import Iconify from '../components/iconify';
 import { BAR_DATA_QUERY } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import { useState, useEffect } from 'react';
+
 // sections
 import {
-  AppTasks,
   AppNewsUpdate3,
   AppOrderTimeline3,
-  AppCurrentVisits,
-  AppWebsiteVisits,
   AppWebsiteVisits3,
-  AppTrafficBySite,
   AppWidgetSummary2,
-  AppCurrentSubject,
-  AppConversionRates,
-  PriceLineChart,
+  TreeMapChart,
+  FearGreedSummary,
 } from '../sections/@dashboard/app';
 
 // ----------------------------------------------------------------------
@@ -87,7 +83,7 @@ export default function DashboardAppPage() {
     return <div>Loading</div>;
   }
   if (data) {
-    console.log(data, 'DATASA');
+    // console.log(data, 'DATASA');
 
     closeP = data.barDataQuery.map((e) => {
       return {
@@ -110,7 +106,8 @@ export default function DashboardAppPage() {
           {quote}
         </Typography>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={3}  justifyContent="space-evenly"
+  alignItems="strech" >
           {dailyChange ? (
             <>
               {dailyChange > 0 ? (
@@ -195,15 +192,24 @@ export default function DashboardAppPage() {
             <></>
           )}
 
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={8} lg={8}>
             <AppWebsiteVisits3 title="SPY" data={data} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline3 title="Large Trades" />
+          <Grid item xs={12} md={4} lg={4}>
+            <AppOrderTimeline3 title="Large Trades" ticker="SPY" />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={8} lg={8}>
+            <TreeMapChart />
+          </Grid>
+
+          <Grid item xs={12} md={4} lg={4}>
+            <FearGreedSummary sx={{height: '100%'}}/>
+          </Grid>
+
+
+          <Grid item xs={12} md={12} lg={12}>
             <AppNewsUpdate3
               ticker={'SPY'}
               title="News Update"

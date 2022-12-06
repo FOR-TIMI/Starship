@@ -16,6 +16,9 @@ import  {QUERY_POSTS } from '../utils/queries';
 //Import post modal
 import SinglePost from './SinglePost';
 
+//Import New Post Modal
+import NewPostModal from '../components/new-post-modal'
+
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
@@ -32,15 +35,24 @@ export default function BlogPage() {
   const POSTS = data?.posts || [];
 
   
-  //To Keep track of modal
-  const [modalOpen, setModalOpen] = useState(false);
+  //To Keep track of post modal
+  const [singlePostModalOpen, setSinglePostModalOpen] = useState(false);
+ 
+  //keep track of New post Modal
+  const [newPostModalOpen, setNewPostModalOpen] = useState(false);
+
+
 
   //To keep track of the current post selected
   const [currentPostId, setCurrentPostId] = useState();
+
+  const toggleNewPostModal = () => {
+     setNewPostModalOpen(!newPostModalOpen)
+  }
   
-  const toggleModal = (_id) => {
+  const toggleSinglePostModal = (_id) => {
     setCurrentPostId(_id);
-    setModalOpen(!modalOpen)
+    setSinglePostModalOpen(!singlePostModalOpen)
   }
 
 
@@ -49,15 +61,16 @@ export default function BlogPage() {
       <Helmet>
         <title> Tavern </title>
       </Helmet>
-
+      
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Tavern
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleNewPostModal}>
             New Post
           </Button>
+          
         </Stack>
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
@@ -73,17 +86,27 @@ export default function BlogPage() {
                 key={post ? post._id : index} 
                 post={post} 
                 index={index} 
-                modalToggle={toggleModal}
+                modalToggle={toggleSinglePostModal}
                 loading={loading}
               />  
           ) 
           )}
+
+
+           {/*New Post Modal */}
+           { newPostModalOpen && (
+              <NewPostModal
+                open={newPostModalOpen}
+                setOpen={setNewPostModalOpen}
+              />
+          )}
+
      
-          {/* Modal */}
-          {modalOpen && (
+          {/*Single Post Modal */}
+          {singlePostModalOpen && (
           <SinglePost
-             modalOpen={modalOpen}
-             setModalOpen={setModalOpen}
+             modalOpen={singlePostModalOpen}
+             setModalOpen={setSinglePostModalOpen}
              currentPostId={currentPostId}
            />
           )}

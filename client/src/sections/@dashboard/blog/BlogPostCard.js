@@ -2,14 +2,20 @@ import PropTypes from 'prop-types';
 
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Box, Link, Card, Grid, Avatar, Typography, CardContent} from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 // utils
-import { fDate } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import SvgColor from '../../../components/svg-color';
 import Iconify from '../../../components/iconify';
+import FollowButton from '../../../components/follow-button';
+
+//
+import Checkbox from '@mui/material/Checkbox';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
+
 
 
 
@@ -63,6 +69,8 @@ BlogPostCard.propTypes = {
   index: PropTypes.number,
 };
 
+const label = { inputProps: { 'aria-label': 'Checkbox' } };
+
 export default function BlogPostCard({ post, index, modalToggle,loading }) {
   
 
@@ -92,6 +100,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
       sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}
       
     >
+      
       <Card sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
@@ -137,23 +146,28 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
               ...((latestPostLarge || latestPost) && { display: 'none' }),
             }} />
           ) }
-
+          
           {
             post ? (
-            <StyledAvatar
-              alt={post.author.username}
-              src={`/assets/images/avatars/${post.author.avatar}`}
-              sx={{
-                ...((latestPostLarge || latestPost) && {
+              <div>
+                <StyledAvatar
+                  alt={post.author.username}
+                  src={`/assets/images/avatars/${post.author.avatar}`}
+                  sx={{
+                  ...((latestPostLarge || latestPost) && {
                   zIndex: 9,
                   top: 24,
                   left: 24,
                   width: 40,
                   height: 40,
-                }),
-              }}
-              /> 
-              ) : (
+                  }),
+                  }}
+                /> 
+                <FollowButton styleProps={{zIndex: 9}} user={post.author}/>
+              </div>
+           
+              ) 
+              : (
                 <Skeleton variant="circular" sx={{
                   ...((latestPostLarge || latestPost) && {
                     position: 'absolute',
@@ -170,6 +184,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
               ) 
             
           }
+
           
          
 
@@ -225,12 +240,11 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
           <StyledInfo>
             {post ? POST_INFO.map((info, index) => (
               <Box
-                onClick={handleClick}
                 data-name={info.name}
                 key={index}
                 sx={{
                   "&:hover":{
-                      color: 'red'
+                      color: 'blue'
                   },
                   cursor: 'pointer',
                   display: 'flex',
@@ -241,7 +255,11 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
                   }), 
                 }}
               >
-                <Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />
+                { info.name === 'like' ? 
+                 (<Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />}/>)
+                 : (<Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />)
+                }
+                
                 <Typography variant="caption">{fShortenNumber(info.number) || 0}</Typography>
               </Box>
             )) : (

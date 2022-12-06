@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { Grid } from '@mui/material';
 import ShopProductCard from './ProductCard';
 import { useNavigate } from 'react-router-dom';
-
-import { useQuery } from '@apollo/client';
 
 // ----------------------------------------------------------------------
 

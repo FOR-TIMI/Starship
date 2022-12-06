@@ -16,7 +16,7 @@ export default function NoFollowings () {
                 }}
             >
                 <Typography variant="body2">
-                You are not following anyone yet.
+                    You are not following anyone yet.
                 </Typography>
             </Paper>
             </TableCell>

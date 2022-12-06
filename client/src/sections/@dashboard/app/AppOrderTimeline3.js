@@ -8,8 +8,8 @@ import { GET_BASKET, GET_LARGE_TRADES } from '../../../utils/queries';
 import { useQuery } from '@apollo/client';
 // ----------------------------------------------------------------------
 
-export default function AppOrderTimeline2({ symbol, title, subheader, list }) {
-  return <OrderTimeline title={title} subheader={subheader} list={list} symbol={symbol} />;
+export default function AppOrderTimeline3({ ticker, title, subheader, list }) {
+  return <OrderTimeline title={title} subheader={subheader} list={list} symbol={ticker} />;
 }
 
 function OrderTimeline({ symbol, title, subheader, list }) {
@@ -23,7 +23,6 @@ function OrderTimeline({ symbol, title, subheader, list }) {
     console.log(error);
   }
   if (data) {
-    console.log(data, 'THIS DASSS');
     return (
       <Card>
         <CardHeader title={title} subheader={subheader} />
@@ -37,7 +36,7 @@ function OrderTimeline({ symbol, title, subheader, list }) {
         >
           <Timeline>
             {data.getLargeTrades.map((item, index) => (
-              <OrderItem key={item.ID} item={item} isLast={index === data.getLargeTrades.length - 1} />
+              <OrderItem key={item.ID} item={item} symbol={symbol} isLast={index === data.getLargeTrades.length - 1} />
             ))}
           </Timeline>
         </CardContent>
@@ -48,7 +47,7 @@ function OrderTimeline({ symbol, title, subheader, list }) {
 // ----------------------------------------------------------------------
 
 function OrderItem({ item, isLast, symbol }) {
-  console.log(symbol);
+  // console.log(symbol);
   const { Timestamp, Exchange, Price, Size, Conditions, ID, Tape } = item;
   return (
     <TimelineItem>
@@ -58,7 +57,7 @@ function OrderItem({ item, isLast, symbol }) {
       </TimelineSeparator>
 
       <TimelineContent>
-        <Typography variant="subtitle2">{Size.toString() + ' SPY'}</Typography>
+        <Typography variant="subtitle2">{Size.toString() + ' ' + symbol}</Typography>
 
         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           {fDateTime(Timestamp)}

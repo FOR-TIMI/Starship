@@ -107,7 +107,7 @@ const typeDefs = gql`
     users: [User]
     baskets: [Basket]
     socialBaskets (username: String!): [Basket]
-    posts: [Post]
+    posts(userId:String): [Post]
     signedInUser: User
     post(_id: ID!): Post
     friendsPosts(_id: ID!): [Post]
@@ -138,9 +138,10 @@ const typeDefs = gql`
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
+    updateUser( avatar: String): User
     addTicker(basketId: ID!, ticker: String!): Basket
     addBasket(tickers: [String]!, basketName: String): Basket
-    addPost(title: String!): Post
+    addPost(title: String!, basketId: String): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
     removeFollowing(followingId: ID!): User

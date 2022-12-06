@@ -216,12 +216,6 @@ export default function DashboardAppPage() {
             <AppCurrentVisits2
               title="Basket Makeup"
               basketId={basketId}
-              // chartData={[
-              //   { label: 'America', value: 4344 },
-              //   { label: 'Asia', value: 5435 },
-              //   { label: 'Europe', value: 1443 },
-              //   { label: 'Africa', value: 4443 },
-              // ]}
               chartColors={[
                 theme.palette.primary.main,
                 theme.palette.info.main,

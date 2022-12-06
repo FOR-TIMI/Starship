@@ -46,7 +46,7 @@ async function getBarsData(symbol, timeframe, limit, days) {
   return new Promise(async (resolve) => {
     let dateStart = moment().subtract(days, "days").format();
     let datenow = moment().subtract(16, "minutes").format();
-    console.log(datenow);
+    // console.log(datenow);
 
     const bars = await alpaca.getMultiBarsV2(symbol, {
       start: dateStart,
@@ -54,9 +54,9 @@ async function getBarsData(symbol, timeframe, limit, days) {
       timeframe: timeframe, // timeframe: '1Min' | '5Min' | '15Min' | '1H' | '1D' available
       limit: limit, // I have tested this upto 100000
     });
-    for (const b of bars) {
-      console.log(b[1].length, "THIS BARS");
-    }
+    // for (const b of bars) {
+    //   // console.log(b[1].length, "THIS BARS");
+    // }
     const allBars = [];
     for await (const b of bars) {
       let barsData = {};
