@@ -3,12 +3,16 @@ import { faker } from '@faker-js/faker';
 import moment from 'moment';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, Button } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
 import { BAR_DATA_QUERY } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import { useState, useEffect } from 'react';
+
+
+//stripe 
+
 
 // sections
 import {
@@ -93,8 +97,10 @@ export default function DashboardAppPage() {
     });
     // const newData = dataToBasket(data.barsDataQuery);
     // setParsedData(newData);
+    //STRIPE
+    
   }
-
+  
   return (
     <>
       <Helmet>
