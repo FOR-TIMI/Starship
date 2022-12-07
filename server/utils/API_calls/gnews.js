@@ -5,7 +5,7 @@ const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
     // console.log(searchQuery);
     const browser = await puppeteer.launch({
-      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
     const page = await browser.newPage();
