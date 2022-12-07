@@ -10,6 +10,9 @@
     "seed": "cd server && npm run seed",
     "build": "cd client && npm run build"
   },
+  "engines": {
+    "node": "v16.17.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
