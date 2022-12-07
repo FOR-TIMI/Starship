@@ -9,6 +9,7 @@ const searchGoogle = async (searchQuery) => {
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
+    //random
     const page = await browser.newPage();
 
     await page.goto(
