@@ -1,3 +1,4 @@
+
 import PropTypes from 'prop-types';
 
 // @mui
@@ -71,7 +72,7 @@ BlogPostCard.propTypes = {
 
 const label = { inputProps: { 'aria-label': 'Checkbox' } };
 
-export default function BlogPostCard({ post, index, modalToggle,loading }) {
+export default function BlogPostCard({ post, index, modalToggle,signedInUsername, loading }) {
   
 
   
@@ -83,17 +84,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
     { number: post ? post.commentCount : 0, icon: 'eva:message-circle-fill',name: "comment" },
     { number: post ? post.likeCount : 0, icon: 'eva:heart-outline', name: "like" },
   ];
- 
- 
-
-  const handleClick = (e) => {
-     console.log(e.target.dataset)
-     return;
-  }
-
- 
-
-
+  
   return (
     <Grid 
       item xs={12} 
@@ -163,7 +154,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
                   }),
                   }}
                 /> 
-                <FollowButton styleProps={{zIndex: 9}} user={post.author}/>
+                {!(signedInUsername===post.author.username )? <FollowButton styleProps={{zIndex: 9}} user={post.author}/> : <FollowButton disabled/>}
               </div>
            
               ) 
@@ -184,7 +175,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
               ) 
             
           }
-
+          
           
          
 

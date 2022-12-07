@@ -54,7 +54,7 @@ export default function NewPostModal({open,setOpen}) {
 
  
   const baskets = data?.signedInUser.baskets || []
-
+  console.log(baskets)
   
   const handleBasketIdChange = (e) => {
     setBasketId(e.target.value)
