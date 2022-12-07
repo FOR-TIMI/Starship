@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server.js",
     "watch": "nodemon",
-    "build": "node node_modules/puppeteer/install.js",
     "seed": "node seeders/seeds.js"
   },
   "keywords": [],
