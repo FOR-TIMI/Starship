@@ -19,7 +19,6 @@ const { typeDefs, resolvers } = require("./schemas");
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  playground: true,
   context: authMiddleware,
 });
 
