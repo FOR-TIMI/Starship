@@ -3,18 +3,23 @@ const cheerio = require("cheerio");
 
 const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        "--no-sandbox",
-        "--single-process",
-        "--no-zygote",
-        "--disable-gpu",
-        "--disable-setuid-sandbox",
-      ],
-      ignoreDefaultArgs: ["--disable-extensions"],
-      executablePath: "google-chrome",
-    });
+    let browser;
+    if (process.env.NODE_ENV == "production") {
+      browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          "--no-sandbox",
+          "--single-process",
+          "--no-zygote",
+          "--disable-gpu",
+          "--disable-setuid-sandbox",
+        ],
+        ignoreDefaultArgs: ["--disable-extensions"],
+        executablePath: "google-chrome",
+      });
+    } else {
+      browser = await puppeteer.launch({});
+    }
     //
 
     const page = await browser.newPage();
