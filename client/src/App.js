@@ -8,8 +8,9 @@ import ScrollToTop from './components/scroll-to-top';
 import { StyledChart } from './components/chart';
 import './App.css';
 
-const URI = process.env.HTTP_LINK || 'http://localhost:3001/graphql';
+const URI = process.env.REACT_APP_HTTP_LINK || 'http://localhost:3001/graphql';
 const httpLink = new HttpLink({ uri: URI });
+//random
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
