@@ -14,6 +14,8 @@ const searchGoogle = async (searchQuery) => {
       ],
     });
 
+    //random
+
     const page = await browser.newPage();
 
     await page.goto(
