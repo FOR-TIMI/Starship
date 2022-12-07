@@ -13,6 +13,7 @@ const searchGoogle = async (searchQuery) => {
         "--disable-setuid-sandbox",
       ],
       ignoreDefaultArgs: ["--disable-extensions"],
+      executable_path: "google-chrome",
     });
     //
 
