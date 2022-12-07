@@ -6,7 +6,12 @@ const searchGoogle = async (searchQuery) => {
     // console.log(searchQuery);
     const browser = await puppeteer.launch({
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: [
+        "--no-sandbox",
+        "--single-process",
+        "--no-zygote",
+        "--disable-setuid-sandbox",
+      ],
     });
 
     //random
