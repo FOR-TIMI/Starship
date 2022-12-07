@@ -16,8 +16,6 @@ const searchGoogle = async (searchQuery) => {
       ignoreDefaultArgs: ["--disable-extensions"],
     });
 
-    //random
-
     const page = await browser.newPage();
 
     await page.goto(
