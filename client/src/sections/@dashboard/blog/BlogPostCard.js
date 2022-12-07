@@ -1,6 +1,6 @@
 
 import PropTypes from 'prop-types';
-
+import { Navigate, useNavigate, useRoutes } from 'react-router-dom';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent} from '@mui/material';
@@ -74,7 +74,10 @@ const label = { inputProps: { 'aria-label': 'Checkbox' } };
 
 export default function BlogPostCard({ post, index, modalToggle,signedInUsername, loading }) {
   
-
+  const navigate = useNavigate();
+  function openBasket(id) {
+    navigate('/dashboard/user/' + id);
+  }
   
   
   const latestPostLarge = index === 0;
@@ -203,22 +206,40 @@ export default function BlogPostCard({ post, index, modalToggle,signedInUsername
         }
 
          {
-          post ? (
+          post ? (<>
             <StyledTitle
               color="inherit"
               variant="subtitle2"
-              underline="hover"
+              //underline="hover"
               sx={{
                 ...(latestPostLarge && { typography: 'h5', height: 60 }),
                 ...((latestPostLarge || latestPost) && {
                   color: 'common.white',
                 }),
-                cursor: "pointer"
+                cursor: "default"
               }}
-              onClick={() => modalToggle(post._id)}
+              //onClick={() => modalToggle(post._id)}
             >
               {post.title}
+              
             </StyledTitle>
+            <StyledTitle
+            color="inherit"
+            variant="subtitle2"
+            underline="hover"
+            sx={{
+              ...(latestPostLarge && { typography: 'h5', height: 60 }),
+              ...((latestPostLarge || latestPost) && {
+                color: 'common.white',
+              }),
+              cursor: "pointer"
+            }}
+            onClick={() => openBasket(post.basketId)}
+          >
+            {post.basketName}
+            
+          </StyledTitle></>
+            
           ) : (
             <Skeleton width="100%" variant="rectangular"
             sx={{

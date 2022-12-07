@@ -20,7 +20,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import AddIcon from '@mui/icons-material/Add';
 
 //graphQl queries
-import { QUERY_ME, QUERY_POSTS } from '../../utils/queries'
+import { QUERY_ME, QUERY_POSTS, GET_BASKETS } from '../../utils/queries'
 
 //graphQl Mutations
 import { ADD_POST} from '../../utils/mutations'
@@ -49,17 +49,24 @@ export default function NewPostModal({open,setOpen}) {
 
   const [title, setTitle] = useState('')
   const [basketId,setBasketId] = useState('');
+  const [basketName, setBasketName] = useState('');
+  const [basketValue, setBasketValue] = useState('');
 
   const {loading,data } = useQuery(QUERY_ME)
-
+  const {loading: basketLoading ,data: basketData } = useQuery(GET_BASKETS);
  
-  const baskets = data?.signedInUser.baskets || []
-  console.log(baskets)
+  const baskets = basketData?.baskets || []
+  
+  
   
   const handleBasketIdChange = (e) => {
-    setBasketId(e.target.value)
+    setBasketId(e.target.value._id)
+    setBasketValue(e.target.value)
+    setBasketName(e.target.value.basketName)
+    
   }
 
+ 
 
   const handleClose = () => {
     setOpen(false);
@@ -100,7 +107,7 @@ export default function NewPostModal({open,setOpen}) {
     e.preventDefault();
     try{
       await addPost({
-        variables: { title, basketId, author: data.signedInUser}
+        variables: { title, basketId, author: data.signedInUser, basketName}
       });
 
       //To clear the form
@@ -146,7 +153,7 @@ export default function NewPostModal({open,setOpen}) {
               <Select
                 labelId="demo-select-small"
                 id="demo-select-small"
-                value={basketId}
+                value={basketValue}
                 label="Basket"
                 onChange={handleBasketIdChange}
                 sx={{ height: "100%"}}
@@ -157,7 +164,7 @@ export default function NewPostModal({open,setOpen}) {
                 </MenuItem>
                   { 
                   baskets.length && baskets.map( b => (
-                     <MenuItem key={b._id} value={b._id}>{b.basketName}</MenuItem>
+                     <MenuItem key={b._id} value={b}>{b.basketName}</MenuItem>
                   )) 
 
                   }

@@ -40,7 +40,8 @@ export default function BlogPage() {
   
   const { loading,data } = useQuery(QUERY_POSTS);
   const POSTS = data?.posts || [];
-
+ 
+  
   
   //To Keep track of post modal
   const [singlePostModalOpen, setSinglePostModalOpen] = useState(false);
