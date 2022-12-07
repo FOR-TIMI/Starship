@@ -11,7 +11,6 @@ import { NEWS_QUERY, GET_BASKET } from '../../../utils/queries';
 // ----------------------------------------------------------------------
 
 export default function AppNewsUpdate3({ ticker, subheader }) {
-  
   return (
     <Card>
       <CardHeader title={'News'} subheader={subheader} />
@@ -41,6 +40,7 @@ function NewsContainer({ ticker }) {
   });
 
   if (data) {
+    console.log(data);
     return (
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
@@ -50,6 +50,8 @@ function NewsContainer({ ticker }) {
         </Stack>
       </Scrollbar>
     );
+  } else {
+    return null;
   }
 }
 
