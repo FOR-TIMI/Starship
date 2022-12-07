@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("./config/connection");
 const app = express();
+const path = require("path");
 
 //Port
 const PORT = process.env.PORT || 3001;
