@@ -6,7 +6,7 @@ const searchGoogle = async (searchQuery) => {
     let browser;
     if (process.env.NODE_ENV == "production") {
       browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         args: [
           "--no-sandbox",
           "--single-process",
@@ -18,7 +18,7 @@ const searchGoogle = async (searchQuery) => {
         executablePath: "google-chrome",
       });
     } else {
-      browser = await puppeteer.launch({});
+      browser = await puppeteer.launch();
     }
     //
 
