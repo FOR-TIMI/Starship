@@ -1,6 +1,6 @@
 
 import PropTypes from 'prop-types';
-import { Navigate, useNavigate, useRoutes } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent} from '@mui/material';
@@ -18,7 +18,7 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 
-import  { CHECK_LIKE, QUERY_ME,QUERY_POSTS, QUERY_LIKED_POSTS } from '../../../utils/queries';
+import  { CHECK_LIKE } from '../../../utils/queries';
 import  { ADD_LIKE, REMOVE_LIKE } from '../../../utils/mutations';
 
 
