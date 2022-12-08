@@ -52,6 +52,7 @@ const searchGoogle = async (searchQuery) => {
       data.push({ title, content, img, pubDate, link });
       if (i == 5) {
         // console.log(data, "THIS DATA");
+        browser.close();
         resolve(data);
         //hello
       }
