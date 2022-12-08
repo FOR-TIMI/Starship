@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer-core");
+const playwright = require("playwright");
 const cheerio = require("cheerio");
 const { executablePath } = require("puppeteer");
 
@@ -6,27 +6,7 @@ const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
     // console.log(searchQuery);
     let browser;
-    if (process.env.NODE_ENV == "production") {
-      browser = await puppeteer.launch({
-        headless: false,
-        args: [
-          "--disable-gpu",
-          "--disable-dev-shm-usage",
-          "--disable-setuid-sandbox",
-          "--no-first-run",
-          "--no-sandbox",
-          "--no-zygote",
-          "--single-process",
-        ],
-        ignoreDefaultArgs: ["--disable-extensions"],
-        executablePath: "/app/.apt/usr/bin/google-chrome",
-      });
-      //
-    } else {
-      browser = await puppeteer.launch({
-        executablePath: executablePath(),
-      });
-    }
+    browser = await playwright.chromium.launch({});
 
     const page = await browser.newPage();
 
