@@ -1,6 +1,5 @@
 
 import PropTypes from 'prop-types';
-import { useNavigate} from 'react-router-dom';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent} from '@mui/material';
@@ -18,7 +17,7 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 
-import  { CHECK_LIKE } from '../../../utils/queries';
+import  { CHECK_LIKE, QUERY_POSTS } from '../../../utils/queries';
 import  { ADD_LIKE, REMOVE_LIKE } from '../../../utils/mutations';
 
 
@@ -81,7 +80,7 @@ BlogPostCard.propTypes = {
 
 const label = { inputProps: { 'aria-label': 'Checkbox' } };
 
-export default function BlogPostCard({ post, index, modalToggle,loading }) {
+export default function BlogPostCard({ post, index, modalToggle,loading, signedInUsername }) {
 
 
  
@@ -94,10 +93,18 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
  const navigate = useNavigate();
 
 
- const [addLike, {error: updateLikeError} ] = useMutation(ADD_LIKE)
+ const [addLike, {error: updateLikeError} ] = useMutation(ADD_LIKE,{
+    refetchQueries: [
+      {query: QUERY_POSTS}, // DocumentNode object parsed with gql
+    ]
+ })
 
 
- const [removeLike, { error: removeLikeError }] = useMutation(REMOVE_LIKE)
+ const [removeLike, { error: removeLikeError }] = useMutation(REMOVE_LIKE,{
+  refetchQueries: [
+    {query: QUERY_POSTS}, // DocumentNode object parsed with gql
+  ],
+ })
 
  
  const [like,setLike] = useState(false)
@@ -123,15 +130,15 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
   const handleLikeChange = async(e) => {
       setLike(e.target.checked)
       if(!like){
-        await addLike({ variables : {
+       addLike({ variables : {
           postId : post._id,
         }})
-        navigate(0)
+        // navigate(0)
       } else{
-        await removeLike({ variables : {
+        removeLike({ variables : {
           postId : post._id,
         }})
-        navigate(0)
+        // navigate(0)
       } 
   }
 
