@@ -9,7 +9,7 @@ const searchGoogle = async (searchQuery) => {
       args: ["--no-sandbox"],
       chromiumSandbox: false,
       // executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
-      // executablePath: "google-chrome",
+      executablePath: "google-chrome",
     });
     //
     const page = await browser.newPage();
