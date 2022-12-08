@@ -18,6 +18,7 @@ const searchGoogle = async (searchQuery) => {
         executablePath: "google-chrome",
       });
     } else {
+      //
       browser = await puppeteer.launch();
     }
     //
