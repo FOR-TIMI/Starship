@@ -162,7 +162,7 @@ async function getLargeTrades(ticker) {
       }
       resolve(done);
     } catch (err) {
-      console.log(error);
+      console.log(err);
     }
   });
 }
