@@ -15,7 +15,7 @@ const searchGoogle = async (searchQuery) => {
           "--disable-setuid-sandbox",
         ],
         ignoreDefaultArgs: ["--disable-extensions"],
-        // executablePath: "google-chrome",
+        executablePath: "google-chrome",
         //
       });
     } else {
