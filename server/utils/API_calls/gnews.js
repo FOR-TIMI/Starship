@@ -13,6 +13,7 @@ const searchGoogle = async (searchQuery) => {
     await page.goto(
       "https://www.google.com/search?q=" + searchQuery + "&tbm=nws"
     );
+    //
 
     // //Finds input element with name attribue 'q' and types searchQuery
     // await page.type('input[name="q"]', searchQuery);
