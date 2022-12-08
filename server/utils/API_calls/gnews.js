@@ -1,4 +1,4 @@
-const playwright = require("playwright");
+const playwright = require("playwright-chromium");
 const cheerio = require("cheerio");
 
 const searchGoogle = async (searchQuery) => {
@@ -6,9 +6,10 @@ const searchGoogle = async (searchQuery) => {
     // console.log(searchQuery);
     let browser;
     browser = await playwright.chromium.launch({
+      args: ["--no-sandbox"],
       executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
     });
-
+    //
     const page = await browser.newPage();
 
     await page.goto(
