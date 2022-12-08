@@ -1,6 +1,5 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
-var userAgent = require("user-agents");
 
 const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve, reject) => {
@@ -25,7 +24,6 @@ const searchGoogle = async (searchQuery) => {
     //
     try {
       const page = await browser.newPage();
-      await page.setUserAgent(userAgent.toString()); // added this
 
       await page.goto(
         "https://www.google.com/search?q=" + searchQuery + "&tbm=nws"
