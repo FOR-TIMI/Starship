@@ -23,7 +23,7 @@ const searchGoogle = async (searchQuery) => {
     //
     try {
       const page = await browser.newPage();
-
+      //
       await page.goto(
         "https://www.google.com/search?q=" + searchQuery + "&tbm=nws"
       );
