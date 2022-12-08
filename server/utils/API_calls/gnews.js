@@ -19,7 +19,7 @@ const searchGoogle = async (searchQuery) => {
           "--single-process",
         ],
         ignoreDefaultArgs: ["--disable-extensions"],
-        executablePath: "google-chrome",
+        executablePath: "/app/.apt/usr/bin/google-chrome",
       });
       //
     } else {
