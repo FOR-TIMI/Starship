@@ -310,7 +310,6 @@ export default function BlogPostCard({ post, index, modalToggle,loading, signedI
               //  Check if user is signed IN 
               signedInUsername && !(signedInUsername === post.author.username) &&  (
                 <Tooltip title="Follow" placement="top-end">
-                {/* {!(signedInUsername===post.author.username )? <FollowButton styleProps={{zIndex: 9}} user={post.author}/> : <FollowButton disabled/>} */}          
                   <Checkbox {...label} icon={<PersonAddIcon />} checkedIcon={<PersonRemoveIcon />} />
                 </Tooltip>
                ) 

@@ -10,6 +10,7 @@ const { searchGoogle } = require("../utils/API_calls/gnews");
 const { signToken } = require("../utils/auth");
 
 const { AuthenticationError } = require("apollo-server-express");
+const { query } = require("express");
 
 
 const resolvers = {
@@ -194,6 +195,19 @@ const resolvers = {
            console.error(err)
          }
       }
+      throw new AuthenticationError("You need to be logged In!");
+    },
+
+    checkFollowing: async(parent, { userId}, context) => {
+      if(context.user){
+        try{
+          const [{ followings }] = await User.find({ _id: context.user._id})
+          return followings.includes(userId)
+        } catch(err){
+          console.error(err)
+        }
+      }
+      throw new AuthenticationError("You need to be logged In!");
     },
 
     post: async (parent, { _id }) => {
