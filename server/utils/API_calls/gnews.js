@@ -4,7 +4,14 @@ const cheerio = require("cheerio");
 const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
     // console.log(searchQuery);
-    const browser = await puppeteer.launch();
+    let browser;
+    if (process.env.NODE_ENV == "production") {
+      browser = await puppeteer.launch({
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
+    } else {
+      browser = await puppeteer.launch();
+    }
 
     const page = await browser.newPage();
 
