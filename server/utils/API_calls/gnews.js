@@ -10,7 +10,7 @@ const searchGoogle = async (searchQuery) => {
         headless: false,
         chromiumSandbox: false,
         // executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
-        executablePath: "/app/.apt/usr/bin/google-chrome",
+        executablePath: process.env.GOOGLE_CHROME_SHIM,
       });
     } else {
       browser = await playwright.chromium.launch({});
