@@ -10,7 +10,7 @@ const searchGoogle = async (searchQuery) => {
       browser = await puppeteer.launch({
         headless: false,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        executablePath: "google-chrome",
+        executablePath: "chrome",
       });
     } else {
       browser = await puppeteer.launch({
