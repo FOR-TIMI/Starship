@@ -32,6 +32,7 @@ const searchGoogle = async (searchQuery) => {
 
     //Wait for one of the div classes to load
     await page.waitForSelector(".uhHOwf > img", { visible: true });
+    await browser.close();
 
     const results = await page.content();
     const $ = cheerio.load(results);
@@ -52,7 +53,6 @@ const searchGoogle = async (searchQuery) => {
       data.push({ title, content, img, pubDate, link });
       if (i == 5) {
         // console.log(data, "THIS DATA");
-        await browser.close();
         resolve(data);
         //hello
       }
