@@ -9,8 +9,8 @@ const searchGoogle = async (searchQuery) => {
       browser = await playwright.chromium.launch({
         headless: false,
         chromiumSandbox: false,
-        // executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
-        executablePath: process.env.GOOGLE_CHROME_SHIM,
+        executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
+        // executablePath: process.env.GOOGLE_CHROME_SHIM,
       });
     } else {
       browser = await playwright.chromium.launch({});
