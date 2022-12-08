@@ -32,9 +32,9 @@ const searchGoogle = async (searchQuery) => {
 
     //Wait for one of the div classes to load
     await page.waitForSelector(".uhHOwf > img", { visible: true });
-    await browser.close();
 
     const results = await page.content();
+    await browser.close();
     const $ = cheerio.load(results);
 
     const thisOne = $("#search").find("div[class=MjjYud] > div>div");
