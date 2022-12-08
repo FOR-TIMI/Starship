@@ -27,9 +27,13 @@ import { useNavigate } from "react-router-dom";
 // @apollo client
 import { useQuery, useMutation} from '@apollo/client';
 
+//Add user Icons
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+//remove user Icon
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
 
-
+import Tooltip from '@mui/material/Tooltip';
 
 // ----------------------------------------------------------------------
 
@@ -133,12 +137,10 @@ export default function BlogPostCard({ post, index, modalToggle,loading, signedI
        addLike({ variables : {
           postId : post._id,
         }})
-        // navigate(0)
       } else{
         removeLike({ variables : {
           postId : post._id,
         }})
-        // navigate(0)
       } 
   }
 
@@ -212,9 +214,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading, signedI
                   }),
                   }}
                 /> 
-                {!(signedInUsername===post.author.username )? <FollowButton styleProps={{zIndex: 9}} user={post.author}/> : <FollowButton disabled/>}
-              </div>
-           
+              </div>         
               ) 
               : (
                 <Skeleton variant="circular" sx={{
@@ -305,6 +305,18 @@ export default function BlogPostCard({ post, index, modalToggle,loading, signedI
          }
 
           <StyledInfo>
+            <Box sx={{ flexGrow:"1"}}>
+            {
+              //  Check if user is signed IN 
+              signedInUsername && !(signedInUsername === post.author.username) &&  (
+                <Tooltip title="Follow" placement="top-end">
+                {/* {!(signedInUsername===post.author.username )? <FollowButton styleProps={{zIndex: 9}} user={post.author}/> : <FollowButton disabled/>} */}          
+                  <Checkbox {...label} icon={<PersonAddIcon />} checkedIcon={<PersonRemoveIcon />} />
+                </Tooltip>
+               ) 
+            }
+
+            </Box>
             {post ? POST_INFO.map((info, index) => (
               <Box
                 data-name={info.name}
@@ -323,13 +335,20 @@ export default function BlogPostCard({ post, index, modalToggle,loading, signedI
                 }}
               >
                 { info.name === 'like' ? 
-                 (<Checkbox {...label} 
-                    icon={<FavoriteBorder />} 
-                    checkedIcon={<Favorite />} 
-                    checked={like}
-                    onChange={handleLikeChange}
-                  />)
-                 : (<Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />)
+                 (
+                  <Tooltip title={like ? "unlike" : "like"} placement="top-end">
+                      <Checkbox {...label} 
+                          icon={<FavoriteBorder />} 
+                          checkedIcon={<Favorite />} 
+                          checked={like}
+                          onChange={handleLikeChange}
+                        />
+                     </Tooltip>
+                    )  
+                 : ( <Tooltip title="comment" placement="top-end">
+                        <Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />
+                      </Tooltip>
+                  )
                 }
                 
                 <Typography variant="caption">{fShortenNumber(info.number) || 0}</Typography>
