@@ -7,7 +7,7 @@ const searchGoogle = async (searchQuery) => {
     let browser;
     if (process.env.NODE_ENV == "production") {
       browser = await playwright.chromium.launch({
-        headless: true,
+        headless: false,
         chromiumSandbox: false,
         executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
         // executablePath: process.env.GOOGLE_CHROME_SHIM,
