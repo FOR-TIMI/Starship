@@ -24,6 +24,7 @@
     "moment": "^2.29.4",
     "mongoose": "^5.13.15",
     "puppeteer": "^19.3.0",
+    "puppeteer-core": "^19.4.0",
     "stripe": "^8.67.0"
   },
   "devDependencies": {
