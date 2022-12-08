@@ -17,12 +17,14 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 
-import  { CHECK_LIKE, QUERY_POSTS } from '../../../utils/queries';
-import  { ADD_LIKE, REMOVE_LIKE } from '../../../utils/mutations';
+import  { CHECK_LIKE, QUERY_POSTS, CHECK_FOLLOWING, QUERY_ME } from '../../../utils/queries';
+import  { ADD_FOLLOWING, ADD_LIKE, REMOVE_LIKE, REMOVE_FOLLOWING } from '../../../utils/mutations';
 
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+
+//useNavigate
+import { useNavigate } from 'react-router-dom'
 
 // @apollo client
 import { useQuery, useMutation} from '@apollo/client';
@@ -86,32 +88,40 @@ const label = { inputProps: { 'aria-label': 'Checkbox' } };
 
 export default function BlogPostCard({ post, index, modalToggle,loading, signedInUsername }) {
 
-
+ const navigate = useNavigate()
  
-
+ //LIke query
  const { data:likeData} = useQuery(CHECK_LIKE,{
    variables : { postId : post ? post._id : ''}
  })
- 
- //update cache to setLikeData
- const navigate = useNavigate();
 
+//Following Query
+const {data:followingData} = useQuery(CHECK_FOLLOWING,{
+  variables: {userId: post ? post.author._id : ''}
+})
+
+const  [addFollowing, { error: addFollowingError}] = useMutation(ADD_FOLLOWING)
+
+const  [removeFollowing, { error: removeFollowingError}] = useMutation(REMOVE_FOLLOWING)
+ 
+ 
 
  const [addLike, {error: updateLikeError} ] = useMutation(ADD_LIKE,{
     refetchQueries: [
-      {query: QUERY_POSTS}, // DocumentNode object parsed with gql
+      {query: QUERY_POSTS}, 
     ]
  })
 
 
  const [removeLike, { error: removeLikeError }] = useMutation(REMOVE_LIKE,{
   refetchQueries: [
-    {query: QUERY_POSTS}, // DocumentNode object parsed with gql
+    {query: QUERY_POSTS}, 
   ],
  })
 
  
  const [like,setLike] = useState(false)
+ const [follow, setFollow] = useState(false)
 
  const openBasket = (id) => {
   navigate(`/dashboard/user/${id}`)
@@ -122,6 +132,13 @@ export default function BlogPostCard({ post, index, modalToggle,loading, signedI
     setLike(likeData.checkLike)
   }
  },[likeData])
+
+
+ useEffect(() => {
+  if(followingData){
+    setFollow(followingData.checkFollowing)
+  }
+ }, [followingData])
 
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
@@ -142,6 +159,25 @@ export default function BlogPostCard({ post, index, modalToggle,loading, signedI
           postId : post._id,
         }})
       } 
+  }
+
+  const handleFollowingChange = async(e) => {
+       setFollow(e.target.checked)
+       if(!follow){
+         addFollowing({
+           variables: {
+            followingId: post.author._id
+           } 
+          })
+          navigate(0)
+       } else{
+         removeFollowing({
+          variables: {
+            followingId: post.author._id
+           }
+         })
+         navigate(0)
+       }
   }
 
 
@@ -309,8 +345,13 @@ export default function BlogPostCard({ post, index, modalToggle,loading, signedI
             {
               //  Check if user is signed IN 
               signedInUsername && !(signedInUsername === post.author.username) &&  (
-                <Tooltip title="Follow" placement="top-end">
-                  <Checkbox {...label} icon={<PersonAddIcon />} checkedIcon={<PersonRemoveIcon />} />
+                <Tooltip title={follow ? "unfollow" : "follow"} placement="top-end">
+                  <Checkbox {...label} 
+                    icon={<PersonAddIcon />}
+                    checkedIcon={<PersonRemoveIcon />}
+                    checked={follow}
+                    onChange={handleFollowingChange}
+                    />
                 </Tooltip>
                ) 
             }

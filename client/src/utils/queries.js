@@ -15,6 +15,9 @@ export const QUERY_ME = gql`
       likedPosts{
         _id
       }
+      followings{
+        _id
+      }
     }
   }
 `;
@@ -241,22 +244,9 @@ export const CHECK_LIKE= gql`
   }
 `
 
-export const QUERY_LIKED_POSTS=gql`
-query{
-  likedPosts {
-        _id
-      title
-      coverPhoto
-      createdAt
-      commentCount
-      likeCount
-      author {
-        _id
-        username
-        avatar
-      }
+export const CHECK_FOLLOWING = gql`
+  query($userId: ID!){
+    checkFollowing(userId: $userId)
   }
-}
-
 `
 
