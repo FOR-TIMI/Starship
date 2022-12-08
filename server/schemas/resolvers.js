@@ -85,13 +85,25 @@ const resolvers = {
     },
 
     //Get all posts
-    posts: async (parent, { userId }, context) => {
+    posts: async (parent, { userId, postId }, context) => {
 
       /**
        * If a user is signed in, it gets the following id and trys to find all the posts
        */
       const params = userId ? { author: userId} : {}
       if (context.user) {
+        if(postId){
+          return Post.find({_id: postId})
+          .populate("author")
+          .populate("likes")
+          .populate({
+            path: "comments",
+            populate: {
+              path: "author",
+              model: "User",
+            },
+          });
+        }
         try {
           const [{ followings }] = await User.find({
             username: context.user.username,
@@ -260,6 +272,29 @@ const resolvers = {
         throw new Error("No username provided.");
      }
     },
+
+
+    likedPosts: async(parent,args,context) => {
+      if(context.user){
+        const {likedPosts} = await User.findOne({ _id: context.user._id })
+                            .select("-__v -password")
+
+
+        return Post.find({
+          _id : { $in: likedPosts }
+        }).populate("author")
+          .populate("likes")
+          .populate({
+            path: "comments",
+            populate: {
+              path: "author",
+              model: "User",
+            },
+          })
+      }
+
+      throw new AuthenticationError("You need to be logged In!");
+    }
 
 
   },
@@ -505,7 +540,27 @@ const resolvers = {
       }
       throw new AuthenticationError("You need to be logged In!");
     },
-  },
+
+    removeLike: async(parent, { postId }, context) => {
+      if(context.user){
+        await User.findOneAndUpdate(
+          {_id: context.user._id},
+          {$pull :{likedPosts: postId}},
+          {new: true}
+        )
+      const updatedPost =  await Post.findOneAndUpdate(
+          {_id: postId},
+          {$pull :{likes: context.user._id}},
+          {new: true}
+        )
+
+        return updatedPost
+      }
+      throw new AuthenticationError("You need to be logged In!");
+    }
+
+
+  }
 };
 
 module.exports = resolvers;

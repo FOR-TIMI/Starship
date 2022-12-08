@@ -17,6 +17,15 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 
+import  { CHECK_LIKE, QUERY_ME,QUERY_POSTS, QUERY_LIKED_POSTS } from '../../../utils/queries';
+import  { ADD_LIKE, REMOVE_LIKE } from '../../../utils/mutations';
+
+
+import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
+// @apollo client
+import { useQuery, useMutation} from '@apollo/client';
 
 
 
@@ -73,10 +82,31 @@ const label = { inputProps: { 'aria-label': 'Checkbox' } };
 
 export default function BlogPostCard({ post, index, modalToggle,loading }) {
 
-  
 
-  
-  
+ 
+
+ const { data:likeData} = useQuery(CHECK_LIKE,{
+   variables : { postId : post ? post._id : ''}
+ })
+ 
+ //update cache to setLikeData
+ const navigate = useNavigate();
+
+
+ const [addLike, {error: updateLikeError} ] = useMutation(ADD_LIKE)
+
+
+ const [removeLike, { error: removeLikeError }] = useMutation(REMOVE_LIKE)
+
+ 
+ const [like,setLike] = useState(false)
+
+ useEffect(() => {
+  if(likeData){
+    setLike(likeData.checkLike)
+  }
+ },[likeData])
+
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
@@ -85,18 +115,20 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
     { number: post ? post.likeCount : 0, icon: 'eva:heart-outline', name: "like" },
   ];
  
- 
-
-  const handleClick = (e) => {
-     console.log(e.target.dataset)
-     return;
+  const handleLikeChange = async(e) => {
+      setLike(e.target.checked)
+      if(!like){
+        await addLike({ variables : {
+          postId : post._id,
+        }})
+        navigate(0)
+      } else{
+        await removeLike({ variables : {
+          postId : post._id,
+        }})
+        navigate(0)
+      } 
   }
-
-  const handleLike = (e) => {
-    
-  }
-
- 
 
 
   return (
@@ -231,7 +263,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
               }}
               onClick={() => modalToggle(post._id)}
             >
-              {post.title}
+              {post.title}{post.basketId && <Link to={`/dashboard/user/${post.basketId}`}>{'  -'}Checkout my basket</Link>}
             </StyledTitle>
           ) : (
             <Skeleton width="100%" variant="rectangular"
@@ -264,7 +296,8 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
                  (<Checkbox {...label} 
                     icon={<FavoriteBorder />} 
                     checkedIcon={<Favorite />} 
-                    onChange={handleLike}
+                    checked={like}
+                    onChange={handleLikeChange}
                   />)
                  : (<Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />)
                 }

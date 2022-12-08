@@ -12,13 +12,16 @@ export const QUERY_ME = gql`
         _id
         basketName
       }
+      likedPosts{
+        _id
+      }
     }
   }
 `;
 
 export const QUERY_POSTS = gql`
-  query {
-    posts {
+  query($postId: ID){
+    posts(postId: $postId){
       _id
       title
       coverPhoto
@@ -229,3 +232,29 @@ export const GET_LARGE_TRADES = gql`
     }
   }
 `;
+
+export const CHECK_LIKE= gql`
+  query Query($postId: String!){
+    checkLike(postId: $postId)
+  }
+`
+
+export const QUERY_LIKED_POSTS=gql`
+query{
+  likedPosts {
+        _id
+      title
+      coverPhoto
+      createdAt
+      commentCount
+      likeCount
+      author {
+        _id
+        username
+        avatar
+      }
+  }
+}
+
+`
+

@@ -114,7 +114,8 @@ const typeDefs = gql`
     baskets: [Basket]
     images: [Images]
     socialBaskets (username: String!): [Basket]
-    posts(userId:String): [Post]
+    likedPosts: [Post]
+    posts(userId:ID, postId:ID): [Post]
     signedInUser: User
     post(_id: ID!): Post
     friendsPosts(_id: ID!): [Post]
@@ -156,6 +157,7 @@ const typeDefs = gql`
     addImage(url: String!, prompt: String!): Images
     removeFollowing(followingId: ID!): User
     addLike(postId: ID!): Post
+    removeLike(postId: ID!): Post
     deleteBasket(basketId: ID!): Basket
   }
 `;
