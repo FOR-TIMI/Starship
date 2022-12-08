@@ -12,6 +12,12 @@ const postSchema = new Schema(
       minlength: 1,
       maxlength: 100
     },
+    basketId: {
+      type: String,
+    },
+    basketName: {
+      type: String
+    },
     createdAt: {
       type: Date,
       default: Date.now,

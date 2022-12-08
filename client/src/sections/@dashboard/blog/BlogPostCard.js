@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types';
 
+import PropTypes from 'prop-types';
+import { Navigate, useNavigate, useRoutes } from 'react-router-dom';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent} from '@mui/material';
@@ -114,21 +115,19 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
     { number: post ? post.commentCount : 0, icon: 'eva:message-circle-fill',name: "comment" },
     { number: post ? post.likeCount : 0, icon: 'eva:heart-outline', name: "like" },
   ];
- 
-  const handleLikeChange = async(e) => {
-      setLike(e.target.checked)
-      if(!like){
-        await addLike({ variables : {
-          postId : post._id,
-        }})
-        navigate(0)
-      } else{
-        await removeLike({ variables : {
-          postId : post._id,
-        }})
-        navigate(0)
-      } 
+
+  
+  const openBasket = (id) => {
+    navigate(`/dashboard/user/${id}`)
   }
+ 
+
+  const handleClick = (e) => {
+     console.log(e.target.dataset)
+     return;
+  }
+
+ 
 
 
   return (
@@ -200,7 +199,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
                   }),
                   }}
                 /> 
-                <FollowButton styleProps={{zIndex: 9}} user={post.author}/>
+                {!(signedInUsername===post.author.username )? <FollowButton styleProps={{zIndex: 9}} user={post.author}/> : <FollowButton disabled/>}
               </div>
            
               ) 
@@ -221,7 +220,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
               ) 
             
           }
-
+          
           
          
 
@@ -249,22 +248,39 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
         }
 
          {
-          post ? (
+          post ? (<>
             <StyledTitle
               color="inherit"
               variant="subtitle2"
-              underline="hover"
+              //underline="hover"
               sx={{
                 ...(latestPostLarge && { typography: 'h5', height: 60 }),
                 ...((latestPostLarge || latestPost) && {
                   color: 'common.white',
                 }),
-                cursor: "pointer"
+                cursor: "default"
               }}
-              onClick={() => modalToggle(post._id)}
+              //onClick={() => modalToggle(post._id)}
             >
               {post.title}{post.basketId && <Link to={`/dashboard/user/${post.basketId}`}>{'  -'}Checkout my basket</Link>}
             </StyledTitle>
+            <StyledTitle
+            color="inherit"
+            variant="subtitle2"
+            underline="hover"
+            sx={{
+              ...(latestPostLarge && { typography: 'h5', height: 60 }),
+              ...((latestPostLarge || latestPost) && {
+                color: 'common.white',
+              }),
+              cursor: "pointer"
+            }}
+            onClick={() => openBasket(post.basketId)}
+          >
+            {post.basketName}
+            
+          </StyledTitle></>
+            
           ) : (
             <Skeleton width="100%" variant="rectangular"
             sx={{

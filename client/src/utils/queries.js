@@ -25,7 +25,9 @@ export const QUERY_POSTS = gql`
       _id
       title
       coverPhoto
+      basketId
       createdAt
+      basketName
       commentCount
       likeCount
       author {

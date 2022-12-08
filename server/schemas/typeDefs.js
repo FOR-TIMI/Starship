@@ -25,6 +25,7 @@ const typeDefs = gql`
     title: String
     createdAt: String
     basketId: String
+    basketName: String
     likes: [User]
     comments: [Comment]
     commentCount: Int
@@ -151,7 +152,7 @@ const typeDefs = gql`
     addVerification( user: String): User
     addTicker(basketId: ID!, ticker: String!): Basket
     addBasket(tickers: [String]!, basketName: String): Basket
-    addPost(title: String!, basketId: String): Post
+    addPost(title: String!, basketId: String, basketName: String): Post
     addComment(postId: ID!, commentText: String!): Post
     addFollowing(followingId: ID!): User
     addImage(url: String!, prompt: String!): Images

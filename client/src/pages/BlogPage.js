@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 // @apollo client
 import { useQuery} from '@apollo/client';
+
 // @mui
 import { Grid, Button, Container, Stack, Typography } from '@mui/material';
 // components
@@ -12,6 +13,7 @@ import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashb
 import React, { useState } from 'react';
 
 import  {QUERY_POSTS } from '../utils/queries';
+import { QUERY_ME } from '../utils/queries';
 
 //Import post modal
 import SinglePost from './SinglePost';
@@ -31,9 +33,15 @@ const SORT_OPTIONS = [
 
 export default function BlogPage() {
 
+  const { loading: userLoading, data: signedInData } = useQuery(QUERY_ME)
+
+  const signedInUser = signedInData?.signedInUser || {}
+  const signedInUsername = signedInUser.username
+  
   const { loading,data } = useQuery(QUERY_POSTS);
   const POSTS = data?.posts || [];
-
+ 
+  
   
   //To Keep track of post modal
   const [singlePostModalOpen, setSinglePostModalOpen] = useState(false);
@@ -88,6 +96,7 @@ export default function BlogPage() {
                 index={index} 
                 modalToggle={toggleSinglePostModal}
                 loading={loading}
+                signedInUsername={signedInUsername}
               />  
           ) 
           )}

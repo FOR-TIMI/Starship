@@ -72,13 +72,13 @@ export const ADD_BASKET = gql`
 `
 
 export const ADD_POST = gql`
-  mutation($title: String!, $basketId: String){
-    addPost(title: $title, basketId: $basketId){
-      _id
+  mutation($title: String!, $basketId: String, $basketName: String){
+    addPost(title: $title, basketId: $basketId, basketName: $basketName){
       title
       coverPhoto
       basketId
       createdAt
+      basketName
       commentCount
       likeCount
       author{
