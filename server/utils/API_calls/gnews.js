@@ -19,7 +19,7 @@ const searchGoogle = async (searchQuery) => {
           "--single-process",
         ],
         ignoreDefaultArgs: ["--disable-extensions"],
-        executablePath: "google-chrome-$GOOGLE_CHROME_CHANNEL",
+        executablePath: "google-chrome",
       });
     } else {
       browser = await puppeteer.launch({
