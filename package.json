@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "^1.46.0",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "user-agents": "^1.0.1222"
   }
 }
