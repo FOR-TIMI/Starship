@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@alpacahq/alpaca-trade-api": "^2.16.1",
+    "@playwright/test": "^1.28.1",
     "apollo-server-express": "^3.6.1",
     "axios": "^1.2.0",
     "bcrypt": "^4.0.1",
@@ -23,7 +24,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "mongoose": "^5.13.15",
-    "puppeteer": "^19.3.0",
+    "playwright-chromium": "^1.28.1",
     "stripe": "^8.67.0"
   },
   "devDependencies": {

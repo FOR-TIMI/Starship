@@ -142,4 +142,3 @@ If you feel awesome and want to support us in a small way, please consider check
 
 
 
- ![image](http://imgs.xkcd.com/comics/frequency/heartbeat.gif)

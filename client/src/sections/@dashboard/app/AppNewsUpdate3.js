@@ -11,7 +11,6 @@ import { NEWS_QUERY, GET_BASKET } from '../../../utils/queries';
 // ----------------------------------------------------------------------
 
 export default function AppNewsUpdate3({ ticker, subheader }) {
-  
   return (
     <Card>
       <CardHeader title={'News'} subheader={subheader} />
@@ -36,6 +35,7 @@ function NewsContainer({ ticker }) {
   let vars = {
     ticker: ticker,
   };
+
   const { loading, error, data } = useQuery(NEWS_QUERY, {
     variables: vars,
   });
