@@ -75,8 +75,6 @@ export default function SingleAnalysis() {
         y: [e.OpenPrice, e.HighPrice, e.LowPrice, e.ClosePrice],
       };
     });
-
-    //console.log( closeP);
   }
 
   return (

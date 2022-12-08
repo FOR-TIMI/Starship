@@ -1,4 +1,12 @@
-const { User, Basket, Like, Post, Ticker, Comment, Image } = require("../model");
+const {
+  User,
+  Basket,
+  Like,
+  Post,
+  Ticker,
+  Comment,
+  Image,
+} = require("../model");
 const {
   getBarData,
   getBarsData,
@@ -8,9 +16,8 @@ const {
 } = require("../utils/API_calls/queries");
 const { searchGoogle } = require("../utils/API_calls/gnews");
 const { signToken } = require("../utils/auth");
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const { AuthenticationError } = require("apollo-server-express");
-
 
 const resolvers = {
   Query: {
@@ -19,13 +26,15 @@ const resolvers = {
       return data;
     },
 
-    barsDataQuery: async (parent, {symbols, timeframe, limit, days}) => {
+    barsDataQuery: async (parent, { symbols, timeframe, limit, days }) => {
       let data = await getBarsData(symbols, timeframe, limit, days);
       return data;
     },
 
     getNews: async (parent, { ticker }) => {
+      console.log(ticker);
       const sg = await searchGoogle(ticker);
+      console.log(sg);
       return sg;
     },
 
@@ -37,17 +46,17 @@ const resolvers = {
     //Get signedIn User
     signedInUser: async (parent, args, context) => {
       if (context.user) {
-        try{
+        try {
           const userData = await User.findOne({ _id: context.user._id })
-          .select("-__v -password")
-          .populate("followers")
-          .populate("followings")
-          .populate("posts")
-          .populate("baskets");
+            .select("-__v -password")
+            .populate("followers")
+            .populate("followings")
+            .populate("posts")
+            .populate("baskets");
 
-        return userData;
+          return userData;
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
       }
       throw new AuthenticationError("You're currently not signed in");
@@ -70,7 +79,7 @@ const resolvers = {
 
     //Get a user by username
     user: async (parent, { username }) => {
-      if(username) {
+      if (username) {
         return User.findOne({ username })
           .select("-__v -password")
           .populate("followers")
@@ -84,11 +93,10 @@ const resolvers = {
 
     //Get all posts
     posts: async (parent, { userId }, context) => {
-
       /**
        * If a user is signed in, it gets the following id and trys to find all the posts
        */
-      const params = userId ? { author: userId} : {}
+      const params = userId ? { author: userId } : {};
       if (context.user) {
         try {
           const [{ followings }] = await User.find({
@@ -111,7 +119,7 @@ const resolvers = {
               .sort({ createdAt: -1 });
 
             //Include posts that weren't made by the users followings
-            const allPosts = await Post.find({ $nor : followings})
+            const allPosts = await Post.find({ $nor: followings })
               .populate("author")
               .populate("likes")
               .populate({
@@ -159,7 +167,8 @@ const resolvers = {
             path: "author",
             model: "User",
           },
-        }).sort({ createdAt: -1 }); // when a user is not signed in
+        })
+        .sort({ createdAt: -1 }); // when a user is not signed in
     },
 
     post: async (parent, { _id }) => {
@@ -230,17 +239,14 @@ const resolvers = {
       return Basket.findOne({ _id });
     },
     socialBaskets: async (parent, args, context) => {
-  
       if (args.username) {
         const params = args.username;
         return Basket.find({ username: params }).sort({ createdAt: -1 });
       } else {
         throw new Error("No username provided.");
-      }}
+      }
+    },
   },
-
-  
-  
 
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
@@ -264,45 +270,43 @@ const resolvers = {
 
     updateUser: async (parent, { avatar }, context) => {
       // First we create the user
-      const update = { avatar:avatar };
+      const update = { avatar: avatar };
       if (context.user) {
-      try {
-        let user = User.findOneAndUpdate(
-          { _id: context.user._id },
-          update,
-          { new: true }
-        );
-        return user;
-      } catch (err) {
-        console.error(err);
-      }}
+        try {
+          let user = User.findOneAndUpdate({ _id: context.user._id }, update, {
+            new: true,
+          });
+          return user;
+        } catch (err) {
+          console.error(err);
+        }
+      }
       throw new AuthenticationError("You need to be logged in!");
     },
 
     addVerification: async (parent, { user }, context) => {
       if (context.user) {
-      try {
-        let user = User.findOneAndUpdate(
-          { _id: context.user._id },
-          { isVerified: true},
-          { new: true }
-        );
-        return user;
-      } catch (err) {
-        console.error(err);
-      }}
-      throw new AuthenticationError("You need to be logged in!");
-    },
-
-    addImage: async (parent, {url, prompt}, context)=>{
-      if (context.user) {
-        let image = await Image.create({url, prompt});
-        return image;
+        try {
+          let user = User.findOneAndUpdate(
+            { _id: context.user._id },
+            { isVerified: true },
+            { new: true }
+          );
+          return user;
+        } catch (err) {
+          console.error(err);
+        }
       }
       throw new AuthenticationError("You need to be logged in!");
     },
 
-
+    addImage: async (parent, { url, prompt }, context) => {
+      if (context.user) {
+        let image = await Image.create({ url, prompt });
+        return image;
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
 
     login: async (parent, { email, password }) => {
       // Look up the user by the provided email address. Since the `email` field is unique, we know that only one person will exist with that email
@@ -333,14 +337,12 @@ const resolvers = {
     //use parent?
     deleteBasket: async (parent, { basketId }, context) => {
       if (context.user) {
-        try{
-        let basket = await Basket.findOneAndDelete({_id: basketId});
-        return basket;
-      }
-        catch{
+        try {
+          let basket = await Basket.findOneAndDelete({ _id: basketId });
+          return basket;
+        } catch {
           throw new Error("Something went wrong");
         }
-    
       }
     },
 
@@ -351,7 +353,7 @@ const resolvers = {
         const basket = await Basket.create({
           tickers: tickers,
           username: context.user.username,
-          basketName: basketName
+          basketName: basketName,
         });
 
         await User.findByIdAndUpdate(
@@ -370,17 +372,19 @@ const resolvers = {
       if (context.user) {
         let symbol = ticker;
         let b = await Basket.findById(basketId);
-        let c = b.tickers.map((e)=>{return e.symbol});
+        let c = b.tickers.map((e) => {
+          return e.symbol;
+        });
         let t = c.includes(symbol);
         // verifying if symbol already exists in basket if not find and update else return error
-        if(!t){
-        let basket = await Basket.findOneAndUpdate(
-          { _id: basketId }, // get the user Id to access basket:[Basket]
-          { $addToSet: { tickers: {symbol} },}, // addtoSet not working ,
-          { new: true, runValidators: true } // flag which tells mongo to return the updated document from the database
-        );
-        return basket;
-      }
+        if (!t) {
+          let basket = await Basket.findOneAndUpdate(
+            { _id: basketId }, // get the user Id to access basket:[Basket]
+            { $addToSet: { tickers: { symbol } } }, // addtoSet not working ,
+            { new: true, runValidators: true } // flag which tells mongo to return the updated document from the database
+          );
+          return basket;
+        }
 
         return new Error("Already exists in basket");
       }
@@ -390,12 +394,12 @@ const resolvers = {
 
     // userId will be my userId and the followId would be the userId of the person i'm following
     addFollowing: async (parent, { followingId }, context) => {
-      if ( context.user && followingId) {
+      if (context.user && followingId) {
         try {
           //To update the person i'm following's follower list
           await User.findOneAndUpdate(
             { _id: followingId },
-            { $addToSet: { followers: context.user._id} },
+            { $addToSet: { followers: context.user._id } },
             { new: true }
           );
 
@@ -416,32 +420,32 @@ const resolvers = {
 
     removeFollowing: async (parent, { followingId }, context) => {
       if (context.user && followingId) {
-          const updatedUser = await User.findOneAndUpdate(
-            { _id: context.user._id },
-            { $pull: { followings: { $in: [followingId] }} },
-            { new: true },
-            function callback (err,data) {
-              console.error(err);
-            }
-          )
-          return updatedUser
-        }
-        throw new AuthenticationError("You need to be logged in!")
-        },
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { followings: { $in: [followingId] } } },
+          { new: true },
+          function callback(err, data) {
+            console.error(err);
+          }
+        );
+        return updatedUser;
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
 
     addPost: async (parent, args, context) => {
       if (context.user) {
-        const {_id} = await Post.create({
+        const { _id } = await Post.create({
           ...args,
-          author : context.user._id
-        })
+          author: context.user._id,
+        });
 
         await User.findOneAndUpdate(
           { _id: context.user._id },
           { $push: { posts: _id } },
           { new: true }
         );
-        return Post.findById(_id).populate("author")
+        return Post.findById(_id).populate("author");
       }
       throw new AuthenticationError("You need to be logged in!");
     },
