@@ -1,6 +1,5 @@
 const playwright = require("playwright");
 const cheerio = require("cheerio");
-const { executablePath } = require("puppeteer");
 
 const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
