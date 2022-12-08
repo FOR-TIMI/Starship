@@ -102,6 +102,10 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
  
  const [like,setLike] = useState(false)
 
+ const openBasket = (id) => {
+  navigate(`/dashboard/user/${id}`)
+}
+
  useEffect(() => {
   if(likeData){
     setLike(likeData.checkLike)
@@ -115,19 +119,21 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
     { number: post ? post.commentCount : 0, icon: 'eva:message-circle-fill',name: "comment" },
     { number: post ? post.likeCount : 0, icon: 'eva:heart-outline', name: "like" },
   ];
-
-  
-  const openBasket = (id) => {
-    navigate(`/dashboard/user/${id}`)
-  }
  
-
-  const handleClick = (e) => {
-     console.log(e.target.dataset)
-     return;
+  const handleLikeChange = async(e) => {
+      setLike(e.target.checked)
+      if(!like){
+        await addLike({ variables : {
+          postId : post._id,
+        }})
+        navigate(0)
+      } else{
+        await removeLike({ variables : {
+          postId : post._id,
+        }})
+        navigate(0)
+      } 
   }
-
- 
 
 
   return (
@@ -260,6 +266,7 @@ export default function BlogPostCard({ post, index, modalToggle,loading }) {
                 }),
                 cursor: "default"
               }}
+              //To view Single post
               //onClick={() => modalToggle(post._id)}
             >
               {post.title}{post.basketId && <Link to={`/dashboard/user/${post.basketId}`}>{'  -'}Checkout my basket</Link>}
