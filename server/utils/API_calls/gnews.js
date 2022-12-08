@@ -4,15 +4,16 @@ const cheerio = require("cheerio");
 const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
     // console.log(searchQuery);
-    let browser;
-    browser = await playwright.chromium.launch({
+
+    const browser = await playwright.chromium.launch({
       args: ["--no-sandbox"],
       chromiumSandbox: false,
       // executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
-      executablePath: "google-chrome",
+      executablePath: "/app/.apt/usr/bin/google-chrome",
     });
     //
-    const page = await browser.newPage();
+    const context = await browser.newContext();
+    const page = await context.newPage();
 
     await page.goto(
       "https://www.google.com/search?q=" + searchQuery + "&tbm=nws"
