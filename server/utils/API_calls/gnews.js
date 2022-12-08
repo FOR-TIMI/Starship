@@ -16,7 +16,6 @@ const searchGoogle = async (searchQuery) => {
         ],
         ignoreDefaultArgs: ["--disable-extensions"],
         executablePath: "google-chrome",
-        //
       });
     } else {
       browser = await puppeteer.launch();
