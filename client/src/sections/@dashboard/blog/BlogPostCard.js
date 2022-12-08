@@ -344,7 +344,7 @@ const  [removeFollowing, { error: removeFollowingError}] = useMutation(REMOVE_FO
             <Box sx={{ flexGrow:"1"}}>
             {
               //  Check if user is signed IN 
-              signedInUsername && !(signedInUsername === post.author.username) &&  (
+              signedInUsername && !(signedInUsername === post?.author.username) &&  (
                 <Tooltip title={follow ? "unfollow" : "follow"} placement="top-end">
                   <Checkbox {...label} 
                     icon={<PersonAddIcon />}
