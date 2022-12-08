@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer-core");
 const cheerio = require("cheerio");
+const { executablePath } = require("puppeteer");
 
 const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
@@ -12,7 +13,9 @@ const searchGoogle = async (searchQuery) => {
         executablePath: "google-chrome",
       });
     } else {
-      browser = await puppeteer.launch();
+      browser = await puppeteer.launch({
+        executablePath: executablePath(),
+      });
     }
 
     const page = await browser.newPage();
