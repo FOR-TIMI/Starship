@@ -13,6 +13,7 @@ const searchGoogle = async (searchQuery) => {
     } else {
       browser = await puppeteer.launch();
     }
+    //
 
     const page = await browser.newPage();
 
