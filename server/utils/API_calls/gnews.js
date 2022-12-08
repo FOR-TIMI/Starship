@@ -6,14 +6,15 @@ const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
     // console.log(searchQuery);
     let browser;
-    browser = await playwright.chromium.launch({});
+    browser = await playwright.chromium.launch({
+      executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
+    });
 
     const page = await browser.newPage();
 
     await page.goto(
       "https://www.google.com/search?q=" + searchQuery + "&tbm=nws"
     );
-    //
 
     // //Finds input element with name attribue 'q' and types searchQuery
     // await page.type('input[name="q"]', searchQuery);
