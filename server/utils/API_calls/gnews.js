@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 const cheerio = require("cheerio");
 
 const searchGoogle = async (searchQuery) => {
