@@ -6,7 +6,7 @@ const searchGoogle = async (searchQuery) => {
     let browser;
     if (process.env.NODE_ENV == "production") {
       browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         args: [
           "--no-sandbox",
           "--single-process",
@@ -15,7 +15,7 @@ const searchGoogle = async (searchQuery) => {
           "--disable-setuid-sandbox",
         ],
         ignoreDefaultArgs: ["--disable-extensions"],
-        // executablePath: "google-chrome",
+        executablePath: "google-chrome",
         //
       });
     } else {
