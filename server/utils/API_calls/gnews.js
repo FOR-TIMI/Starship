@@ -9,8 +9,17 @@ const searchGoogle = async (searchQuery) => {
     if (process.env.NODE_ENV == "production") {
       browser = await puppeteer.launch({
         headless: false,
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        executablePath: "chrome",
+        args: [
+          "--disable-gpu",
+          "--disable-dev-shm-usage",
+          "--disable-setuid-sandbox",
+          "--no-first-run",
+          "--no-sandbox",
+          "--no-zygote",
+          "--single-process",
+        ],
+        ignoreDefaultArgs: ["--disable-extensions"],
+        executablePath: "google-chrome-$GOOGLE_CHROME_CHANNEL",
       });
     } else {
       browser = await puppeteer.launch({
