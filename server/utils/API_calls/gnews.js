@@ -42,7 +42,7 @@ const searchGoogle = async (searchQuery) => {
     let data = [];
 
     //Iterate over all the divs found with class 'bkWMgd'
-    thisOne.each(function (i, parent) {
+    thisOne.each(async function (i, parent) {
       let title = $(parent).find(".mCBkyc").text();
       let content = $(parent).find(".GI74Re").text();
       let img = $(parent).find(".uhHOwf > img").attr("src");
@@ -52,7 +52,7 @@ const searchGoogle = async (searchQuery) => {
       data.push({ title, content, img, pubDate, link });
       if (i == 5) {
         // console.log(data, "THIS DATA");
-        browser.close();
+        await browser.close();
         resolve(data);
         //hello
       }
