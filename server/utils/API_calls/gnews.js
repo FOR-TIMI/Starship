@@ -4,13 +4,18 @@ const cheerio = require("cheerio");
 const searchGoogle = async (searchQuery) => {
   return new Promise(async (resolve) => {
     // console.log(searchQuery);
+    let browser;
+    if (process.env.NODE_ENV == "production") {
+      browser = await playwright.chromium.launch({
+        headless: false,
+        chromiumSandbox: false,
+        // executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
+        executablePath: "/app/.apt/usr/bin/google-chrome",
+      });
+    } else {
+      browser = await playwright.chromium.launch({});
+    }
 
-    const browser = await playwright.chromium.launch({
-      args: ["--no-sandbox"],
-      chromiumSandbox: false,
-      // executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
-      executablePath: "/app/.apt/usr/bin/google-chrome",
-    });
     //
     const context = await browser.newContext();
     const page = await context.newPage();
