@@ -126,3 +126,19 @@ export const DELETE_BASKET = gql`
   }
 `;
 
+export const ADD_LIKE = gql`
+  mutation($postId: ID!){
+    addLike(postId: $postId) {
+       _id
+    }
+}
+`
+
+export const REMOVE_LIKE = gql`
+  mutation($postId: ID!){
+    removeLike(postId: $postId) {
+      likeCount
+    }
+  }
+`
+

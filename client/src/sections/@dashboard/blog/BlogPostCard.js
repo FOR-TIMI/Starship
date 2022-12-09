@@ -1,6 +1,5 @@
 
 import PropTypes from 'prop-types';
-import { Navigate, useNavigate, useRoutes } from 'react-router-dom';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent} from '@mui/material';
@@ -10,7 +9,7 @@ import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import SvgColor from '../../../components/svg-color';
 import Iconify from '../../../components/iconify';
-import FollowButton from '../../../components/follow-button';
+
 
 //
 import Checkbox from '@mui/material/Checkbox';
@@ -18,10 +17,25 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 
+import  { CHECK_LIKE, QUERY_POSTS, CHECK_FOLLOWING } from '../../../utils/queries';
+import  { ADD_FOLLOWING, ADD_LIKE, REMOVE_LIKE, REMOVE_FOLLOWING } from '../../../utils/mutations';
 
 
+import { useEffect, useState } from 'react';
+
+//useNavigate
+import { useNavigate } from 'react-router-dom'
+
+// @apollo client
+import { useQuery, useMutation} from '@apollo/client';
+
+//Add user Icons
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+//remove user Icon
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
 
+import Tooltip from '@mui/material/Tooltip';
 
 // ----------------------------------------------------------------------
 
@@ -72,14 +86,60 @@ BlogPostCard.propTypes = {
 
 const label = { inputProps: { 'aria-label': 'Checkbox' } };
 
-export default function BlogPostCard({ post, index, modalToggle,signedInUsername, loading }) {
-  
-  const navigate = useNavigate();
-  function openBasket(id) {
-    navigate('/dashboard/user/' + id);
+export default function BlogPostCard({ post, index, modalToggle,loading, signedInUsername }) {
+
+ const navigate = useNavigate()
+ 
+ //LIke query
+ const { data:likeData} = useQuery(CHECK_LIKE,{
+   variables : { postId : post ? post._id : ''}
+ })
+
+//Following Query
+const {data:followingData} = useQuery(CHECK_FOLLOWING,{
+  variables: {userId: post ? post.author._id : ''}
+})
+
+const  [addFollowing] = useMutation(ADD_FOLLOWING)
+
+const  [removeFollowing] = useMutation(REMOVE_FOLLOWING)
+ 
+ 
+
+ const [addLike] = useMutation(ADD_LIKE,{
+    refetchQueries: [
+      {query: QUERY_POSTS}, 
+    ]
+ })
+
+
+ const [removeLike] = useMutation(REMOVE_LIKE,{
+  refetchQueries: [
+    {query: QUERY_POSTS}, 
+  ],
+ })
+
+ 
+ const [like,setLike] = useState(false)
+ const [follow, setFollow] = useState(false)
+
+ const openBasket = (id) => {
+  navigate(`/dashboard/user/${id}`)
+}
+
+ useEffect(() => {
+  if(likeData){
+    setLike(likeData.checkLike)
   }
-  
-  
+ },[likeData])
+
+
+ useEffect(() => {
+  if(followingData){
+    setFollow(followingData.checkFollowing)
+  }
+ }, [followingData])
+
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
@@ -87,7 +147,40 @@ export default function BlogPostCard({ post, index, modalToggle,signedInUsername
     { number: post ? post.commentCount : 0, icon: 'eva:message-circle-fill',name: "comment" },
     { number: post ? post.likeCount : 0, icon: 'eva:heart-outline', name: "like" },
   ];
-  
+ 
+  const handleLikeChange = async(e) => {
+      setLike(e.target.checked)
+      if(!like){
+       addLike({ variables : {
+          postId : post._id,
+        }})
+      } else{
+        removeLike({ variables : {
+          postId : post._id,
+        }})
+      } 
+  }
+
+  const handleFollowingChange = async(e) => {
+       setFollow(e.target.checked)
+       if(!follow){
+         addFollowing({
+           variables: {
+            followingId: post.author._id
+           } 
+          })
+          navigate(0)
+       } else{
+         removeFollowing({
+          variables: {
+            followingId: post.author._id
+           }
+         })
+         navigate(0)
+       }
+  }
+
+
   return (
     <Grid 
       item xs={12} 
@@ -157,9 +250,7 @@ export default function BlogPostCard({ post, index, modalToggle,signedInUsername
                   }),
                   }}
                 /> 
-                {!(signedInUsername===post.author.username )? <FollowButton styleProps={{zIndex: 9}} user={post.author}/> : <FollowButton disabled/>}
-              </div>
-           
+              </div>         
               ) 
               : (
                 <Skeleton variant="circular" sx={{
@@ -218,10 +309,10 @@ export default function BlogPostCard({ post, index, modalToggle,signedInUsername
                 }),
                 cursor: "default"
               }}
+              //To view Single post
               //onClick={() => modalToggle(post._id)}
             >
-              {post.title}
-              
+              {post.title}{post.basketId && <Link to={`/dashboard/user/${post.basketId}`}>{'  -'}Checkout my basket</Link>}
             </StyledTitle>
             <StyledTitle
             color="inherit"
@@ -250,6 +341,22 @@ export default function BlogPostCard({ post, index, modalToggle,signedInUsername
          }
 
           <StyledInfo>
+            <Box sx={{ flexGrow:"1"}}>
+            {
+              //  Check if user is signed IN 
+              signedInUsername && !(signedInUsername === post?.author.username) &&  (
+                <Tooltip title={follow ? "unfollow" : "follow"} placement="top-end">
+                  <Checkbox {...label} 
+                    icon={<PersonAddIcon />}
+                    checkedIcon={<PersonRemoveIcon />}
+                    checked={follow}
+                    onChange={handleFollowingChange}
+                    />
+                </Tooltip>
+               ) 
+            }
+
+            </Box>
             {post ? POST_INFO.map((info, index) => (
               <Box
                 data-name={info.name}
@@ -268,8 +375,20 @@ export default function BlogPostCard({ post, index, modalToggle,signedInUsername
                 }}
               >
                 { info.name === 'like' ? 
-                 (<Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />}/>)
-                 : (<Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />)
+                 (
+                  <Tooltip title={like ? "unlike" : "like"} placement="top-end">
+                      <Checkbox {...label} 
+                          icon={<FavoriteBorder />} 
+                          checkedIcon={<Favorite />} 
+                          checked={like}
+                          onChange={handleLikeChange}
+                        />
+                     </Tooltip>
+                    )  
+                 : ( <Tooltip title="comment" placement="top-end">
+                        <Iconify icon={info.icon} sx={{ width: 24, height: 24, mr: 0.5 }} />
+                      </Tooltip>
+                  )
                 }
                 
                 <Typography variant="caption">{fShortenNumber(info.number) || 0}</Typography>

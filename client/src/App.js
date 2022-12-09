@@ -24,7 +24,6 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const client = new ApolloClient({
-  // uri: 'http://localhost:3001/graphql',
   cache: new InMemoryCache(),
   link: concat(authMiddleware, httpLink),
 });
