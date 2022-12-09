@@ -9,7 +9,7 @@ import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import SvgColor from '../../../components/svg-color';
 import Iconify from '../../../components/iconify';
-import FollowButton from '../../../components/follow-button';
+
 
 //
 import Checkbox from '@mui/material/Checkbox';
@@ -17,7 +17,7 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 
-import  { CHECK_LIKE, QUERY_POSTS, CHECK_FOLLOWING, QUERY_ME } from '../../../utils/queries';
+import  { CHECK_LIKE, QUERY_POSTS, CHECK_FOLLOWING } from '../../../utils/queries';
 import  { ADD_FOLLOWING, ADD_LIKE, REMOVE_LIKE, REMOVE_FOLLOWING } from '../../../utils/mutations';
 
 
@@ -100,20 +100,20 @@ const {data:followingData} = useQuery(CHECK_FOLLOWING,{
   variables: {userId: post ? post.author._id : ''}
 })
 
-const  [addFollowing, { error: addFollowingError}] = useMutation(ADD_FOLLOWING)
+const  [addFollowing] = useMutation(ADD_FOLLOWING)
 
-const  [removeFollowing, { error: removeFollowingError}] = useMutation(REMOVE_FOLLOWING)
+const  [removeFollowing] = useMutation(REMOVE_FOLLOWING)
  
  
 
- const [addLike, {error: updateLikeError} ] = useMutation(ADD_LIKE,{
+ const [addLike] = useMutation(ADD_LIKE,{
     refetchQueries: [
       {query: QUERY_POSTS}, 
     ]
  })
 
 
- const [removeLike, { error: removeLikeError }] = useMutation(REMOVE_LIKE,{
+ const [removeLike] = useMutation(REMOVE_LIKE,{
   refetchQueries: [
     {query: QUERY_POSTS}, 
   ],
