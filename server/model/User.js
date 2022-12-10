@@ -69,6 +69,10 @@ const userSchema = new Schema(
 
 // set up pre-save middleware to create password
 userSchema.pre("save", async function (next) {
+
+  const randomAvatarIndex = Math.floor(Math.random() * 24) + 1;
+  this.avatar = `avatar_${randomAvatarIndex}.jpg`
+  
   //Check if it's a new user or a current user updating their password
   if (this.isNew || this.isModified("password")) {
     try {
@@ -80,6 +84,8 @@ userSchema.pre("save", async function (next) {
       return next(err);
     }
   }
+
+
 
   next();
 });
