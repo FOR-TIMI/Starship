@@ -138,7 +138,7 @@ const  [removeFollowing] = useMutation(REMOVE_FOLLOWING)
   if(followingData){
     setFollow(followingData.checkFollowing)
   }
- }, [followingData])
+ },[followingData])
 
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
@@ -301,7 +301,7 @@ const  [removeFollowing] = useMutation(REMOVE_FOLLOWING)
             <StyledTitle
               color="inherit"
               variant="subtitle2"
-              //underline="hover"
+              underline="none"
               sx={{
                 ...(latestPostLarge && { typography: 'h5', height: 60 }),
                 ...((latestPostLarge || latestPost) && {
@@ -310,16 +310,16 @@ const  [removeFollowing] = useMutation(REMOVE_FOLLOWING)
                 cursor: "default"
               }}
               //To view Single post
-              //onClick={() => modalToggle(post._id)}
+              onClick={() => modalToggle(post._id)}
             >
-              {post.title}{post.basketId && <Link to={`/dashboard/user/${post.basketId}`}>{'  -'}Checkout my basket</Link>}
+              {post.title}
             </StyledTitle>
-            <StyledTitle
+            <Typography
             color="inherit"
-            variant="subtitle2"
+            variant="subtitle3"
             underline="hover"
             sx={{
-              ...(latestPostLarge && { typography: 'h5', height: 60 }),
+              ...(latestPostLarge && { typography: 'p', height: 30 }),
               ...((latestPostLarge || latestPost) && {
                 color: 'common.white',
               }),
@@ -327,9 +327,9 @@ const  [removeFollowing] = useMutation(REMOVE_FOLLOWING)
             }}
             onClick={() => openBasket(post.basketId)}
           >
-            {post.basketName}
-            
-          </StyledTitle></>
+            {post.basketName && `${post.basketName} basket`}
+          </Typography>
+          </>
             
           ) : (
             <Skeleton width="100%" variant="rectangular"

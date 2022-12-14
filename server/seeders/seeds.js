@@ -21,16 +21,6 @@ db.once('open', async () => {
   console.log('\n ----- Deleted all current Baskets ----- \n ');
   
 
-  //all avatars
-  const avatars = []
-  //all  post covers
-  const covers = []
- 
-  // to add covers and avatars
-  for(let i =1; i <= 24; i++){
-    avatars.push(`avatar_${i}.jpg`)
-    covers.push(`cover_${i}.jpg`)
-  }
 
   // create user data
   const userData = [];
@@ -41,12 +31,7 @@ db.once('open', async () => {
     const email = faker.internet.email(username);
     const password = faker.internet.password();
 
-    //to get a random avatar index
-    const randomAvatarIndex = Math.floor(Math.random() * avatars.length);
-    //to get random avatar from the avatars array
-    const avatar = avatars[randomAvatarIndex]
-
-    userData.push({ username, email, password, avatar });
+    userData.push({ username, email, password});
   }
  
   // FOllowers are people following me. When they follow me, i add their user id into my follower array
@@ -102,14 +87,11 @@ db.once('open', async () => {
     //set author to the users Id
     const author = userId
     
-    //get random cover photo
-    const randomCoverIndex = Math.floor(Math.random() * covers.length);
-    const coverPhoto = covers[randomCoverIndex]
 
     /**
      * create a post
      */
-    const createdPost = await Post.create({ title, author, coverPhoto});
+    const createdPost = await Post.create({ title, author});
    
     /**
      * Add post id to the posts field in the user's data

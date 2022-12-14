@@ -25,7 +25,6 @@ export default function AppNewsUpdate2({ title, basketId, subheader, list, ...ot
   });
 
   if (data) {
-    // console.log(data.basket.tickers[0].symbol, 'THIS DDaaaD');
 
     return (
       <Card {...other}>
@@ -57,7 +56,7 @@ function NewsContainer({ ticker }) {
   });
 
   if (data) {
-    // console.log(data, 'THISDJLJKD');
+
 
     return (
       <Scrollbar>
@@ -82,7 +81,6 @@ NewsItem.propTypes = {
 
 function NewsItem({ news }) {
   const { title, pubDate, link, content, img } = news;
-  // console.log(typeof contentSnippet);
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       <Box component="img" src={img} sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }} />

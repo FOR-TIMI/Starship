@@ -55,7 +55,6 @@ function NewsContainer({ ticker }) {
 
 function NewsItem({ news }) {
   const { title, pubDate, link, content, img } = news;
-  // console.log(typeof contentSnippet);
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       <Box component="img" src={img} sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }} />

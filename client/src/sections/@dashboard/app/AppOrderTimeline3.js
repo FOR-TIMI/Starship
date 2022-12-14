@@ -19,9 +19,6 @@ function OrderTimeline({ symbol, title, subheader, list }) {
   const { loading, error, data } = useQuery(GET_LARGE_TRADES, {
     variables: variables,
   });
-  if (error) {
-    // console.log(error);
-  }
   if (data) {
     return (
       <Card>

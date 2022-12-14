@@ -10,6 +10,7 @@ SocialProductList.propTypes = {
 };
 
 
+
 export default function SocialProductList({ baskets, ...other }) {
   
   const navigate = useNavigate();

@@ -17,7 +17,6 @@ const {
 const { searchGoogle } = require("../utils/API_calls/gnews");
 const { signToken } = require("../utils/auth");
 const { AuthenticationError } = require("apollo-server-express");
-const { query } = require("express");
 
 const resolvers = {
   Query: {
@@ -32,9 +31,7 @@ const resolvers = {
     },
 
     getNews: async (parent, { ticker }) => {
-      console.log(ticker);
       const sg = await searchGoogle(ticker);
-      console.log(sg);
       return sg;
     },
 

@@ -55,14 +55,6 @@ export default function AppWidgetSummary2({ title, total, icon, color = 'primary
       {...other}
     >
       <StyledIcon
-        // sx={{
-        //   color: (theme) => theme.palette[color].dark,
-        //   backgroundImage: (theme) =>
-        //     `linear-gradient(135deg, ${alpha(theme.palette[color].dark, 0)} 0%, ${alpha(
-        //       theme.palette[color].dark,
-        //       0.24
-        //     )} 100%)`,
-        // }}
         sx={{
           color: (theme) => theme.palette[color].dark,
           backgroundImage: (theme) =>
