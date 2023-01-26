@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/FOR-TIMI/Starship/blob/main/client/public/assets/logo.svg?raw=true" width="250px" height="150px"/>
+  Starship
   <p align="center">
   <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"/>
   <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white"/>
